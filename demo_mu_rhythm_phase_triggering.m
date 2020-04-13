@@ -59,4 +59,4 @@ while (condition_index <= no_of_trials)
 end
 
 %% End
-disp ('Plasticity Protocol has been completed');
+disp ('Protocol has been completed');
