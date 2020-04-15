@@ -2,6 +2,9 @@
 % This demo script uses BOSS Device and 2 different approaches to generate jittered open loop stimuls
 % Resources:   1) Required: BOSS Device Switch On
 %             2) BOSS Device Open Source MATLAB API
+%             3) The stimulator is Switched On, External Trigger mode is turned on and the Stimulator is Enabled
+
+
 % Press Ctrl+C on MATLAB command line to stop the script anytime
 
 
@@ -17,8 +20,8 @@ bd.configure_time_port_marker([0 1 1]); %Configuring Trigger Sequence in [Time P
 for TrialNumber=1:NumberOfTrials
     bd.manualTrigger
     disp(['Triggered Trial #' num2str(TrialNumber)])
-    bd.min_inter_trig_interval= ITI(1)+ (ITI(2)-ITI(1)).*rand(1,1); %Assigning New Random ITI for this Trial to the BOSS Device
-    pause(bd.min_inter_trig_interval) %Wait for next trial start
+    min_inter_trig_interval= ITI(1)+ (ITI(2)-ITI(1)).*rand(1,1); %Assigning New Random ITI for this Trial to the BOSS Device
+    pause(min_inter_trig_interval) %Wait for next trial start
 end
 disp('Trials Completed')
 %% Approach 2 - BOSS Device Sequence Generator Based Open Loop Stimulation

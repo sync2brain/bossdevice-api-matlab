@@ -1,8 +1,8 @@
 %% Summary
 % This demo script uses BOSS Device to Measure loop latency between the Amplifier and BOSS Device Signals
-% Resources:   1) BOSS Device Switched On
-%              2) BOSS Device Open Source MATLAB API
-%              3) Biosignal Amplifier streaming any number of channels
+% Resources % Requirements:  1) BOSS Device Switched On
+%                            2) BOSS Device Open Source MATLAB API
+%                            3) Biosignal Amplifier streaming any number of channels
 % Press Ctrl+C on MATLAB command line to stop the script anytime
 
 %% Initializing BOSS Device 

@@ -3,6 +3,7 @@
 % Resources:   1) BOSS Device Switched On
 %              2) BOSS Device Open Source MATLAB API
 %              3) Biosignal Amplifier streaming atleast 5 EEG Channels
+%              4) The stimulator is Switched On, External Trigger mode is turned on and the Stimulator is Enabled
 % Press Ctrl+C on MATLAB command line to stop the script anytime
 
 %% Initializing Demo Script Variables;
@@ -47,22 +48,41 @@ bpf_fir_coeffs = firls(bandpassfilter_order, [0 (individual_peak_frequency + [-5
 bd.spatial_filter_weights=spatial_filter_weights;
 bd.alpha.bpf_fir_coeffs = bpf_fir_coeffs;
 
-%% Controlling BOSS Device for mu Alpha Phase Locked Triggering
+
+
+%% For plasticitz, we have the same condition, multiple times, we can run everything on the device:
+        bd.triggers_remaining = 100;
+        bd.alpha.phase_target(1) = phase;
+        bd.alpha.phase_plusminus(1) = phase_tolerance;
+        bd.configure_time_port_marker(plasticity_protocol_sequence)
+        bd.min_inter_trig_interval = minimium_inter_trigger_interval;
+        pause(0.1)
+        bd.arm;
+
+        fprintf('\nSystem running, pulses remaining: %03i', bd.triggers_remaining)
+        while (bd.triggers_remaining > 0)
+            fprintf('\b\b\b%03i', bd.triggers_remaining);
+            pause(0.1)
+        end
+        fprintf('\b\b\bDone\n')
+
+
+%% Controlling BOSS Device for mu Alpha Phase Locked Triggering % this could be for excitability, where we have interleaved different conditions
 condition_index=0;
 while (condition_index <= no_of_trials)
-    if(strcmp(bb.armed, 'no'))
-        bb.triggers_remaining = 1;
-        bb.alpha.phase_target(1) = phase;
-        bb.alpha.phase_plusminus(1) = phase_tolerance;
-        bb.configure_time_port_marker(plasticity_protocol_sequence)
-        bb.min_inter_trig_interval = minimium_inter_trigger_interval;
+    if(strcmp(bd.armed, 'no'))
+        bd.triggers_remaining = 1;
+        bd.alpha.phase_target(1) = phase;
+        bd.alpha.phase_plusminus(1) = phase_tolerance;
+        bd.configure_time_port_marker(plasticity_protocol_sequence)
+        bd.min_inter_trig_interval = minimium_inter_trigger_interval;
         pause(0.1)
-        bb.arm;
+        bd.arm;
     end
     % trigger has been executed, move to the next condition
-    if(bb.triggers_remaining == 0)
+    if(bd.triggers_remaining == 0)
         condition_index = condition_index + 1;
-        bb.disarm;
+        bd.disarm;
         disp Triggered!
         pause(minimium_inter_trigger_interval)
     end

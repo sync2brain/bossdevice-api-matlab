@@ -2,7 +2,8 @@
 % This demo script uses BOSS Device to estimate Phase Prediction Error
 % Resources:   1) BOSS Device Switched On
 %              2) BOSS Device Open Source MATLAB API
-%              3) Signal Generator with 11Hz Frequency 
+%              3) Signal Generator with 11Hz Frequency
+
 % Press Ctrl+C on MATLAB command line to stop the script anytime
 
 %% Circular statistics functions

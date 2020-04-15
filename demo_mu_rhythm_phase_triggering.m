@@ -3,6 +3,7 @@
 % Resources:   1) BOSS Device Switched On
 %              2) BOSS Device Open Source MATLAB API
 %              3) Biosignal Amplifier streaming atleast 5 EEG Channels
+%              4) The stimulator is Switched On, External Trigger mode is turned on and the Stimulator is Enabled
 % Press Ctrl+C on MATLAB command line to stop the script anytime
 
 %% Initializing Demo Script Variables;
