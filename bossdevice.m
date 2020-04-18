@@ -118,7 +118,7 @@ classdef bossdevice < handle
         
         function obj = set.spatial_filter_weights(obj, weights)
             % check that the dimensions matches the number of channels
-            assert(size(weights, 1) == obj.eeg_channels, 'number of rows in weights vector must equal number of channels')
+            assert(size(weights, 1) == obj.eeg_channels, 'number of rows in weights vector must equal number of EEG channels')
             num_rows = size(obj.spatial_filter_weights, 1);
             num_columns = size(obj.spatial_filter_weights, 2);
             % check if the number of columns does not exceed the number of parallell signals
@@ -232,8 +232,8 @@ classdef bossdevice < handle
                 case 'yes'
                     assert(strcmp(obj.calibration_mode, 'no'), 'Cannot arm target when in calibration mode')
                     assert(strcmp(obj.generator_running, 'no'), 'Cannot arm target while generator is running')
-                    stop(obj.scope_emg); % not sure this is necessary
-                    start(obj.scope_emg);
+%                     stop(obj.scope_emg); % not sure this is necessary
+%                     start(obj.scope_emg);
                     setparam(obj.tg, 'CTL', 'gen_enabled', 1)
                     setparam(obj.tg, 'CTL', 'trg_enabled', 1)
                 case 'no'
