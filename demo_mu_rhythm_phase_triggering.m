@@ -40,20 +40,20 @@ bd.alpha.bpf_fir_coeffs = bpf_fir_coeffs;
 %% Controlling BOSS Device for mu Alpha Phase Locked Triggering
 condition_index=0;
 while (condition_index <= no_of_trials)
-    if(strcmp(bb.armed, 'no'))
-        bb.triggers_remaining = 1;
-        bb.alpha.phase_target(1) = phase(randi(1:numel(phase), 1));
-        bb.alpha.phase_plusminus(1) = phase_tolerance;
-        bb.configure_time_port_marker(([0, 1, 0]))
-        bb.min_inter_trig_interval = minimium_inter_trigger_interval;
+    if(strcmp(bd.armed, 'no'))
+        bd.triggers_remaining = 1;
+        bd.alpha.phase_target(1) = phase(randi(1:numel(phase), 1));
+        bd.alpha.phase_plusminus(1) = phase_tolerance;
+        bd.configure_time_port_marker(([0, 1, 0]))
+        bd.min_inter_trig_interval = minimium_inter_trigger_interval;
         pause(0.1)
-        bb.arm;
+        bd.arm;
     end
     % trigger has been executed, move to the next condition
-    if(bb.triggers_remaining == 0)
+    if(bd.triggers_remaining == 0)
         condition_index = condition_index + 1;
-        bb.disarm;
-        disp (['Triggered around ' (num2str(rad2deg(bb.alpha.phase_target(1)))) ' degrees Phase angle.'])
+        bd.disarm;
+        disp (['Triggered around ' (num2str(rad2deg(bd.alpha.phase_target(1)))) ' degrees Phase angle.'])
         pause(minimium_inter_trigger_interval)
     end
     pause(0.01);
