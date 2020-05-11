@@ -85,7 +85,13 @@ classdef bossdevice < handle
             obj.scope_emg.TriggerSignal =  getsignalid(obj.tg, 'gen_running'); %getsignalid(obj.tg, 'GEN\Compare to Zero\Compare');
             obj.scope_emg.TriggerLevel = 0.5;
             obj.scope_emg.TriggerSlope = 'Rising';
-            
+            %% Redundent Untill Incorporated in Firmware
+            obj.sample_and_hold_period=0;
+            obj.calibration_mode = 'no';
+            obj.armed = 'no';
+            obj.theta.ignore; pause(0.1)
+            obj.beta.ignore; pause(0.1)
+            obj.alpha.ignore; pause(0.1)
         end
         
         function obj = stop(obj)
@@ -110,11 +116,6 @@ classdef bossdevice < handle
         function spatial_filter_weights = get.spatial_filter_weights(obj)
             spatial_filter_weights = getparam(obj.tg, 'SPF', 'weights');
         end
-        
-        %implement this similarly to the function that includes clab
-        %        function obj = set.spatial_filter_weights(obj, idx, w, varaginin)
-        %
-        %        end
         
         function obj = set.spatial_filter_weights(obj, weights)
             % check that the dimensions matches the number of channels
@@ -149,9 +150,6 @@ classdef bossdevice < handle
             
             obj.spatial_filter_weights = weights;
         end
-        
-        
-        
         
         function triggers_remaining = get.triggers_remaining(obj)
             triggers_remaining = getsignal(obj.tg, 'TRG/Counter');
