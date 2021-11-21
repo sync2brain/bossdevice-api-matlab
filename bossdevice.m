@@ -3,11 +3,11 @@ classdef bossdevice < handle
     %   Detailed explanation goes here
     
     properties
+        version
         tg % Real-Time target %TODO: make this private
         theta
         alpha
         beta
-        scope_emg
     end
     properties (Dependent)
         spatial_filter_weights
@@ -24,6 +24,8 @@ classdef bossdevice < handle
     
     methods
         function obj = bossdevice()
+            %% Version Control
+            obj.version='21-11-2021';
             %% Checking Toolboxes
             obj.checkEnvironmentToolboxes
             %% Initializing Real-Time Network
@@ -65,25 +67,6 @@ classdef bossdevice < handle
             %May be deprecated in model as well as here
             obj.calibration_mode = 'no';
             
-            % set-up host scopes May be deprecated
-% % %             for id = [21] % we don't really need to worry about this unless the firmware has predefined host scopes with these ids
-% % %                 if(find(obj.tg.Scopes == id))
-% % %                     warning(sprintf('Scope %i already exists, it will be removed and recreated.', id));
-% % %                     remscope(obj.tg, id);
-% % %                 end
-% % %             end
-% % %             obj.scope_emg = addscope(obj.tg, 'host', 21);
-% % %             emg_signal_id = getsignalid(obj.tg, 'UDP/raw_aux') + int32([0 1]);
-% % %             
-% % %             addsignal(obj.scope_emg, emg_signal_id);
-% % %             
-% % %             obj.scope_emg.NumSamples = 500;
-% % %             obj.scope_emg.NumPrePostSamples = -250;
-% % %             obj.scope_emg.Decimation = 1;
-% % %             obj.scope_emg.TriggerMode = 'Signal';
-% % %             obj.scope_emg.TriggerSignal =  getsignalid(obj.tg, 'gen_running'); %getsignalid(obj.tg, 'GEN\Compare to Zero\Compare');
-% % %             obj.scope_emg.TriggerLevel = 0.5;
-% % %             obj.scope_emg.TriggerSlope = 'Rising';
             %% Redundent Untill Incorporated in Firmware
             obj.sample_and_hold_period=0;
             obj.calibration_mode = 'no';
@@ -229,8 +212,6 @@ classdef bossdevice < handle
                 case 'yes'
                     assert(strcmp(obj.calibration_mode, 'no'), 'Cannot arm target when in calibration mode')
                     assert(strcmp(obj.generator_running, 'no'), 'Cannot arm target while generator is running')
-%                     stop(obj.scope_emg); % not sure this is necessary
-%                     start(obj.scope_emg);
                     setparam(obj.tg, 'DBSP/CTL', 'gen_enabled', 1)
                     setparam(obj.tg, 'DBSP/CTL', 'trg_enabled', 1)
                 case 'no'
@@ -269,14 +250,9 @@ classdef bossdevice < handle
         end
         
         function manualTrigger(obj)
-% % %             stop(obj.scope_emg); % not sure this is necessary
-% % %             pause(0.01)
-% % %             start(obj.scope_emg);
-% % %             pause(0.05)
             setparam(obj.tg, 'DBSP/CTL', 'trg_enabled', 0)
             pause(0.5)
             setparam(obj.tg, 'DBSP/CTL', 'gen_enabled', 1)
-% % %             assert(strcmp(obj.scope_emg.Status, 'Ready for being Triggered'), 'host scope did not reach status ''Ready for being Triggered''');
             pause(0.1)
             setparam(obj.tg, 'DBSP/CTL', 'gen_manual_trigger', 1)
             pause(0.1)
@@ -308,28 +284,39 @@ classdef bossdevice < handle
             
         end
         
-        function data = mep(obj, varargin)
-            
-% % %             if nargin > 1
-% % %                 emgChannel = varargin{1};
-% % %             else
-% % %                 emgChannel = 1;
-% % %             end
-% % %             
-% % %             data = [];
-% % %             while strcmp(obj.scope_emg.Status, 'Acquiring'), pause(0.01), end
-% % %             if ~strcmp(obj.scope_emg.Status, 'Finished'), warning(['Scope has no data, status is: ' obj.scope_emg.Status]), return, end
-% % %             
-% % %             data = obj.scope_emg.Data(:, emgChannel);
-            
-        end
-        
         function checkEnvironmentToolboxes(obj)
             MandatoryToolboxes={'MATLAB','Simulink Real-Time'};
             verlist=ver;
             [InstalledToolboxes{1:length(verlist)}] = deal(verlist.Name);
             for iToolbox=1:numel(MandatoryToolboxes)
                 ErrorToolboxes(iToolbox)= all(ismember(MandatoryToolboxes{1,iToolbox},InstalledToolboxes));
+            end
+            
+        end
+        
+        function AuxData=mep(obj,ChannelIdx,PreTriggerPeriod,PostTriggerPeriod)
+            %Inputs:
+            %ChannelIdx is integer 1-8, default is 1;
+            %PreTriggerPeriod is in ms, default is 100;
+            %PostTriggerPeriod is in ms, default is 100;
+            %Outputs:
+            %1xN array of single ints containing Aux channel data @1kHz
+            %sampling frequency
+            try if isempty(ChannelIdx), ChannelIdx=1; end, catch, ChannelIdx=1;end
+            try if isempty(PreTriggerPeriod), PreTriggerPeriod=100; end, catch,PreTriggerPeriod=100; end
+            try if isempty(PostTriggerPeriod), PostTriggerPeriod=100; end, catch,PostTriggerPeriod=100; end
+            if ChannelIdx>8, error('Aux channel index is invalid');end
+            if ChannelIdx<1, error('Aux channel index is invalid');end
+            if PreTriggerPeriod>2000, error('Aux channel period is invalid');end
+            if PostTriggerPeriod>2000, error('Aux channel period is invalid');end
+            try
+            defaultrun=Simulink.sdi.Run.getLatest;
+            sigid= getSignalsByName(defaultrun,'raw_aux');
+            data=squeeze(sigid.Values.Data(1,:,end-30000:end));
+            temp=find(data(9,:)>0);temp=temp(end);temp=temp+57;
+            AuxData=data(ChannelIdx,temp-PreTriggerPeriod:temp+PostTriggerPeriod);
+            catch
+                error('The scope was not allowed to acquire complete data please wait for the post period before calling this method.');
             end
             
         end
