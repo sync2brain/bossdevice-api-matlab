@@ -10,9 +10,9 @@ sync2brain's bossdevice RESEARCH Application Programmable Interface (API) for MA
 ## Initial configuration
 1. Open Simulink Real-Time Explorer, running `slrtExplorer` in the MATLAB command window
 2. In the list of target computers, select the default entry and in the Target Configurat tab
-2.1. Enter `bossdevice` into the name field
-2.2. Enter your bossdevice IP address. By default, this value is `192.168.7.5`
-3. Click on the Update Software button
+    1. Enter `bossdevice` into the name field
+    2. Enter your bossdevice IP address. By default, this value is `192.168.7.5`
+5. Click on the Update Software button
 
 ## Get started
 1. Start MATLAB project with double-click on Bossdeviceapimatlab.prj
