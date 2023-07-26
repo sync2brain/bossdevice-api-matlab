@@ -2,8 +2,8 @@
 sync2brain's bossdevice RESEARCH Application Programmable Interface (API) for MATLAB
 
 ## Requirements
-- MATLAB
-- Simulink Real-Time
+- MATLAB&reg;
+- Simulink Real-Time&reg;
 - Simulink Real-Time Target Support Package
 - Bossdevice firmware (MLDATX file)
 
@@ -20,3 +20,9 @@ sync2brain's bossdevice RESEARCH Application Programmable Interface (API) for MA
 3. Create an instance of the main control class bossdevice `bd = bossdevice`
 4. Start firmware with `bd.targetObject.start`
 5. Explore examples and methods available in the bossdevice object
+
+## User manual
+For a more detailed technical guidance about how to use the API, including installation, first steps and API description, please visit our [User manual](https://usermanual.sync2brain.com/).
+
+## Feedback, questions and troubleshooting
+If you have any issue to report or enhancement to request, please create a new [Issue](https://github.com/sync2brain/bossdevice-api-matlab/issues). If you have any other topic to discuss like a question about usage, a tip to share with the community or other topic of interest, please check out our on-going [Discussions](https://github.com/sync2brain/bossdevice-api-matlab/discussions).
