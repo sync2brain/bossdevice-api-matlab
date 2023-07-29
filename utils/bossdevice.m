@@ -35,6 +35,7 @@ classdef bossdevice < handle
                 tg slrealtime.Target = slrealtime
             end
             obj.targetObject = tg;
+            obj.targetObject.connect;
 
             if ~obj.targetObject.isLoaded
                 obj.targetObject.load(obj.appName);
