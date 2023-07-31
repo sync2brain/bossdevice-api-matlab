@@ -16,10 +16,10 @@ classdef bossdevice < handle
         sample_and_hold_seconds
         spatial_filter_weights
         min_inter_trig_interval
-        triggers_remaining
-        armed
+        triggers_remaining uint16
+        armed boolean
         generator_sequence
-        generator_running
+        generator_running boolean
         num_eeg_channels
         num_aux_channels
     end
@@ -122,7 +122,9 @@ classdef bossdevice < handle
                 obj
                 val uint16
             end
+            obj.targetObject.setparam([obj.appName,'/TRG'], 'countdown_reset', 0);
             obj.targetObject.setparam([obj.appName,'/TRG'], 'countdown_initialcount', val);
+            obj.targetObject.setparam([obj.appName,'/TRG'], 'countdown_reset', 1);
         end
 
         function sequence = get.generator_sequence(obj)
@@ -175,17 +177,18 @@ classdef bossdevice < handle
         function set.armed(obj, armed)
             if armed
                 assert(~obj.generator_running, 'Cannot arm target while generator is running');
-                setparam(obj.targetObject, [obj.appName,'/CTL'], 'gen_enabled', 1);
-                setparam(obj.targetObject, [obj.appName,'/CTL'], 'trg_enabled', 1);
+                setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
+                setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 1);
+
+                obj.triggers_remaining = 1;
             else
-                setparam(obj.targetObject, [obj.appName,'/CTL'], 'trg_enabled', 0);
+                setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 0);
             end
         end
 
         function armed = get.armed(obj)
-            if (getparam(obj.targetObject, [obj.appName,'/CTL'], 'calibration_mode_enabled') == 0 && ...
-                    getparam(obj.targetObject, [obj.appName,'/CTL'], 'gen_enabled') == 1 && ...
-                    getparam(obj.targetObject, [obj.appName,'/CTL'], 'trg_enabled') == 1)
+            if (getparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled') == 1 && ...
+                    getparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled') == 1)
                 armed = true;
             else
                 armed = false;
