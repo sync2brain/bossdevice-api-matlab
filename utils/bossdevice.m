@@ -3,7 +3,7 @@ classdef bossdevice < handle
     %   API to control the bossdevice from Matlab
     %   Requires Simulink Real-Time toolbox
     %   Supported for Matlab version 2023a
-    
+
     properties
         targetObject slrealtime.Target
 
@@ -28,7 +28,7 @@ classdef bossdevice < handle
     end
 
     methods
-        function obj = bossdevice(tg)            
+        function obj = bossdevice(tg)
             %BOSSDEVICE Construct an instance of this class
             %   Detailed explanation goes here
             arguments
@@ -44,7 +44,7 @@ classdef bossdevice < handle
             obj.theta = bossdevice_oscillation(obj.targetObject, 'theta');
             obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha');
             obj.beta = bossdevice_oscillation(obj.targetObject, 'beta');
-            
+
             if ~obj.targetObject.isRunning
                 warning('Bossdevice is not running. Use start method to start application.')
             end
@@ -57,13 +57,13 @@ classdef bossdevice < handle
         function stop(obj)
             obj.targetObject.stop;
         end
-        
+
 
         % getters and setters for dependent properties
         function duration = get.sample_and_hold_seconds(obj)
             duration = getparam(obj.targetObject, 'mainmodel/UDP', 'sample_and_hold_seconds');
         end
-        
+
         function  set.sample_and_hold_seconds(obj, duration)
             setparam(obj.targetObject, 'mainmodel/UDP', 'sample_and_hold_seconds', duration);
         end
@@ -97,7 +97,7 @@ classdef bossdevice < handle
         function interval = get.min_inter_trig_interval(obj)
             interval = getparam(obj.targetObject, 'mainmodel/TRG', 'min_inter_trig_interval');
         end
-        
+
         function set.min_inter_trig_interval(obj, interval)
             setparam(obj.targetObject, 'mainmodel/TRG', 'min_inter_trig_interval', interval);
         end
@@ -117,7 +117,7 @@ classdef bossdevice < handle
         function sequence = get.generator_sequence(obj)
             sequence = getparam(obj.targetObject, 'mainmodel/GEN', 'sequence_time_port_marker');
         end
-        
+
         function set.generator_sequence(obj, sequence)
             setparam(obj.targetObject, 'mainmodel/GEN', 'sequence_time_port_marker', sequence);
         end
@@ -125,18 +125,32 @@ classdef bossdevice < handle
         function n = get.num_eeg_channels(obj)
             n = getparam(obj.targetObject, 'mainmodel/UDP', 'num_eeg_channels');
         end
-        
+
         function set.num_eeg_channels(obj, n)
             setparam(obj.targetObject, 'mainmodel/UDP', 'num_eeg_channels', n);
         end
-     
+
 
         function n = get.num_aux_channels(obj)
             n = getparam(obj.targetObject, 'mainmodel/UDP', 'num_aux_channels');
         end
-        
+
         function set.num_aux_channels(obj, n)
             setparam(obj.targetObject, 'mainmodel/UDP', 'num_aux_channels', n);
+        end
+
+        function configure_time_port_marker(obj, sequence)
+            numRows = size(obj.generator_sequence, 1);
+
+            assert(size(sequence, 1) <= numRows, 'Sequence exceeds maximum number of rows.');
+            assert(size(sequence, 2) <= 3, 'Sequence cannot have more than 3 columns');
+            if size(sequence, 2) == 1
+                sequence = [sequence ones(size(sequence))];
+            end
+            if size(sequence, 1) < numRows
+                sequence(numRows, 3) = 0; % fill with zeros
+            end
+            obj.generator_sequence = sequence;
         end
 
     end
