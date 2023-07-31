@@ -2,7 +2,7 @@ function [toolboxOptions] = releaseTask(toolboxVersion)
 %GENERATETOOLBOX Function that generates a toolbox for the boss device API
 
 arguments
-    toolboxVersion (1,:) {mustBeText} = "Unversioned"
+    toolboxVersion (1,:) {mustBeText} = '0.0'
 end
 
 % Toolbox Parameter Configuration
@@ -19,9 +19,11 @@ toolboxOptions.AuthorName = "sync2brain";
 toolboxOptions.AuthorEmail = "support@sync2brain.com";
 toolboxOptions.AuthorCompany = "sync2brain";
 toolboxOptions.ToolboxImageFile = "../images/toolboxPackaging.jpg";
-toolboxOptions.ToolboxFiles = ["../images","../toolbox", "../LICENSE", "../README.md"];
+toolboxOptions.ToolboxFiles = ["../images","../toolbox", "../LICENSE", ...
+    "../README.md", "../Bossdeviceapimatlab.prj",...
+     "../buildUtilities", "../resources"];
 currentdir = pwd;
-toolboxOptions.ToolboxMatlabPath = [currentdir(1:end-10),'toolbox'];
+toolboxOptions.ToolboxMatlabPath = [currentdir(1:end-14),'toolbox'];
 %toolboxOptions.AppGalleryFiles = ""; %Not applicable
 toolboxOptions.ToolboxGettingStartedGuide = "../toolbox/gettingStarted.mlx";
 
