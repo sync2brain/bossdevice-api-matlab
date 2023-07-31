@@ -16,7 +16,7 @@ classdef bossdevice < handle
         sample_and_hold_seconds
         spatial_filter_weights
         min_inter_trig_interval
-        %triggers_remaining
+        triggers_remaining
         generator_sequence
         generator_running % read only
         num_eeg_channels
@@ -100,6 +100,10 @@ classdef bossdevice < handle
         
         function set.min_inter_trig_interval(obj, interval)
             setparam(obj.targetObject, 'mainmodel/TRG', 'min_inter_trig_interval', interval);
+        end
+
+        function val = get.triggers_remaining(obj)
+            val = getsignal(obj.targetObject,'mainmodel/TRG/Count Down',1);
         end
 
         
