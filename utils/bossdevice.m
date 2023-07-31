@@ -17,11 +17,12 @@ classdef bossdevice < handle
         spatial_filter_weights
         min_inter_trig_interval
         triggers_remaining uint16
-        armed boolean
+        armed logical
         generator_sequence
-        generator_running boolean
+        generator_running logical
         num_eeg_channels
         num_aux_channels
+        isRunning
     end
 
     properties (Constant, Hidden)
@@ -62,7 +63,11 @@ classdef bossdevice < handle
         end
 
         function start(obj)
-            obj.targetObject.start("ReloadOnStop",true,"StopTime",Inf);
+            if ~obj.targetObject.isRunning
+                obj.targetObject.start("ReloadOnStop",true,"StopTime",Inf);
+            else
+                disp('Application is already running.');
+            end
         end
 
         function stop(obj)
@@ -193,6 +198,10 @@ classdef bossdevice < handle
             else
                 armed = false;
             end
+        end
+
+        function isRunning = get.isRunning(obj)
+            isRunning = obj.targetObject.isRunning;
         end
 
     end
