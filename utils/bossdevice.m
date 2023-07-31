@@ -106,7 +106,14 @@ classdef bossdevice < handle
             val = getsignal(obj.targetObject,'mainmodel/TRG/Count Down',1);
         end
 
-        
+        function set.triggers_remaining(obj, val)
+            arguments
+                obj
+                val uint16
+            end
+            obj.targetObject.setparam('mainmodel/TRG', 'countdown_initialcount', val);
+        end
+
         function sequence = get.generator_sequence(obj)
             sequence = getparam(obj.targetObject, 'mainmodel/GEN', 'sequence_time_port_marker');
         end
