@@ -42,14 +42,20 @@ classdef bossdevice < handle
     end
 
     methods
-        function obj = bossdevice(tg)
+        function obj = bossdevice(targetName)
             %BOSSDEVICE Construct an instance of this class
             arguments
-                tg slrealtime.Target = slrealtime
+                targetName {mustBeTextScalar} = '';
+            end
+
+            % Use default target if not passing any input argument
+            if isempty(targetName)
+                tgs = slrealtime.Targets;
+                targetName = tgs.getDefaultTargetName;
             end
 
             % Initialize and connect to the bossdevice
-            obj.targetObject = tg;
+            obj.targetObject = slrealtime(targetName);
             obj.targetObject.connect; % May ask to update if versions do not match
 
             % Search firmware binary and prompt user if not found in MATLAB path
