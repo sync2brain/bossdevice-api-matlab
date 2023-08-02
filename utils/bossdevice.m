@@ -5,11 +5,13 @@ classdef bossdevice < handle
     %   Supported for Matlab version 2023a
 
     properties
-        targetObject slrealtime.Target
-
         theta
         alpha
         beta
+    end
+
+    properties (Access = protected)
+        targetObject slrealtime.Target
     end
 
     properties (Dependent)
