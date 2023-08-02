@@ -191,7 +191,7 @@ classdef bossdevice < handle
         end
 
         function generator_running = get.generator_running(obj)
-            if (getsignal(obj.targetObject, [obj.appName,'/gen_running'],1))
+            if (getsignal(obj.targetObject, [obj.appName,'/GEN'],4))
                 generator_running = true;
             else
                 generator_running = false;
