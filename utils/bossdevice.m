@@ -211,8 +211,6 @@ classdef bossdevice < handle
                 assert(~obj.generator_running, 'Cannot arm target while generator is running.');
                 setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
                 setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 1);
-
-                obj.triggers_remaining = 1;
             else
                 setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 0);
             end
