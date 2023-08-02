@@ -19,26 +19,19 @@ classdef bossdevice < handle
         spatial_filter_weights
         min_inter_trig_interval
         triggers_remaining uint16
-        armed logical
         generator_sequence
-        generator_running logical
         num_eeg_channels
         num_aux_channels
-        isRunning
+    end
+
+    properties (SetAccess = private, Dependent)
+        generator_running logical
+        isRunning logical
+        armed logical
     end
 
     properties (Constant, Hidden)
         appName = 'mainmodel';
-    end
-
-    methods (Static)
-        function obj = arm(obj)
-            obj.armed = true;
-        end
-
-        function obj = disarm(obj)
-            obj.armed = false;
-        end
     end
 
     methods
@@ -205,9 +198,17 @@ classdef bossdevice < handle
             end
         end
 
+        function obj = arm(obj)
+            obj.armed = true;
+        end
+
+        function obj = disarm(obj)
+            obj.armed = false;
+        end
+
         function set.armed(obj, armed)
             if armed
-                assert(~obj.generator_running, 'Cannot arm target while generator is running');
+                assert(~obj.generator_running, 'Cannot arm target while generator is running.');
                 setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
                 setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 1);
 
