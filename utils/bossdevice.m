@@ -44,21 +44,39 @@ classdef bossdevice < handle
     methods
         function obj = bossdevice(tg)
             %BOSSDEVICE Construct an instance of this class
-            %   Detailed explanation goes here
             arguments
                 tg slrealtime.Target = slrealtime
             end
-            obj.targetObject = tg;
-            obj.targetObject.connect;
 
-            if ~obj.targetObject.isLoaded
-                obj.targetObject.load(obj.appName);
+            % Initialize and connect to the bossdevice
+            obj.targetObject = tg;
+            obj.targetObject.connect; % May ask to update if versions do not match
+
+            % Search firmware binary and prompt user if not found in MATLAB path
+            if exist([obj.appName,'.mldatx'],"file")
+                firmwareFilepath = obj.appName;
+            else
+                [filename, firmwareFilepath] = uigetfile([obj.appName,'.mldatx'],...
+                    'Select the firmware binary to load on the bossdevice');
+                if isequal(filename,0)
+                    disp('User selected Cancel.');
+                    return;
+                else
+                    firmwareFilepath = fullfile(firmwareFilepath,filename);
+                end
             end
 
+            % Load firmware on the bossdevice if not loaded yet
+            if ~obj.targetObject.isLoaded
+                obj.targetObject.load(firmwareFilepath);
+            end
+
+            % Figure out some oscillation values
             obj.theta = bossdevice_oscillation(obj.targetObject, 'theta');
             obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha');
             obj.beta = bossdevice_oscillation(obj.targetObject, 'beta');
 
+            % Prompt user to start application if required
             if ~obj.targetObject.isRunning
                 warning('Bossdevice is not running. Use start method to start application.')
             end
