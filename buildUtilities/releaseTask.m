@@ -1,15 +1,14 @@
-function [toolboxOptions] = releaseTask(toolboxVersion)
+function toolboxOptions = releaseTask(toolboxVersion)
 %GENERATETOOLBOX Function that generates a toolbox for the boss device API
 
 arguments
-    toolboxVersion (1,:) {mustBeText} = '0.0'
+    toolboxVersion {mustBeTextScalar} = '0.0'
 end
 
-% Toolbox Parameter Configuration
+projObj = currentProject;
 
-toolboxFolder = "../../bossdevice-api-matlab";
-identifier = "bossdevice-api-matlab";
-toolboxOptions = matlab.addons.toolbox.ToolboxOptions(toolboxFolder, identifier);
+% Toolbox Parameter Configuration
+toolboxOptions = matlab.addons.toolbox.ToolboxOptions(fullfile(projObj.RootFolder,"toolbox"), "bossdevice-api-matlab");
 
 toolboxOptions.ToolboxName = "Bossdevice API Toolbox";
 toolboxOptions.ToolboxVersion = toolboxVersion;
@@ -18,46 +17,43 @@ toolboxOptions.Description = "For a more detailed description refer to the toolb
 toolboxOptions.AuthorName = "sync2brain";
 toolboxOptions.AuthorEmail = "support@sync2brain.com";
 toolboxOptions.AuthorCompany = "sync2brain";
-toolboxOptions.ToolboxImageFile = "../images/toolboxPackaging.jpg";
-toolboxOptions.ToolboxFiles = ["../images","../toolbox", "../LICENSE", ...
-    "../README.md", "../Bossdeviceapimatlab.prj",...
-     "../buildUtilities", "../resources"];
-currentdir = pwd;
-toolboxOptions.ToolboxMatlabPath = [currentdir(1:end-14),'toolbox'];
-%toolboxOptions.AppGalleryFiles = ""; %Not applicable
-toolboxOptions.ToolboxGettingStartedGuide = "../toolbox/gettingStarted.mlx";
+toolboxOptions.ToolboxImageFile = "images/toolboxPackaging.jpg";
+toolboxOptions.ToolboxGettingStartedGuide = "toolbox/gettingStarted.mlx";
 
-if ~exist("../releases", 'dir')
-   mkdir("../releases")
+if ~exist("releases", 'dir')
+   mkdir("releases")
 end
-toolboxOptions.OutputFile = "../releases/bossdevice-toolbox-installer.mltbx";
+toolboxOptions.OutputFile = "releases/bossdevice-api-installer.mltbx";
 
-toolboxOptions.MaximumMatlabRelease = "R2023a"; 
-toolboxOptions.MinimumMatlabRelease = "R2023a"; 
+toolboxOptions.MinimumMatlabRelease = "R2023a";
+% toolboxOptions.MaximumMatlabRelease = "R2023a"; % Won't limit maximum MATLAB release
 toolboxOptions.SupportedPlatforms.Glnxa64 = true;
-toolboxOptions.SupportedPlatforms.Maci64 = true;
-toolboxOptions.SupportedPlatforms.MatlabOnline = true;
+toolboxOptions.SupportedPlatforms.Maci64 = false;
+toolboxOptions.SupportedPlatforms.MatlabOnline = false;
 toolboxOptions.SupportedPlatforms.Win64 = true;
-%toolboxOptions.ToolboxJavaPath = ""; %Not applicable
 
 %Required Add-ons
-% toolboxOptions.RequiredAddons = ...
-%     [struct("Name","Simulink Desktop Real-Time", ...
-%            "Identifier","WT", ...
-%            "EarliestVersion","5.16", ...
-%            "LatestVersion","5.16",...
-%            "DownloadURL", "https://www.mathworks.com/products/simulink-desktop-real-time.html"),...
-%     struct("Name","Embedded Coder", ...
-%            "Identifier","EC", ...
-%            "EarliestVersion","7.10", ...
-%            "LatestVersion","7.10",...
-%            "DownloadURL", "https://www.mathworks.com/products/embedded-coder.html")];
+% Extracted information from matlab.addons.installedAddons
+toolboxOptions.RequiredAddons = ...
+    [struct("Name","Simulink Real-Time", ...
+           "Identifier","XP", ...
+           "EarliestVersion","8.2", ...
+           "LatestVersion","latest", ...
+           "DownloadURL","https://www.mathworks.com/products/simulink-real-time.html"),...
+    struct("Name","Simulink Real-Time Target Support Package", ...
+           "Identifier","SLRT_QNX", ...
+           "EarliestVersion","23.1.0", ...
+           "LatestVersion","latest", ...
+           "DownloadURL", "https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package")];
 
-% Required Additional Software 
-% --> Not Applicable
+% Required Additional Software
+toolboxOptions.RequiredAdditionalSoftware = ...
+    struct("Name","Bossdevice firmware", ...
+           "Platform","win64", ...
+           "DownloadURL","https://sync2brain.com/downloads", ...
+           "LicenseURL","https://sync2brain.com/wp-content/uploads/2022/06/sync2brain-bossdevice-research-EULA_V1.0.pdf");
 
 % Generate toolbox
 matlab.addons.toolbox.packageToolbox(toolboxOptions);
 
 end
-
