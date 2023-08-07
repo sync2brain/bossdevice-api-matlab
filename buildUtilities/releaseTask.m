@@ -17,7 +17,7 @@ toolboxOptions.Description = "For a more detailed description refer to the toolb
 toolboxOptions.AuthorName = "sync2brain";
 toolboxOptions.AuthorEmail = "support@sync2brain.com";
 toolboxOptions.AuthorCompany = "sync2brain";
-toolboxOptions.ToolboxImageFile = "images/toolboxPackaging.jpg";
+toolboxOptions.ToolboxImageFile = "images/sync2brain-Logo-hell.png";
 toolboxOptions.ToolboxGettingStartedGuide = "toolbox/gettingStarted.mlx";
 
 if ~exist("releases", 'dir')
