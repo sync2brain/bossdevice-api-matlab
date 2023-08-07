@@ -17,13 +17,13 @@ toolboxOptions.Description = "For a more detailed description refer to the toolb
 toolboxOptions.AuthorName = "sync2brain";
 toolboxOptions.AuthorEmail = "support@sync2brain.com";
 toolboxOptions.AuthorCompany = "sync2brain";
-toolboxOptions.ToolboxImageFile = "images/sync2brain-Logo-hell.png";
-toolboxOptions.ToolboxGettingStartedGuide = "toolbox/gettingStarted.mlx";
+toolboxOptions.ToolboxImageFile = fullfile(projObj.RootFolder,"images/sync2brain-Logo-hell.png");
+toolboxOptions.ToolboxGettingStartedGuide = fullfile(projObj.RootFolder,"toolbox/gettingStarted.mlx");
 
-if ~exist("releases", 'dir')
-   mkdir("releases")
+if ~exist(fullfile(projObj.RootFolder,"releases"), 'dir')
+   mkdir(fullfile(projObj.RootFolder,"releases"))
 end
-toolboxOptions.OutputFile = "releases/bossdevice-api-installer.mltbx";
+toolboxOptions.OutputFile = fullfile(projObj.RootFolder,"releases/bossdevice-api-installer.mltbx");
 
 toolboxOptions.MinimumMatlabRelease = "R2023a";
 % toolboxOptions.MaximumMatlabRelease = "R2023a"; % Won't limit maximum MATLAB release
