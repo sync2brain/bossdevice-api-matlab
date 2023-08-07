@@ -201,7 +201,16 @@ classdef bossdevice < handle
         function isRunning = get.isRunning(obj)
             isRunning = obj.targetObject.isRunning;
         end
-        
+
+        function manualTrigger(obj)
+            setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
+            setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 0);
+
+            setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 1);
+            pause(0.1);
+            setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 0);
+        end
+
     end
 
 end
