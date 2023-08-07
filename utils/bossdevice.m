@@ -54,7 +54,7 @@ classdef bossdevice < handle
             % Search firmware binary and prompt user if not found in MATLAB path
             if exist([obj.appName,'.mldatx'],"file")
                 firmwareFilepath = obj.appName;
-            else
+            elseif ~batchStartupOptionUsed
                 [filename, firmwareFilepath] = uigetfile([obj.appName,'.mldatx'],...
                     'Select the firmware binary to load on the bossdevice');
                 if isequal(filename,0)
@@ -63,6 +63,8 @@ classdef bossdevice < handle
                 else
                     firmwareFilepath = fullfile(firmwareFilepath,filename);
                 end
+            else
+                error([obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
 
             % Load firmware on the bossdevice if not loaded yet
