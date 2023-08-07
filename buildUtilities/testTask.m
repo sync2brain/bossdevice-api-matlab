@@ -9,10 +9,16 @@ import matlab.unittest.TestRunner;
 import matlab.unittest.TestSuite;
 import matlab.unittest.Verbosity;
 import matlab.unittest.plugins.XMLPlugin;
+import matlab.unittest.selectors.HasTag;
 
 projObj = currentProject;
 
 suite = TestSuite.fromProject(projObj);
+if ~isempty(tags)
+    suite = suite.selectIf(HasTag(tags));
+else
+    disp('No tag was passed as input. All test cases will be executed.');
+end
 
 runner = TestRunner.withTextOutput('OutputDetail', Verbosity.Detailed);
 runner.addPlugin(XMLPlugin.producingJUnitFormat(fullfile(projObj.RootFolder,'results.xml')));
