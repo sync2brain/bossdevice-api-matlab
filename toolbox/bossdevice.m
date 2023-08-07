@@ -64,7 +64,7 @@ classdef bossdevice < handle
                     firmwareFilepath = fullfile(firmwareFilepath,filename);
                 end
             else
-                error([obj.appName,'.mldatx could not be found in the MATLAB path.']);
+                error('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
 
             % Load firmware on the bossdevice if not loaded yet
