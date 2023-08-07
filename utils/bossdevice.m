@@ -5,11 +5,13 @@ classdef bossdevice < handle
     %   Supported for Matlab version 2023a
 
     properties
-        targetObject slrealtime.Target
-
         theta
         alpha
         beta
+    end
+
+    properties (Access = protected)
+        targetObject slrealtime.Target
     end
 
     properties (Dependent)
@@ -17,46 +19,65 @@ classdef bossdevice < handle
         spatial_filter_weights
         min_inter_trig_interval
         triggers_remaining uint16
-        armed logical
         generator_sequence
-        generator_running logical
         num_eeg_channels
         num_aux_channels
-        isRunning
+    end
+
+    properties (SetAccess = private, Dependent)
+        generator_running logical
+        isRunning logical
+        armed logical
     end
 
     properties (Constant, Hidden)
         appName = 'mainmodel';
     end
 
-    methods (Static)
-        function obj = arm(obj)
-            obj.armed = true;
-        end
-
-        function obj = disarm(obj)
-            obj.armed = false;
-        end
-    end
-
     methods
-        function obj = bossdevice(tg)
+        function obj = bossdevice(targetName)
             %BOSSDEVICE Construct an instance of this class
-            %   Detailed explanation goes here
             arguments
-                tg slrealtime.Target = slrealtime
+                targetName {mustBeTextScalar} = '';
             end
-            obj.targetObject = tg;
-            obj.targetObject.connect;
 
+            % Use default target if not passing any input argument
+            if isempty(targetName)
+                tgs = slrealtime.Targets;
+                targetName = tgs.getDefaultTargetName;
+            end
+
+            % Initialize and connect to the bossdevice
+            obj.targetObject = slrealtime(targetName);
+            obj.targetObject.connect; % May ask to update if versions do not match
+
+            % Search firmware binary and prompt user if not found in MATLAB path
+            if exist([obj.appName,'.mldatx'],"file")
+                firmwareFilepath = obj.appName;
+            elseif ~batchStartupOptionUsed
+                [filename, firmwareFilepath] = uigetfile([obj.appName,'.mldatx'],...
+                    'Select the firmware binary to load on the bossdevice');
+                if isequal(filename,0)
+                    disp('User selected Cancel.');
+                    return;
+                else
+                    firmwareFilepath = fullfile(firmwareFilepath,filename);
+                end
+            else
+                error([obj.appName,'.mldatx could not be found in the MATLAB path.']);
+            end
+
+            % Load firmware on the bossdevice if not loaded yet
             if ~obj.targetObject.isLoaded
-                obj.targetObject.load(obj.appName);
+                obj.targetObject.load(firmwareFilepath);
             end
 
+            % Figure out some oscillation values
             obj.theta = bossdevice_oscillation(obj.targetObject, 'theta');
             obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha');
             obj.beta = bossdevice_oscillation(obj.targetObject, 'beta');
 
+            % Prompt user to start application if required
             if ~obj.targetObject.isRunning
                 warning('Bossdevice is not running. Use start method to start application.')
             end
@@ -172,16 +193,24 @@ classdef bossdevice < handle
         end
 
         function generator_running = get.generator_running(obj)
-            if (getsignal(obj.targetObject, [obj.appName,'/gen_running'],1))
+            if (getsignal(obj.targetObject, [obj.appName,'/GEN'],4))
                 generator_running = true;
             else
                 generator_running = false;
             end
         end
 
+        function obj = arm(obj)
+            obj.armed = true;
+        end
+
+        function obj = disarm(obj)
+            obj.armed = false;
+        end
+
         function set.armed(obj, armed)
             if armed
-                assert(~obj.generator_running, 'Cannot arm target while generator is running');
+                assert(~obj.generator_running, 'Cannot arm target while generator is running.');
                 setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
                 setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 1);
             else

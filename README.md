@@ -18,7 +18,7 @@ sync2brain's bossdevice RESEARCH Application Programmable Interface (API) for MA
 1. Start MATLAB project with double-click on Bossdeviceapimatlab.prj
 2. Move or copy `mainmodel.mldatx` real-time application file into the work folder
 3. Create an instance of the main control class bossdevice `bd = bossdevice`
-4. Start firmware with `bd.targetObject.start`
+4. Start firmware with `bd.start`
 5. Explore examples and methods available in the bossdevice object
 
 ## User manual
