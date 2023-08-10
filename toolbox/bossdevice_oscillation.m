@@ -107,11 +107,11 @@ classdef bossdevice_oscillation
         end        
         
         function offset_samples = get.offset_samples(obj)
-            offset_samples = getparam(obj.tg, ['mainmodel/OSC/' obj.name], 'offset_samples');
+            offset_samples = getparam(obj.tg, ['mainmodel/OSC/' obj.name], 'ipe_offset_samples');
         end
         
         function obj = set.offset_samples(obj, weights)
-            setparam(obj.tg, ['mainmodel/OSC/' obj.name], 'offset_samples', weights)
+            setparam(obj.tg, ['mainmodel/OSC/' obj.name], 'ipe_offset_samples', weights)
         end
 
         
