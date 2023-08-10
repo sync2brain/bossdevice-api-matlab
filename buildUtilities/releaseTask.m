@@ -1,8 +1,9 @@
-function toolboxOptions = releaseTask(toolboxVersion)
+function toolboxOptions = releaseTask(options)
 %GENERATETOOLBOX Function that generates a toolbox for the boss device API
 
 arguments
-    toolboxVersion {mustBeTextScalar} = '0.0'
+    options.toolboxVersion {mustBeTextScalar} = '0.0'
+    options.authorName {mustBeTextScalar} = "sync2brain" % Use committer name when packaging from CI
 end
 
 projObj = currentProject;
@@ -11,10 +12,10 @@ projObj = currentProject;
 toolboxOptions = matlab.addons.toolbox.ToolboxOptions(fullfile(projObj.RootFolder,"toolbox"), "bossdevice-api-matlab");
 
 toolboxOptions.ToolboxName = "Bossdevice API Toolbox";
-toolboxOptions.ToolboxVersion = toolboxVersion;
-toolboxOptions.Summary = "sync2brain's bossdevice RESEARCH Application Programmable Interface (API) for MATLAB."; 
+toolboxOptions.ToolboxVersion = options.toolboxVersion;
+toolboxOptions.Summary = projObj.Description;
 toolboxOptions.Description = "For a more detailed description refer to the toolbox README.md file. ↵↵ Contact email: support@sync2brain.com";
-toolboxOptions.AuthorName = "sync2brain";
+toolboxOptions.AuthorName = options.authorName;
 toolboxOptions.AuthorEmail = "support@sync2brain.com";
 toolboxOptions.AuthorCompany = "sync2brain";
 toolboxOptions.ToolboxImageFile = fullfile(projObj.RootFolder,"images/sync2brain-Logo-hell.png");
