@@ -18,6 +18,13 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+      
+      - name: GitHub Tag Name example
+        run: |
+         echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
+         echo "Tag name from github.ref_name: ${{  github.ref_name }}"
+         echo "Tag name from GITHUB_REF_NAME: $GITHUB_ACTOR"
+         echo "Tag name from github.ref_name: ${{  github.actor }}"
 
       - name: Set up MATLAB
         uses: matlab-actions/setup-matlab@v1
@@ -25,7 +32,7 @@ jobs:
       - name: Run commands
         uses: matlab-actions/run-command@v1
         with:
-          command: openProject(pwd); releaseTask($GITHUB_REF_NAME,$GITHUB_ACTOR);
+          command: openProject(pwd); releaseTask("$GITHUB_REF_NAME","$GITHUB_ACTOR");
           
       # Save the MLTBX.
       - name: Save Packaged Toolbox
