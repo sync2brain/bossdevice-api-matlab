@@ -1,0 +1,35 @@
+name: Package toolbox and publish release
+
+# Run workflow when a tag is created
+on:
+  push:
+    tags: 
+      - 'v*'
+      
+jobs:
+  ci:
+    uses: ./.github/workflows/main.yml
+
+  package:
+    needs: ci
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v1
+        
+      - name: Run commands
+        uses: matlab-actions/run-command@v1
+        with:
+          command: openProject(pwd); releaseTask($GITHUB_REF_NAME,$GITHUB_ACTOR);
+          
+      # Save the MLTBX.
+      - name: Save Packaged Toolbox
+        uses: actions/upload-artifact@v3
+        with:
+          name: bossdevice-api-installer
+          path: release/bossdevice-api-installer.mltbx
