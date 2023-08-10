@@ -11,7 +11,7 @@ sync2brain's bossdevice RESEARCH Application Programmable Interface (API) for MA
 
 ## Initial configuration
 1. Install the bossdevice API from MATLAB with double click on `bossdevice-api-installer.mltbx`.
-2. In the MATLAB Command Window, call `bd = bossdevice` to add the bossdevice with the default settings to the list of targets. It will also try to establish connection. If you want to change either the name of the bossdevice or its default IP address in your local MATLAB settings, call `bd = bossdevice('myBossdevice','192.168.7.5')`.
+2. In the MATLAB Command Window, call `bd = bossdevice` to add the bossdevice with the default settings to the list of targets. It will also try to establish connection. If you want to change either the name of the bossdevice or its default IP address in your local MATLAB settings, call `bd = bossdevice('bossdevice','192.168.7.5',true)` replacing the function arguments with the name and IP address you want to set on the real-time device.
 3. Click on the update command if prompted to update the software dependencies on the bossdevice.
 
 ## Get started
