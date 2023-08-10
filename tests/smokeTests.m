@@ -8,7 +8,7 @@ classdef smokeTests < matlab.unittest.TestCase
         % Setup for each test
     end
 
-    methods (Test, TestTags = {'github'})
+    methods (Test)
         % Test methods
 
         function noFirmware(testCase)
