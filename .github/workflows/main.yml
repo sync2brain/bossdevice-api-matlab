@@ -47,9 +47,9 @@ jobs:
         with:
           command: openProject(pwd); testTask("github");
           
-      - name: Test Reporter
-        uses: dorny/test-reporter@v1
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
         with:
-          name: Check MATLAB test results from JUnit report
-          path: results.xml
-          reporter: java-junit
+          files: |
+            results.xml
