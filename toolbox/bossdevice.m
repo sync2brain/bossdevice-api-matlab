@@ -35,20 +35,32 @@ classdef bossdevice < handle
     end
 
     methods
-        function obj = bossdevice(targetName)
+        function obj = bossdevice(targetName, ipAddress, overwrite)
             %BOSSDEVICE Construct an instance of this class
             arguments
-                targetName {mustBeTextScalar} = '';
+                targetName {mustBeTextScalar} = 'bossdevice';
+                ipAddress {mustBeTextScalar} = '192.168.7.5';
+                overwrite logical {mustBeNumericOrLogical} = false;
             end
 
             % Use default target if not passing any input argument
-            if isempty(targetName)
-                tgs = slrealtime.Targets;
-                targetName = tgs.getDefaultTargetName;
+            tgs = slrealtime.Targets;
+            if ~contains(tgs.getTargetNames,targetName,'IgnoreCase',true)
+                tgs.addTarget(targetName);
+                isTargetNew = true;
+            else
+                isTargetNew = false;
             end
 
             % Initialize and connect to the bossdevice
             obj.targetObject = slrealtime(targetName);
+            if isTargetNew
+                obj.targetObject.TargetSettings.address = ipAddress;
+                fprintf('Added new target configuration for "%s" with IP address "%s".\n',targetName,ipAddress);
+            elseif overwrite && ~strcmp(obj.targetObject.TargetSettings.address,ipAddress)
+                obj.targetObject.TargetSettings.address = ipAddress;
+                fprintf('Set new IP address "%s" on "%s".\n',ipAddress,targetName);
+            end
             obj.targetObject.connect; % May ask to update if versions do not match
 
             % Search firmware binary and prompt user if not found in MATLAB path

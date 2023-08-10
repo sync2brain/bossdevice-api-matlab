@@ -10,18 +10,15 @@ sync2brain's bossdevice RESEARCH Application Programmable Interface (API) for MA
 - Bossdevice firmware (MLDATX file)
 
 ## Initial configuration
-1. Open Simulink Real-Time Explorer, running `slrtExplorer` in the MATLAB command window
-2. In the list of target computers, select the default entry and in the Target Configurat tab
-    1. Enter `bossdevice` into the name field
-    2. Enter your bossdevice IP address. By default, this value is `192.168.7.5`
-5. Click on the Update Software button
+1. Install the bossdevice API from MATLAB with double click on `bossdevice-api-installer.mltbx`.
+2. In the MATLAB Command Window, call `bd = bossdevice` to add the bossdevice with the default settings to the list of targets. It will also try to establish connection. If you want to change either the name of the bossdevice or its default IP address in your local MATLAB settings, call `bd = bossdevice('myBossdevice','192.168.7.5')`.
+3. Click on the update command if prompted to update the software dependencies on the bossdevice.
 
 ## Get started
-1. Start MATLAB project with double-click on Bossdeviceapimatlab.prj
-2. Move or copy `mainmodel.mldatx` real-time application file into the work folder
-3. Create an instance of the main control class bossdevice `bd = bossdevice`
-4. Start firmware with `bd.start`
-5. Explore examples and methods available in the bossdevice object
+1. Create an instance of the main control class bossdevice `bd = bossdevice` in the MATLAB command window.
+2. If not found in the MATLAB path, please select `mainmodel.mldatx` real-time application.
+3. Start firmware with `bd.start`.
+4. Explore examples and methods available in the bossdevice object.
 
 ## User manual
 For a more detailed technical guidance about how to use the API, including installation, first steps and API description, please visit our [User manual](https://usermanual.sync2brain.com/).
