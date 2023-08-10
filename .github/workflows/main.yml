@@ -29,7 +29,7 @@ jobs:
       - name: Run commands
         uses: matlab-actions/run-command@v1
         with:
-          command: openProject(pwd); cd('buildUtilities'); buildtool check;
+          command: openProject(pwd); checkTask;
           
   test:
     runs-on: ubuntu-latest
@@ -45,7 +45,7 @@ jobs:
       - name: Run commands
         uses: matlab-actions/run-command@v1
         with:
-          command: openProject(pwd); cd('buildUtilities'); buildtool test("github");
+          command: openProject(pwd); testTask("github");
           
       - name: Test Reporter
         uses: dorny/test-reporter@v1
