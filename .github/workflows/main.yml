@@ -30,6 +30,13 @@ jobs:
         uses: matlab-actions/run-command@v1
         with:
           command: openProject(pwd); checkTask;
+
+      - name: Archive check results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: code-issues
+          path: checkResults.json
           
   test:
     runs-on: ubuntu-latest
