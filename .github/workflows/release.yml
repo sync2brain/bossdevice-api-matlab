@@ -33,3 +33,10 @@ jobs:
         with:
           name: bossdevice-api-installer
           path: release/bossdevice-api-installer.mltbx
+      
+      # Create new release
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/bossdevice-api-installer.mltbx
+          generate_release_notes: true
