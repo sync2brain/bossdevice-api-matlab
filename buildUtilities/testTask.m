@@ -20,13 +20,17 @@ else
     disp('No tag was passed as input. All test cases will be executed.');
 end
 
+if isempty(suite)
+    warning('No tests were found with tag(s) "%s" and none will be executed.',strjoin(tags,', '));
+end
+
 runner = TestRunner.withTextOutput('OutputDetail', Verbosity.Detailed);
 runner.addPlugin(XMLPlugin.producingJUnitFormat(fullfile(projObj.RootFolder,'results.xml')));
 
 results = runner.run(suite);
 
-if ~ismember('github',tags)
-    % GitHub actions evaluate test success from Test Report
+% CI workflows evaluate test success from Test Report
+if ~batchStartupOptionUsed
     results.assertSuccess;
 end
 

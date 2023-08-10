@@ -1,0 +1,60 @@
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Check out repo
+        uses: actions/checkout@v3
+        
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v1
+    
+      - name: Run commands
+        uses: matlab-actions/run-command@v1
+        with:
+          command: openProject(pwd); checkTask;
+
+      - name: Archive check results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: code-issues
+          path: checkResults.json
+          
+  test:
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Check out repo
+        uses: actions/checkout@v3
+        
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v1
+    
+      - name: Run commands
+        uses: matlab-actions/run-command@v1
+        with:
+          command: openProject(pwd); testTask("github");
+          
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            results.xml
