@@ -25,8 +25,8 @@ runner.addPlugin(XMLPlugin.producingJUnitFormat(fullfile(projObj.RootFolder,'res
 
 results = runner.run(suite);
 
-if ~ismember('github',tags)
-    % GitHub actions evaluate test success from Test Report
+% CI workflows evaluate test success from Test Report
+if ~batchStartupOptionUsed
     results.assertSuccess;
 end
 
