@@ -27,16 +27,13 @@ jobs:
         with:
           command: openProject(pwd); releaseTask('toolboxVersion',"${{  github.ref_name }}",'authorName',"${{  github.actor }}");
           
-      # Save the MLTBX.
-      - name: Save Packaged Toolbox
-        uses: actions/upload-artifact@v3
-        with:
-          name: bossdevice-api-installer
-          path: release/bossdevice-api-installer.mltbx
+      - name: Check content of current directory
+        run: echo ls -R
       
       # Create new release
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: release/bossdevice-api-installer.mltbx
+          fail_on_unmatched_files: true
           generate_release_notes: true
