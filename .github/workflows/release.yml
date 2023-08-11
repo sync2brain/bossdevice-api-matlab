@@ -26,9 +26,6 @@ jobs:
         uses: matlab-actions/run-command@v1
         with:
           command: openProject(pwd); releaseTask('toolboxVersion',"${{  github.ref_name }}",'authorName',"${{  github.actor }}");
-          
-      - name: Check content of current directory
-        run: echo ls -R
       
       # Create new release
       - name: Release
