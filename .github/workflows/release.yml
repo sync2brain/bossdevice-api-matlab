@@ -34,6 +34,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: release/bossdevice-api-installer.mltbx
+          files: releases/bossdevice-api-installer.mltbx
           fail_on_unmatched_files: true
           generate_release_notes: true
