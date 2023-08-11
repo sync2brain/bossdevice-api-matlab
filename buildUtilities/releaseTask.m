@@ -8,6 +8,9 @@ end
 
 projObj = currentProject;
 
+% Remove v from toolboxVersion
+options.toolboxVersion = erase(options.toolboxVersion,"v");
+
 % Toolbox Parameter Configuration
 toolboxOptions = matlab.addons.toolbox.ToolboxOptions(fullfile(projObj.RootFolder,"toolbox"), "bossdevice-api-matlab");
 
