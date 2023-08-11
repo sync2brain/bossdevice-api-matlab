@@ -12,7 +12,7 @@ sync2brain's bossdevice RESEARCH Application Programmable Interface (API) for MA
 
 ## Enable bossdevice communication over Control PC
 1. Turn on the bossdevice and connect the `Control PC` Ethernet port on your bossdevice to an available Ethernet port on your computer.
-2. On your computer, follow [these steps](https://www.mathworks.com/help/slrealtime/gs/development-computer-communication-setup-windows.html) to configure the Ethenet interface on your PC with the IP address `192.168.7.2`.
+2. On your computer, follow [these steps](https://www.mathworks.com/help/slrealtime/gs/development-computer-communication-setup-windows.html) to configure the local Ethernet interface on your PC with the IP address `192.168.7.2`.
 
 ## Initial toolbox configuration
 1. Download `bossdevice-api-installer.mltbx` from the latest release available in the GitHub project.
