@@ -7,9 +7,6 @@ work
 *.slx.r*
 *.mdl.r*
 
-# Derived content-obscured files
-*.p
-
 # Compiled MEX files
 *.mex*
 
