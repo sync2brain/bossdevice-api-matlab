@@ -5,7 +5,6 @@
 - MATLAB&reg;
 - Simulink Real-Time&reg;
 - Simulink Real-Time Target Support Package
-- Speedgoat&reg; I/O Blockset
 - Bossdevice firmware (MLDATX file)
 
 ## Enable bossdevice communication over Control PC
