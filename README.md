@@ -4,7 +4,7 @@
 ## Requirements
 - MATLAB&reg;
 - Simulink Real-Time&reg;
-- Simulink Real-Time Target Support Package
+- [Simulink Real-Time Target Support Package](https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package)
 - Bossdevice firmware (MLDATX file)
 
 ## Enable bossdevice communication over Control PC
