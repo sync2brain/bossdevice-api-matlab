@@ -102,7 +102,7 @@ while (condition_index <= no_of_trials)
         end
         
         % append data in circular buffer
-        mAmplitudeScopeCircBuf{mAmplitudeScopeCircBufCurrentBlock} = data';
+        % mAmplitudeScopeCircBuf{mAmplitudeScopeCircBufCurrentBlock} = data';
         
         maxmindata = cell2mat(cellfun(@(data) quantile(data(1, data(2,:) == 1), [amplitude_threshold(1)/100 amplitude_threshold(2)/100])', mAmplitudeScopeCircBuf, 'UniformOutput', false))';
         maxmindata = circshift(maxmindata, mAmplitudeScopeCircBufCurrentBlock);
