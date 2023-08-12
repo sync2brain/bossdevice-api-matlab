@@ -21,14 +21,13 @@ plasticity_protocol_sequence=[];
 
 %% Initializing BOSS Device API
 bd=bossdevice;
-bd.sample_and_hold_period=0;
-bd.calibration_mode = 'no';
-bd.armed = 'no';
-bd.sample_and_hold_period=0;
+bd.start;
+bd.disarm;
+bd.sample_and_hold_seconds=0;
 bd.theta.ignore; pause(0.1)
 bd.beta.ignore; pause(0.1)
 bd.alpha.ignore; pause(0.1)
-bd.eeg_channels=eeg_channels; 
+bd.num_eeg_channels=eeg_channels; 
 
 %% Preparing an Individual Peak Frequency based Band Pass Filter for mu Alpha
 bpf_fir_coeffs = firls(bandpassfilter_order, [0 (individual_peak_frequency + [-5 -2 +2 +5]) (500/2)]/(500/2), [0 0 1 1 0 0], [1 1 1] );
@@ -40,7 +39,7 @@ bd.alpha.bpf_fir_coeffs = bpf_fir_coeffs;
 %% Controlling BOSS Device for mu Alpha Phase Locked Triggering
 condition_index=0;
 while (condition_index <= no_of_trials)
-    if(strcmp(bd.armed, 'no'))
+    if ~bd.isArmed
         bd.triggers_remaining = 1;
         bd.alpha.phase_target(1) = phase(randi(1:numel(phase), 1));
         bd.alpha.phase_plusminus(1) = phase_tolerance;

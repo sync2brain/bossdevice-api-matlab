@@ -21,7 +21,7 @@
 1. Create an instance of the main control class bossdevice `bd = bossdevice` in the MATLAB command window.
 2. If not found in the MATLAB path, please select `mainmodel.mldatx` real-time application.
 3. Start firmware with `bd.start` on the remote device.
-4. Explore examples and methods available in the bossdevice object.
+4. Explore examples with `bossex.script_name` and methods available in the bossdevice object.
 
 ## User manual
 For a more detailed technical guidance about how to use the API, including installation, first steps and API description, please visit our [User manual](https://usermanual.sync2brain.com/).
