@@ -5,6 +5,8 @@ on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
     branches: [ "master" ]
+    paths-ignore:
+      - 'README.md'
   pull_request:
     branches: [ "master" ]
 
@@ -59,5 +61,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
+          fail_on: "test failures"
+          action_fail: true
           files: |
             results.xml
