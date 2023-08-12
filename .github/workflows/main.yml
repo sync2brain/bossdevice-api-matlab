@@ -62,6 +62,6 @@ jobs:
         if: always()
         with:
           fail_on: "test failures"
-          action_fail: false
+          action_fail: true
           files: |
             results.xml
