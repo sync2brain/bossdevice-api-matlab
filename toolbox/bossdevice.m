@@ -27,7 +27,7 @@ classdef bossdevice < handle
     properties (SetAccess = private, Dependent)
         generator_running logical
         isRunning logical
-        armed logical
+        isArmed logical
     end
 
     properties (Constant, Hidden)
@@ -107,6 +107,7 @@ classdef bossdevice < handle
             obj.targetObject.stop;
         end
 
+        
 
         % getters and setters for dependent properties
         function duration = get.sample_and_hold_seconds(obj)
@@ -213,15 +214,15 @@ classdef bossdevice < handle
         end
 
         function obj = arm(obj)
-            obj.armed = true;
+            obj.isArmed = true;
         end
 
         function obj = disarm(obj)
-            obj.armed = false;
+            obj.isArmed = false;
         end
 
-        function set.armed(obj, armed)
-            if armed
+        function set.isArmed(obj, isArmed)
+            if isArmed
                 assert(~obj.generator_running, 'Cannot arm target while generator is running.');
                 setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
                 setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 1);
@@ -230,12 +231,12 @@ classdef bossdevice < handle
             end
         end
 
-        function armed = get.armed(obj)
+        function isArmed = get.isArmed(obj)
             if (getparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled') == 1 && ...
                     getparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled') == 1)
-                armed = true;
+                isArmed = true;
             else
-                armed = false;
+                isArmed = false;
             end
         end
 
