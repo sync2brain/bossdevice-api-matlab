@@ -95,20 +95,6 @@ classdef bossdevice < handle
             end
         end
 
-        function start(obj)
-            if ~obj.targetObject.isRunning
-                obj.targetObject.start("ReloadOnStop",true,"StopTime",Inf);
-            else
-                disp('Application is already running.');
-            end
-        end
-
-        function stop(obj)
-            obj.targetObject.stop;
-        end
-
-        
-
         % getters and setters for dependent properties
         function duration = get.sample_and_hold_seconds(obj)
             duration = getparam(obj.targetObject, [obj.appName,'/UDP'], 'sample_and_hold_seconds');
@@ -240,10 +226,6 @@ classdef bossdevice < handle
             end
         end
 
-        function isRunning = get.isRunning(obj)
-            isRunning = obj.targetObject.isRunning;
-        end
-
         function manualTrigger(obj)
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
             setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 0);
@@ -251,6 +233,35 @@ classdef bossdevice < handle
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 1);
             pause(0.1);
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 0);
+        end
+
+        %% Target object wrappers
+        function start(obj)
+            if ~obj.targetObject.isRunning
+                obj.targetObject.start("ReloadOnStop",true,"StopTime",Inf);
+            else
+                disp('Application is already running.');
+            end
+        end
+
+        function stop(obj)
+            obj.targetObject.stop;
+        end
+
+        function addInstrument(obj, inst)
+            obj.targetObject.addInstrument(inst);
+        end
+
+        function removeInstrument(obj, inst)
+            obj.targetObject.removeInstrument(inst);
+        end
+
+        function removeAllInstruments(obj)
+            obj.targetObject.removeAllInstruments;
+        end
+
+        function isRunning = get.isRunning(obj)
+            isRunning = obj.targetObject.isRunning;
         end
 
     end
