@@ -5,7 +5,8 @@
 - MATLAB&reg;
 - Simulink Real-Time&reg;
 - [Simulink Real-Time Target Support Package](https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package)
-- Bossdevice firmware (MLDATX file)
+- [bossdevice](https://sync2brain.com/) hardware
+- bossdevice firmware (MLDATX file)
 
 ## Enable bossdevice communication over Control PC
 1. Turn on the bossdevice and connect the `Control PC` Ethernet port on your bossdevice to an available Ethernet port on your computer.
@@ -14,7 +15,7 @@
 ## Initial toolbox configuration
 1. Download `bossdevice-api-installer.mltbx` from the latest release available in the GitHub project.
 2. Start MATLAB and install the bossdevice API toolbox with double click on `bossdevice-api-installer.mltbx`.
-3. In the MATLAB Command Window, call `bd = bossdevice` to add the bossdevice with the default settings to the list of targets. It will also try to establish connection. If you want to change either the name of the bossdevice or its default IP address in your local MATLAB settings, call `bd = bossdevice('bossdevice','192.168.7.5',true)` replacing the function arguments with the name and IP address you want to set on the real-time device.
+3. In the MATLAB Command Window, call `bd = bossdevice` to add the bossdevice with the default settings to the list of targets. It will also try to establish connection. If you want to change either the name of the bossdevice or its default IP address in your local MATLAB settings, call `bd = bossdevice('bossdevice','192.168.7.5')` replacing the function arguments with the name and IP address you want to set on the real-time device.
 4. Click on the update command if prompted to update the software dependencies on the bossdevice.
 
 ## Get started

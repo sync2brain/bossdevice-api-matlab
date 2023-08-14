@@ -25,22 +25,55 @@ classdef bossdevice < handle
     end
 
     properties (SetAccess = private, Dependent)
-        generator_running logical
+        isConnected logical
         isRunning logical
         isArmed logical
+        generator_running logical
     end
 
     properties (Constant, Hidden)
         appName = 'mainmodel';
     end
 
+    methods (Static)
+        function clearPersonalSettings()
+            s = settings;
+            s.bossdeviceAPI.TargetSettings.TargetName.clearPersonalValue;
+            s.bossdeviceAPI.TargetSettings.TargetIPAddress.clearPersonalValue;
+        end
+    end
+
     methods
-        function obj = bossdevice(targetName, ipAddress, overwrite)
+        function obj = bossdevice(targetName, ipAddress)
             %BOSSDEVICE Construct an instance of this class
             arguments
-                targetName {mustBeTextScalar} = 'bossdevice';
-                ipAddress {mustBeTextScalar} = '192.168.7.5';
-                overwrite logical {mustBeNumericOrLogical} = false;
+                targetName {mustBeTextScalar} = '';
+                ipAddress {mustBeTextScalar} = '';
+            end
+
+            % Initialize toolbox settings
+            s = settings;
+
+            % Set settings personal values
+            if ~isempty(targetName)
+                s.bossdeviceAPI.TargetSettings.TargetName.PersonalValue = targetName;
+            end
+
+            if ~isempty(ipAddress)
+                s.bossdeviceAPI.TargetSettings.TargetIPAddress.PersonalValue = ipAddress;
+            end
+
+            % Retrieve personal value if exists otherwise get factory value
+            if s.bossdeviceAPI.TargetSettings.TargetName.hasPersonalValue
+                targetName = s.bossdeviceAPI.TargetSettings.TargetName.PersonalValue;
+            else
+                targetName = s.bossdeviceAPI.TargetSettings.TargetName.FactoryValue;
+            end
+            
+            if s.bossdeviceAPI.TargetSettings.TargetIPAddress.hasPersonalValue
+                ipAddress = s.bossdeviceAPI.TargetSettings.TargetIPAddress.PersonalValue;
+            else
+                ipAddress = s.bossdeviceAPI.TargetSettings.TargetIPAddress.FactoryValue;
             end
 
             % Use default target if not passing any input argument
@@ -54,14 +87,15 @@ classdef bossdevice < handle
 
             % Initialize and connect to the bossdevice
             obj.targetObject = slrealtime(targetName);
-            if isTargetNew
+            if isTargetNew || ~strcmp(obj.targetObject.TargetSettings.address,ipAddress)
                 obj.targetObject.TargetSettings.address = ipAddress;
                 fprintf('Added new target configuration for "%s" with IP address "%s".\n',targetName,ipAddress);
-            elseif overwrite && ~strcmp(obj.targetObject.TargetSettings.address,ipAddress)
-                obj.targetObject.TargetSettings.address = ipAddress;
-                fprintf('Set new IP address "%s" on "%s".\n',ipAddress,targetName);
             end
-            obj.targetObject.connect; % May ask to update if versions do not match
+            try
+                obj.targetObject.connect; % May ask to update if versions do not match
+            catch ME
+                disp(ME.message);
+            end
 
             % Search firmware binary and prompt user if not found in MATLAB path
             if exist([obj.appName,'.mldatx'],"file")
@@ -80,24 +114,28 @@ classdef bossdevice < handle
             end
 
             % Load firmware on the bossdevice if not loaded yet
-            if ~obj.targetObject.isLoaded
+            if obj.targetObject.isConnected && ~obj.targetObject.isLoaded
                 obj.targetObject.load(firmwareFilepath);
             end
 
             % Figure out some oscillation values
-            obj.theta = bossdevice_oscillation(obj.targetObject, 'theta');
-            obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha');
-            obj.beta = bossdevice_oscillation(obj.targetObject, 'beta');
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+                obj.theta = bossdevice_oscillation(obj.targetObject, 'theta');
+                obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha');
+                obj.beta = bossdevice_oscillation(obj.targetObject, 'beta');
+            end
 
             % Prompt user to start application if required
-            if ~obj.targetObject.isRunning
+            if obj.targetObject.isConnected && ~obj.targetObject.isRunning
                 warning('Bossdevice is not running. Use start method to start application.')
             end
         end
 
         % getters and setters for dependent properties
         function duration = get.sample_and_hold_seconds(obj)
-            duration = getparam(obj.targetObject, [obj.appName,'/UDP'], 'sample_and_hold_seconds');
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+                duration = getparam(obj.targetObject, [obj.appName,'/UDP'], 'sample_and_hold_seconds');
+            end
         end
 
         function  set.sample_and_hold_seconds(obj, duration)
@@ -106,7 +144,9 @@ classdef bossdevice < handle
 
 
         function spatial_filter_weights = get.spatial_filter_weights(obj)
-            spatial_filter_weights = getparam(obj.targetObject, [obj.appName,'/OSC'], 'weights');
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+                spatial_filter_weights = getparam(obj.targetObject, [obj.appName,'/OSC'], 'weights');
+            end
         end
 
         function set.spatial_filter_weights(obj, weights)
@@ -131,7 +171,9 @@ classdef bossdevice < handle
 
 
         function interval = get.min_inter_trig_interval(obj)
-            interval = getparam(obj.targetObject, [obj.appName,'/TRG'], 'min_inter_trig_interval');
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+                interval = getparam(obj.targetObject, [obj.appName,'/TRG'], 'min_inter_trig_interval');
+            end
         end
 
         function set.min_inter_trig_interval(obj, interval)
@@ -139,7 +181,9 @@ classdef bossdevice < handle
         end
 
         function val = get.triggers_remaining(obj)
-            val = getsignal(obj.targetObject,[obj.appName,'/TRG/Count Down'],1);
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+                val = getsignal(obj.targetObject,[obj.appName,'/TRG/Count Down'],1);
+            end
         end
 
         function set.triggers_remaining(obj, val)
@@ -153,7 +197,9 @@ classdef bossdevice < handle
         end
 
         function sequence = get.generator_sequence(obj)
-            sequence = getparam(obj.targetObject, [obj.appName,'/GEN'], 'sequence_time_port_marker');
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+                sequence = getparam(obj.targetObject, [obj.appName,'/GEN'], 'sequence_time_port_marker');
+            end
         end
 
         function set.generator_sequence(obj, sequence)
@@ -161,7 +207,9 @@ classdef bossdevice < handle
         end
 
         function n = get.num_eeg_channels(obj)
-            n = getparam(obj.targetObject, [obj.appName,'/UDP'], 'num_eeg_channels');
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+                n = getparam(obj.targetObject, [obj.appName,'/UDP'], 'num_eeg_channels');
+            end
         end
 
         function set.num_eeg_channels(obj, n)
@@ -170,7 +218,9 @@ classdef bossdevice < handle
 
 
         function n = get.num_aux_channels(obj)
-            n = getparam(obj.targetObject, [obj.appName,'/UDP'], 'num_aux_channels');
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+                n = getparam(obj.targetObject, [obj.appName,'/UDP'], 'num_aux_channels');
+            end
         end
 
         function set.num_aux_channels(obj, n)
@@ -192,7 +242,8 @@ classdef bossdevice < handle
         end
 
         function generator_running = get.generator_running(obj)
-            if (getsignal(obj.targetObject, [obj.appName,'/GEN'],4))
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded &&...
+                    (getsignal(obj.targetObject, [obj.appName,'/GEN'],4))
                 generator_running = true;
             else
                 generator_running = false;
@@ -218,7 +269,8 @@ classdef bossdevice < handle
         end
 
         function isArmed = get.isArmed(obj)
-            if (getparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled') == 1 && ...
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded &&...
+                    (getparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled') == 1 && ...
                     getparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled') == 1)
                 isArmed = true;
             else
@@ -236,6 +288,10 @@ classdef bossdevice < handle
         end
 
         %% Target object wrappers
+        function isConnected = get.isConnected(obj)
+            isConnected = obj.targetObject.isConnected;
+        end
+        
         function start(obj)
             if ~obj.targetObject.isRunning
                 obj.targetObject.start("ReloadOnStop",true,"StopTime",Inf);
@@ -261,7 +317,11 @@ classdef bossdevice < handle
         end
 
         function isRunning = get.isRunning(obj)
-            isRunning = obj.targetObject.isRunning;
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+                isRunning = obj.targetObject.isRunning;
+            else
+                isRunning = false;
+            end
         end
 
     end
