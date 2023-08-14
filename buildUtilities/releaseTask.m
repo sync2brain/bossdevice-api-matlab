@@ -6,7 +6,11 @@ arguments
     options.authorName {mustBeTextScalar} = "sync2brain" % Use committer name when packaging from CI
 end
 
+% Get current project object
 projObj = currentProject;
+
+% Export documentation to HTML before packaging toolbox
+exportToHTML(fullfile(projObj.RootFolder,'docSource\'),fullfile(projObj.RootFolder,'toolbox\html\')); 
 
 % Remove v from toolboxVersion
 options.toolboxVersion = erase(options.toolboxVersion,"v");
