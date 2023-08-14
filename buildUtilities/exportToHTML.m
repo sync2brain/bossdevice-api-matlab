@@ -8,7 +8,7 @@ end
 
 docFiles = findAllFiles(inputFolder);
 
-fprintf('Exporting files to HTML format...\n');
+fprintf('Exporting files to %s in HTML format...\n',outputFolder);
 for i = 1:numel(docFiles)
     fprintf('Exporting file %s (%i/%i)...\n',docFiles(i).name,i,numel(docFiles));
     export(fullfile(docFiles(i).folder,docFiles(i).name),outputFolder,'Format','html');
