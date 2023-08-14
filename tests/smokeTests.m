@@ -20,7 +20,8 @@ classdef smokeTests < matlab.unittest.TestCase
         % Test methods
 
         function noBossdevice(testCase)
-            testCase.verifyError(@() bossdevice, 'slrealtime:target:connectError');
+            bd = bossdevice;
+            testCase.verifyFalse(bd.isConnected);
         end
     end
 
