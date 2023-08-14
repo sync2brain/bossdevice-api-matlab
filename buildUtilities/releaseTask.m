@@ -26,7 +26,7 @@ toolboxOptions.AuthorName = options.authorName;
 toolboxOptions.AuthorEmail = "support@sync2brain.com";
 toolboxOptions.AuthorCompany = "sync2brain";
 toolboxOptions.ToolboxImageFile = fullfile(projObj.RootFolder,"images/sync2brain-Logo-hell.png");
-toolboxOptions.ToolboxGettingStartedGuide = fullfile(projObj.RootFolder,"toolbox/gettingStarted.mlx");
+% toolboxOptions.ToolboxGettingStartedGuide = fullfile(projObj.RootFolder,"toolbox/gettingStarted.mlx");
 
 if ~exist(fullfile(projObj.RootFolder,"releases"), 'dir')
    mkdir(fullfile(projObj.RootFolder,"releases"))
