@@ -15,6 +15,9 @@ for i = 1:numel(docFiles)
 end
 fprintf('Export completed.\n');
 
+% Build searchable database
+builddocsearchdb(outputFolder);
+
 end
 
 function files = findAllFiles(folder)
