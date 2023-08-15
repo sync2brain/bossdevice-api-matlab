@@ -28,7 +28,7 @@ classdef bossdevice < handle
         isConnected logical
         isRunning logical
         isArmed logical
-        generator_running logical
+        isGeneratorRunning logical
     end
 
     properties (Constant, Hidden)
@@ -256,7 +256,7 @@ classdef bossdevice < handle
             obj.generator_sequence = sequence;
         end
 
-        function generator_running = get.generator_running(obj)
+        function generator_running = get.isGeneratorRunning(obj)
             if obj.targetObject.isConnected && obj.targetObject.isLoaded &&...
                     (getsignal(obj.targetObject, [obj.appName,'/GEN'],4))
                 generator_running = true;
@@ -275,7 +275,7 @@ classdef bossdevice < handle
 
         function set.isArmed(obj, isArmed)
             if isArmed
-                assert(~obj.generator_running, 'Cannot arm target while generator is running.');
+                assert(~obj.isGeneratorRunning, 'Cannot arm target while generator is running.');
                 setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
                 setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 1);
             else
