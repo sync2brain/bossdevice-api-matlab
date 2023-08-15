@@ -28,7 +28,7 @@ classdef bossdevice < handle
         isConnected logical
         isRunning logical
         isArmed logical
-        generator_running logical
+        isGeneratorRunning logical
     end
 
     properties (Constant, Hidden)
@@ -69,7 +69,7 @@ classdef bossdevice < handle
             else
                 targetName = s.bossdeviceAPI.TargetSettings.TargetName.FactoryValue;
             end
-            
+
             if s.bossdeviceAPI.TargetSettings.TargetIPAddress.hasPersonalValue
                 ipAddress = s.bossdeviceAPI.TargetSettings.TargetIPAddress.PersonalValue;
             else
@@ -115,7 +115,9 @@ classdef bossdevice < handle
 
             % Load firmware on the bossdevice if not loaded yet
             if obj.targetObject.isConnected && ~obj.targetObject.isLoaded
+                fprintf('Loading application "%s" on "%s"...\n',obj.appName,obj.targetObject.TargetSettings.name);
                 obj.targetObject.load(firmwareFilepath);
+                fprintf('Application loaded. Ready to start.\n');
             end
 
             % Figure out some oscillation values
@@ -241,7 +243,7 @@ classdef bossdevice < handle
             obj.generator_sequence = sequence;
         end
 
-        function generator_running = get.generator_running(obj)
+        function generator_running = get.isGeneratorRunning(obj)
             if obj.targetObject.isConnected && obj.targetObject.isLoaded &&...
                     (getsignal(obj.targetObject, [obj.appName,'/GEN'],4))
                 generator_running = true;
@@ -260,7 +262,7 @@ classdef bossdevice < handle
 
         function set.isArmed(obj, isArmed)
             if isArmed
-                assert(~obj.generator_running, 'Cannot arm target while generator is running.');
+                assert(~obj.isGeneratorRunning, 'Cannot arm target while generator is running.');
                 setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
                 setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 1);
             else
@@ -278,13 +280,28 @@ classdef bossdevice < handle
             end
         end
 
-        function manualTrigger(obj)
-            setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
-            setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 0);
+        function sendPulse(obj, port)
+            arguments
+                obj
+                port {mustBeScalarOrEmpty}
+            end
 
-            setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 1);
-            pause(0.1);
-            setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 0);
+            if obj.targetObject.isRunning
+                marker = port;
+
+                sequence_time_port_marker = obj.generator_sequence;
+                sequence_time_port_marker = zeros(size(sequence_time_port_marker));
+                sequence_time_port_marker(1,:) = [0 port marker]; % 0 seconds after the trigger, trigger port 1 and send marker 1
+
+                setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 0);
+                setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 0);
+                setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 0);
+                pause(0.1)
+                obj.generator_sequence(sequence_time_port_marker);
+                obj.manualTrigger;
+            else
+                disp('No pulse sent because app is not running yet. Start app first.');
+            end
         end
 
         %% Target object wrappers
@@ -324,6 +341,17 @@ classdef bossdevice < handle
             end
         end
 
+    end
+
+    methods (Access = protected)
+        function manualTrigger(obj)
+            setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
+            setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 0);
+
+            setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 1);
+            pause(0.1);
+            setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 0);
+        end   
     end
 
 end
