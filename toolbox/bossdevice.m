@@ -117,7 +117,7 @@ classdef bossdevice < handle
             if obj.targetObject.isConnected && ~obj.targetObject.isLoaded
                 fprintf('Loading application "%s" on "%s"...\n',obj.appName,obj.targetObject.TargetSettings.name);
                 obj.targetObject.load(firmwareFilepath);
-                fprintf('Application loaded. Ready to start.'\n);
+                fprintf('Application loaded. Ready to start.\n');
             end
 
             % Figure out some oscillation values
