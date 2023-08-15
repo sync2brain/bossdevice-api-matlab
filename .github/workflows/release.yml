@@ -13,7 +13,7 @@ jobs:
   package:
     needs: ci
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: windows-latest # Must run on Windows to support export to HTML
     
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
