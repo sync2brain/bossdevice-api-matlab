@@ -10,7 +10,11 @@ end
 projObj = currentProject;
 
 % Export documentation to HTML before packaging toolbox
-exportToHTML(fullfile(projObj.RootFolder,'docSource'),fullfile(projObj.RootFolder,'toolbox','html')); 
+% Errors out in GitHub actions. See https://github.com/matlab-actions/run-command/issues/14
+% exportToHTML(fullfile(projObj.RootFolder,'docSource'),fullfile(projObj.RootFolder,'toolbox','html'));
+
+% Build searchable database
+builddocsearchdb(fullfile(projObj.RootFolder,'toolbox','html'));
 
 % Remove v from toolboxVersion
 options.toolboxVersion = erase(options.toolboxVersion,"v");

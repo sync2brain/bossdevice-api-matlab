@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,IE=9,chrome=1"><meta name="generator" content="MATLAB 2023a"><title>Getting Started with the bossdevice API</title><style type="text/css">.rtcContent { padding: 30px; } .S0 { margin: 3px 10px 5px 4px; padding: 0px; line-height: 28.8px; min-height: 0px; white-space: pre-wrap; color: rgb(192, 76, 11); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 24px; font-weight: 400; text-align: left;  }
+.S1 { margin-bottom: 20px; padding-bottom: 4px;  }
+.S2 { margin: 0px; padding: 10px 0px 10px 5px; line-height: 21px; min-height: 0px; white-space: pre-wrap; color: rgb(33, 33, 33); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 14px; font-weight: 700; text-align: start;  }
+.S3 { margin: -1px 0px 0px; padding: 10px 0px 10px 7px; line-height: 21px; min-height: 0px; white-space: pre-wrap; color: rgb(33, 33, 33); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 14px; font-weight: 400; text-align: start;  }
+.S4 { margin: 20px 10px 5px 4px; padding: 0px; line-height: 20px; min-height: 0px; white-space: pre-wrap; color: rgb(33, 33, 33); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 20px; font-weight: 700; text-align: left;  }
+.S5 { margin: 10px 0px 20px; padding-left: 0px; font-family: Helvetica, Arial, sans-serif; font-size: 14px;  }
+.S6 { margin-left: 56px; line-height: 21px; min-height: 0px; text-align: left; white-space: pre-wrap;  }
+.S7 { margin: 2px 10px 9px 4px; padding: 0px; line-height: 21px; min-height: 0px; white-space: pre-wrap; color: rgb(33, 33, 33); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 14px; font-weight: 400; text-align: left;  }
+.S8 { border-left: 0px none rgb(33, 33, 33); border-right: 0px none rgb(33, 33, 33); border-top: 0px none rgb(33, 33, 33); border-bottom: 0px none rgb(33, 33, 33); border-radius: 0px; padding: 0px; line-height: 15.6px; min-height: 16px; white-space: pre; color: rgb(33, 33, 33); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12px;  }</style></head><body><div class = rtcContent><h1  class = 'S0' id = 'T_C6E51E56' ><span>Getting Started with the bossdevice API</span></h1><div  class = 'S1'><div  class = 'S2'><span style=' font-weight: bold;'>Table of Contents</span></div><div  class = 'S3'><a href = "#H_E9DA3CDD"><span>Requirements
+</span></a><a href = "#H_99B8F749"><span>Enable bossdevice communication over Control PC
+</span></a><a href = "#H_D956322C"><span>Initial toolbox configuration
+</span></a><a href = "#H_EDD69053"><span>Get started</span></a></div></div><h2  class = 'S4' id = 'H_E9DA3CDD' ><span>Requirements</span></h2><ul  class = 'S5'><li  class = 'S6'><span>MATLAB®</span></li><li  class = 'S6'><span>Simulink Real-Time®</span></li><li  class = 'S6'><a href = "https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package"><span>Simulink Real-Time Target Support Package</span></a></li><li  class = 'S6'><a href = "https://sync2brain.com/"><span>bossdevice</span></a><span> </span><span>hardware</span></li><li  class = 'S6'><span>bossdevice firmware (MLDATX file)</span></li><li  class = 'S6'><span>3x LAN cables</span></li></ul><h2  class = 'S4' id = 'H_99B8F749' ><span>Enable bossdevice communication over Control PC</span></h2><div  class = 'S7'><span>Turn on the bossdevice and connect the</span><span> </span><span style=' font-family: monospace;'>Control PC</span><span> </span><span>Ethernet port on your bossdevice to an available Ethernet port on your computer.</span></div><div  class = 'S7'><span>On your computer, follow </span><a href = "https://www.mathworks.com/help/slrealtime/gs/development-computer-communication-setup-windows.html"><span>these steps</span></a><span> </span><span>to configure the local Ethernet interface on your PC with the IP address</span><span> </span><span style=' font-family: monospace;'>192.168.7.2</span><span>.</span></div><div  class = 'S7'><span>If you encounter any communication issues such as connection errors, please visit </span><a href = "https://www.mathworks.com/help/slrealtime/ug/troubleshoot-communication-failure-through-firewall.html"><span>Troubleshoot Communication Failure Through Firewall (Windows)</span></a><span> or reach out to technical support.</span></div><h2  class = 'S4' id = 'H_D956322C' ><span>Initial toolbox configuration</span></h2><div  class = 'S7'><span>Download</span><span> </span><span style=' font-family: monospace;'>bossdevice-api-installer.mltbx</span><span> </span><span>from the </span><a href = "https://github.com/sync2brain/bossdevice-api-matlab/releases"><span>latest release</span></a><span> available in the GitHub project.</span></div><div  class = 'S7'><span>Start MATLAB and install the bossdevice API toolbox with double click on </span><span style=' font-family: monospace;'>bossdevice-api-installer.mltbx</span><span>.</span></div><div  class = 'S7'><span>In the MATLAB Command Window, call</span></div><div class = 'preformatted-matlab' style = 'margin: 10px 3px 10px 55px; padding: 10px 10px 10px 5px; '><div  class = 'S8'><span style="white-space: pre"><span >bd = bossdevice</span></span></div></div><div  class = 'S7'><span>to add the bossdevice with the default settings to the list of targets. It will also try to establish connection. If you want to change either the name of the bossdevice or its default IP address in your local MATLAB settings, call </span></div><div class = 'preformatted-matlab' style = 'margin: 10px 3px 10px 55px; padding: 10px 10px 10px 5px; '><div  class = 'S8'><span style="white-space: pre"><span >bd = bossdevice(</span><span style="color: rgb(167, 9, 245);">'bossdevice'</span><span >,</span><span style="color: rgb(167, 9, 245);">'192.168.7.5'</span><span >)</span></span></div></div><div  class = 'S7'><span> replacing the function arguments with the name and IP address you want to set on the real-time device.</span></div><div  class = 'S7'><span>Finally, click on the update command if prompted to update the software dependencies on the bossdevice.</span></div><h2  class = 'S4' id = 'H_EDD69053' ><span>Get started</span></h2><div  class = 'S7'><span>Create an instance of the main control class bossdevice </span><span style=' font-family: monospace;'>bd = bossdevice</span><span> </span><span>in the MATLAB command window.</span></div><div class = 'preformatted-matlab' style = 'margin: 10px 3px 10px 55px; padding: 10px 10px 10px 5px; '><div  class = 'S8'><span style="white-space: pre"><span >bd = bossdevice</span></span></div></div><div  class = 'S7'><span>If not found in the MATLAB path, please select </span><span style=' font-family: monospace;'>mainmodel.mldatx</span><span> </span><span>real-time application.</span></div><div  class = 'S7'><span>Start firmware with </span><span style=' font-family: monospace;'>bd.start</span><span> </span><span>on the remote device.</span></div><div class = 'preformatted-matlab' style = 'margin: 10px 3px 10px 55px; padding: 10px 10px 10px 5px; '><div  class = 'S8'><span style="white-space: pre"><span >bd.start</span></span></div></div><div  class = 'S7'><span>Explore examples and methods available in the bossdevice object.</span></div><div class = 'preformatted-matlab' style = 'margin: 10px 3px 10px 55px; padding: 10px 10px 10px 5px; '><div  class = 'S8'><span style="white-space: pre"><span >bossex.myExample</span></span></div></div><div  class = 'S7'><span></span></div><div  class = 'S7'></div>
+<br>
+<!-- 
+##### SOURCE BEGIN #####
+%% Getting Started with the bossdevice API
+%% Requirements
+%% 
+% * MATLAB®
+% * Simulink Real-Time®
+% * <https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package 
+% Simulink Real-Time Target Support Package>
+% * <https://sync2brain.com/ bossdevice> hardware
+% * bossdevice firmware (MLDATX file)
+% * 3x LAN cables
+%% Enable bossdevice communication over Control PC
+% Turn on the bossdevice and connect the |Control PC| Ethernet port on your 
+% bossdevice to an available Ethernet port on your computer.
+% 
+% On your computer, follow <https://www.mathworks.com/help/slrealtime/gs/development-computer-communication-setup-windows.html 
+% these steps> to configure the local Ethernet interface on your PC with the IP 
+% address |192.168.7.2|.
+% 
+% If you encounter any communication issues such as connection errors, please 
+% visit <https://www.mathworks.com/help/slrealtime/ug/troubleshoot-communication-failure-through-firewall.html 
+% Troubleshoot Communication Failure Through Firewall (Windows)> or reach out 
+% to technical support.
+%% Initial toolbox configuration
+% Download |bossdevice-api-installer.mltbx| from the <https://github.com/sync2brain/bossdevice-api-matlab/releases 
+% latest release> available in the GitHub project.
+% 
+% Start MATLAB and install the bossdevice API toolbox with double click on |bossdevice-api-installer.mltbx|.
+% 
+% In the MATLAB Command Window, call
+%%
+% 
+%   bd = bossdevice
+%
+%% 
+% to add the bossdevice with the default settings to the list of targets. It 
+% will also try to establish connection. If you want to change either the name 
+% of the bossdevice or its default IP address in your local MATLAB settings, call 
+%%
+% 
+%   bd = bossdevice('bossdevice','192.168.7.5')
+%
+%% 
+% replacing the function arguments with the name and IP address you want to 
+% set on the real-time device.
+% 
+% Finally, click on the update command if prompted to update the software dependencies 
+% on the bossdevice.
+%% Get started
+% Create an instance of the main control class bossdevice |bd = bossdevice| 
+% in the MATLAB command window.
+%%
+% 
+%   bd = bossdevice
+%
+%% 
+% If not found in the MATLAB path, please select |mainmodel.mldatx| real-time 
+% application.
+% 
+% Start firmware with |bd.start| on the remote device.
+%%
+% 
+%   bd.start
+%
+%% 
+% Explore examples and methods available in the bossdevice object.
+%%
+% 
+%   bossex.myExample
+%
+%% 
+% 
+% 
+%
+##### SOURCE END #####
+-->
+</div></body></html>
