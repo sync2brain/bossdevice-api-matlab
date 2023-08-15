@@ -10,7 +10,7 @@ end
 projObj = currentProject;
 
 % Export documentation to HTML before packaging toolbox
-exportToHTML(fullfile(projObj.RootFolder,'docSource\'),fullfile(projObj.RootFolder,'toolbox\html\')); 
+exportToHTML(fullfile(projObj.RootFolder,'docSource'),fullfile(projObj.RootFolder,'toolbox','html')); 
 
 % Remove v from toolboxVersion
 options.toolboxVersion = erase(options.toolboxVersion,"v");
