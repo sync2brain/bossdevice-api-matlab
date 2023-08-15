@@ -1,8 +1,9 @@
-classdef bossdevice_oscillation < bossdevice
+classdef bossdevice_oscillation
     %UNTITLED Summary of this class goes here
     %   Detailed explanation goes here
 
-    properties
+    properties (Access = protected)
+        targetObj
         name
     end
     
@@ -17,23 +18,21 @@ classdef bossdevice_oscillation < bossdevice
     end
    
     methods
-        function obj = bossdevice_oscillation(targetName, ipAddress, name)
+        function obj = bossdevice_oscillation(targetObj, name)
             %UNTITLED Construct an instance of this class
             arguments
-                targetName {mustBeTextScalar} = '';
-                ipAddress {mustBeTextScalar} = '';
-                name {mustBeMember(name,{'alpha','beta','theta'})} = 'alpha';
+                targetObj slrealtime.Target
+                name {mustBeMember(name,{'alpha','beta','theta'})}
             end
-            % Call bossdevice constructor
-            obj@bossdevice(targetName, ipAddress);
-
+ 
+            obj.targetObj = targetObj;
             obj.name = name;
 
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded
-                obj.phase_target = getparam(obj.targetObject, ['mainmodel/EVD/' obj.name], 'phase_target');
-                obj.phase_plusminus = getparam(obj.targetObject, ['mainmodel/EVD/' obj.name], 'phase_plusminus');
-                obj.amplitude_min = getparam(obj.targetObject, ['mainmodel/EVD/' obj.name], 'amplitude_min');
-                obj.amplitude_max = getparam(obj.targetObject, ['mainmodel/EVD/' obj.name], 'amplitude_max');
+            if obj.targetObj.isConnected && obj.targetObj.isLoaded
+                obj.phase_target = getparam(obj.targetObj, ['mainmodel/EVD/' obj.name], 'phase_target');
+                obj.phase_plusminus = getparam(obj.targetObj, ['mainmodel/EVD/' obj.name], 'phase_plusminus');
+                obj.amplitude_min = getparam(obj.targetObj, ['mainmodel/EVD/' obj.name], 'amplitude_min');
+                obj.amplitude_max = getparam(obj.targetObj, ['mainmodel/EVD/' obj.name], 'amplitude_max');
             else
                 warning('bossdevice is not connected. Switch the device on and reinitialize this object.');
             end
@@ -41,10 +40,10 @@ classdef bossdevice_oscillation < bossdevice
               
         
         function phase_target = get.phase_target(obj)
-            phase_target = getparam(obj.targetObject, ['mainmodel/EVD/' obj.name], 'phase_target');
+            phase_target = getparam(obj.targetObj, ['mainmodel/EVD/' obj.name], 'phase_target');
         end
         
-        function set.phase_target(obj, phi)
+        function obj = set.phase_target(obj, phi)
             %METHOD1 Summary of this method goes here
             %   Detailed explanation goes here
             previousValue = obj.phase_target;
@@ -58,70 +57,70 @@ classdef bossdevice_oscillation < bossdevice
                     return
                 end
             end
-            setparam(obj.targetObject, ['mainmodel/EVD/' obj.name], 'phase_target', newValue);
+            setparam(obj.targetObj, ['mainmodel/EVD/' obj.name], 'phase_target', newValue);
         end
 
         
         function phase_plusminus = get.phase_plusminus(obj)
-            phase_plusminus = getparam(obj.targetObject, ['mainmodel/EVD/' obj.name], 'phase_plusminus');
+            phase_plusminus = getparam(obj.targetObj, ['mainmodel/EVD/' obj.name], 'phase_plusminus');
         end
         
-        function set.phase_plusminus(obj, phase_plusminus)
+        function obj = set.phase_plusminus(obj, phase_plusminus)
             %set.phase_plusminus Set phase tolerance
             %   A tolerance of pi ignores the phase in generation of events
-            setparam(obj.targetObject, ['mainmodel/EVD/' obj.name], 'phase_plusminus', phase_plusminus);
+            setparam(obj.targetObj, ['mainmodel/EVD/' obj.name], 'phase_plusminus', phase_plusminus);
         end
 
         
         function amplitude_min = get.amplitude_min(obj)
-            amplitude_min = getparam(obj.targetObject, ['mainmodel/EVD/' obj.name], 'amplitude_min');
+            amplitude_min = getparam(obj.targetObj, ['mainmodel/EVD/' obj.name], 'amplitude_min');
         end
         
-        function set.amplitude_min(obj, amplitude_min)
+        function obj = set.amplitude_min(obj, amplitude_min)
             %METHOD1 Summary of this method goes here
             %   Detailed explanation goes here
-            setparam(obj.targetObject, ['mainmodel/EVD/' obj.name], 'amplitude_min', amplitude_min);
+            setparam(obj.targetObj, ['mainmodel/EVD/' obj.name], 'amplitude_min', amplitude_min);
         end        
 
 
         function amplitude_max = get.amplitude_max(obj)
-            amplitude_max = getparam(obj.targetObject, ['mainmodel/EVD/' obj.name], 'amplitude_max');
+            amplitude_max = getparam(obj.targetObj, ['mainmodel/EVD/' obj.name], 'amplitude_max');
         end
         
-        function set.amplitude_max(obj, amplitude_max)
+        function obj = set.amplitude_max(obj, amplitude_max)
             %METHOD1 Summary of this method goes here
             %   Detailed explanation goes here
-            setparam(obj.targetObject, ['mainmodel/EVD/' obj.name], 'amplitude_max', amplitude_max);
+            setparam(obj.targetObj, ['mainmodel/EVD/' obj.name], 'amplitude_max', amplitude_max);
         end
 
         
         function lpf_fir_coeffs = get.lpf_fir_coeffs(obj)
-            lpf_fir_coeffs = getparam(obj.targetObject, ['mainmodel/OSC/' obj.name], 'lpf_fir_coeffs');
+            lpf_fir_coeffs = getparam(obj.targetObj, ['mainmodel/OSC/' obj.name], 'lpf_fir_coeffs');
         end
         
-        function set.lpf_fir_coeffs(obj, coeffs)
-            setparam(obj.targetObject, ['mainmodel/OSC/' obj.name], 'lpf_fir_coeffs', coeffs)
+        function obj = set.lpf_fir_coeffs(obj, coeffs)
+            setparam(obj.targetObj, ['mainmodel/OSC/' obj.name], 'lpf_fir_coeffs', coeffs)
         end
         
         
         function bpf_fir_coeffs = get.bpf_fir_coeffs(obj)
-            bpf_fir_coeffs = getparam(obj.targetObject, ['mainmodel/OSC/' obj.name], 'bpf_fir_coeffs');
+            bpf_fir_coeffs = getparam(obj.targetObj, ['mainmodel/OSC/' obj.name], 'bpf_fir_coeffs');
         end
         
-        function set.bpf_fir_coeffs(obj, coeffs)
+        function obj = set.bpf_fir_coeffs(obj, coeffs)
             assert(numel(coeffs) <= numel(obj.bpf_fir_coeffs), 'number of coefficients exceeds maximum')
             if numel(coeffs) < numel(obj.bpf_fir_coeffs)
                 coeffs(numel(obj.bpf_fir_coeffs)) = 0; % fill with zeros
             end
-            setparam(obj.targetObject, ['mainmodel/OSC/' obj.name], 'bpf_fir_coeffs', coeffs)
+            setparam(obj.targetObj, ['mainmodel/OSC/' obj.name], 'bpf_fir_coeffs', coeffs)
         end        
         
         function offset_samples = get.offset_samples(obj)
-            offset_samples = getparam(obj.targetObject, ['mainmodel/OSC/' obj.name], 'ipe_offset_samples');
+            offset_samples = getparam(obj.targetObj, ['mainmodel/OSC/' obj.name], 'ipe_offset_samples');
         end
         
-        function set.offset_samples(obj, weights)
-            setparam(obj.targetObject, ['mainmodel/OSC/' obj.name], 'ipe_offset_samples', weights)
+        function obj = set.offset_samples(obj, weights)
+            setparam(obj.targetObj, ['mainmodel/OSC/' obj.name], 'ipe_offset_samples', weights)
         end
 
         

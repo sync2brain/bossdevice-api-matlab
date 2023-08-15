@@ -69,7 +69,7 @@ classdef bossdevice < handle
             else
                 targetName = s.bossdeviceAPI.TargetSettings.TargetName.FactoryValue;
             end
-            
+
             if s.bossdeviceAPI.TargetSettings.TargetIPAddress.hasPersonalValue
                 ipAddress = s.bossdeviceAPI.TargetSettings.TargetIPAddress.PersonalValue;
             else
@@ -115,7 +115,9 @@ classdef bossdevice < handle
 
             % Load firmware on the bossdevice if not loaded yet
             if obj.targetObject.isConnected && ~obj.targetObject.isLoaded
+                fprintf('Loading application "%s" on "%s"...\n',obj.appName,obj.targetObject.TargetSettings.name);
                 obj.targetObject.load(firmwareFilepath);
+                fprintf('Application loaded. Ready to start.'\n);
             end
 
             % Figure out some oscillation values
@@ -142,7 +144,7 @@ classdef bossdevice < handle
         function stop(obj)
             obj.targetObject.stop;
         end
-        
+
 
         % getters and setters for dependent properties
         function duration = get.sample_and_hold_seconds(obj)
@@ -303,6 +305,33 @@ classdef bossdevice < handle
             isConnected = obj.targetObject.isConnected;
         end
 
+        function sendPulse(obj, port)
+            arguments
+                obj
+                port {mustBeScalarOrEmpty}
+            end
+
+            if obj.targetObject.isRunning
+                marker = port;
+
+                sequence_time_port_marker = obj.generator_sequence;
+                sequence_time_port_marker = zeros(size(sequence_time_port_marker));
+                sequence_time_port_marker(1,:) = [0 port marker]; % 0 seconds after the trigger, trigger port 1 and send marker 1
+
+                setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 0);
+                setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 0);
+                setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 0);
+                pause(0.1)
+                obj.generator_sequence(sequence_time_port_marker);
+                obj.manualTrigger;
+            else
+                disp('No pulse sent because app is not running yet. Start app first.');
+            end
+        end
+
+    end
+
+    methods (Access = protected)
         function manualTrigger(obj)
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
             setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 0);
@@ -311,7 +340,6 @@ classdef bossdevice < handle
             pause(0.1);
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 0);
         end
-
     end
 
 end
