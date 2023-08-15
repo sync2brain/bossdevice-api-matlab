@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<toc version="2.0">
+    <!-- First tocitem specifies top level in Help browser Contents pane -->
+    <!-- This can be a roadmap page, as shown below, or a content page -->
+    <tocitem target="bossdevice_api_landing_page.html">bossdevice API
+        <!-- Nest tocitems to create hierarchical entries in  Contents-->
+        <!-- To include icons, use the following syntax for tocitems: -->
+        <!-- <tocitem target="foo.html" image="HelpIcon.NAME"> -->
+        <!-- Title-of-Section </tocitem> -->
+        <!-- where NAME is one of the following (use capital letters): -->
+        <!-- FUNCTION, USER_GUIDE, EXAMPLES, BLOCK, GETTING_STARTED, -->
+        <!-- DEMOS, RELEASE_NOTES -->
+        <!-- Icon images used for these entries are also stored in -->
+        <!-- matlabroot/toolbox/matlab/icons -->
+        <!-- A Getting Started Guide usually comes first -->
+        <tocitem target="bossdevice_api_gs_top.html" image="HelpIcon.GETTING_STARTED">
+            Getting Started with the bossdevice API
+            <tocitem target="bossdevice_api_setup.html">Setup and initial configuration
+            </tocitem>
+            <tocitem target="biosignal_amplifier_setup.html">Setup biosignal amplifier
+            </tocitem>
+        </tocitem>
+        <!-- User Guide comes next -->
+        <tocitem target="bossdevice_api_ug_intro.html"
+                 image="HelpIcon.USER_GUIDE">User Guide
+            <!-- First item is page describing function categories, if any -->
+            <tocitem target="bossdevice_api_functions.html"
+                     image="HelpIcon.FUNCTION">Function Reference
+            </tocitem>
+            <!-- List of Examples, with hyperlinks to examples in other files -->
+            <tocitem target="bossdevice_api_examples.html"
+                     image="HelpIcon.HelpIcon.EXAMPLES">Examples
+            </tocitem>
+        </tocitem>
+        <!-- Issues, Bugs and Requests -->
+        <tocitem target="bossdevice_api_support.html">Feedback, questions and troubleshooting
+        </tocitem>
+        <!-- Release notes -->
+        <tocitem target="https://github.com/sync2brain/bossdevice-api-matlab/releases">Release notes
+        </tocitem>
+        <!-- Optional link or links to your or other Web sites -->
+        <tocitem target="https://sync2brain.com"
+                 image="$toolbox/matlab/icons/webicon.gif">
+            sync2brain Website
+        </tocitem>
+    </tocitem>
+</toc>
