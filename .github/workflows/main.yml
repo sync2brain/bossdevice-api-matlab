@@ -55,7 +55,7 @@ jobs:
     
       - name: Run commands
         run: |
-          &"$env:ProgramFiles\MATLAB\${{ matrix.MATLABVersion }}\bin\matlab.exe" -batch "openProject(pwd);  testTask('github');"
+          &"$env:ProgramFiles\MATLAB\${{ matrix.MATLABVersion }}\bin\matlab.exe" -batch "openProject(pwd);  testTask({'github'});"
           
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
