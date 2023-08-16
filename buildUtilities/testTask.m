@@ -15,7 +15,7 @@ projObj = currentProject;
 
 suite = TestSuite.fromProject(projObj);
 if ~isempty(tags)
-    suite = suite.selectIf(HasTag(tags));
+    suite = suite.selectIf(HasTag(string(tags)));
 else
     disp('No tag was passed as input. All test cases will be executed.');
 end
