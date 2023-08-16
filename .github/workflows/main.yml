@@ -32,7 +32,7 @@ jobs:
 
       - name: Run commands
         run: |
-          &"$env:ProgramFiles\MATLAB\${{ matrix.MATLABVersion }}\bin\matlab.exe" -batch "openProject(pwd); checkTask;"
+          &"$env:ProgramFiles\MATLAB\${{ matrix.MATLABVersion }}\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool check test({'github'})"
 
       - name: Archive check results
         uses: actions/upload-artifact@v3
@@ -40,22 +40,7 @@ jobs:
         with:
           name: code-issues
           path: checkResults.json
-
-  test:
-    strategy:
-      fail-fast: false
-      matrix:
-        MATLABVersion: [R2023a]
-    runs-on: self-hosted
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Check out repo
-        uses: actions/checkout@v3
-    
-      - name: Run commands
-        run: |
-          &"$env:ProgramFiles\MATLAB\${{ matrix.MATLABVersion }}\bin\matlab.exe" -batch "openProject(pwd);  testTask({'github'});"
+          if-no-files-found: error
           
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
