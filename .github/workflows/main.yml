@@ -31,7 +31,7 @@ jobs:
 
       - name: Run commands
         run: |
-          &"C:\Program Files\MATLAB\R2023a\bin\matlab.exe" -batch "openProject(pwd);"
+          &"C:\Program Files\MATLAB\R2023a\bin\matlab.exe" -batch "openProject(pwd); checkTask;"
 
       - name: Archive check results
         uses: actions/upload-artifact@v3
