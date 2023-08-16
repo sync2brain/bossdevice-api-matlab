@@ -19,20 +19,15 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
         uses: actions/checkout@v3
-        
-      - name: Set up MATLAB
-        uses: matlab-actions/setup-matlab@v1
     
       - name: Run commands
-        uses: matlab-actions/run-command@v1
-        with:
-          command: openProject(pwd); checkTask;
+        run: $env:ProgramFiles"\MATLAB\R2023a\bin\matlab.exe" -batch "openProject(pwd); checkTask;"
 
       - name: Archive check results
         uses: actions/upload-artifact@v3
@@ -42,20 +37,15 @@ jobs:
           path: checkResults.json
           
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
         uses: actions/checkout@v3
-        
-      - name: Set up MATLAB
-        uses: matlab-actions/setup-matlab@v1
     
       - name: Run commands
-        uses: matlab-actions/run-command@v1
-        with:
-          command: openProject(pwd); testTask("github");
+        run: $env:ProgramFiles"\MATLAB\R2023a\bin\matlab.exe" -batch "openProject(pwd); testTask('github');"
           
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
