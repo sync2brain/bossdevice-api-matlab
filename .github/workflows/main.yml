@@ -28,7 +28,7 @@ jobs:
     
       - name: Run commands
         run: |
-          $env:ProgramFiles"\MATLAB\R2023a\bin\matlab.exe" -batch "openProject(pwd); checkTask;"
+          "C:\Program Files\MATLAB\R2023a\bin\matlab.exe" -batch "openProject(pwd); checkTask;"
 
       - name: Archive check results
         uses: actions/upload-artifact@v3
@@ -47,7 +47,7 @@ jobs:
     
       - name: Run commands
         run: |
-          $env:ProgramFiles"\MATLAB\R2023a\bin\matlab.exe" -batch "openProject(pwd); testTask('github');"
+          "C:\Program Files\MATLAB\R2023a\bin\matlab.exe" -batch "openProject(pwd); testTask('github');"
           
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
