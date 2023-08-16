@@ -30,9 +30,8 @@ jobs:
         run: echo $env:ProgramFiles
 
       - name: Run commands
-        uses: matlab-actions/run-command@v1
-        with:
-          command: openProject(pwd); checkTask;
+        run: |
+          &"C:\Program Files\MATLAB\R2023a\bin\matlab.exe" -batch "openProject(pwd);"
 
       - name: Archive check results
         uses: actions/upload-artifact@v3
