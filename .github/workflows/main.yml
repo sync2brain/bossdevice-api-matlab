@@ -40,11 +40,11 @@ jobs:
         if: always()
         with:
           name: code-issues
-          path: checkResults.json
+          path: buildUtilities/checkResults.json
           if-no-files-found: error
           
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always()
         with:
           fail_on: "test failures"
