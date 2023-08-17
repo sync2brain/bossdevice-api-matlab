@@ -20,7 +20,7 @@ builddocsearchdb(fullfile(projObj.RootFolder,'toolbox','html'));
 options.toolboxVersion = erase(options.toolboxVersion,"v");
 
 % Toolbox Parameter Configuration
-toolboxOptions = matlab.addons.toolbox.ToolboxOptions(fullfile(projObj.RootFolder,"toolbox"), "bossdevice-api-matlab");
+toolboxOptions = matlab.addons.toolbox.ToolboxOptions(fullfile(projObj.RootFolder,"toolbox"), "71e8748d-9f0b-4242-b8f1-1d61b60aa4dc");
 
 toolboxOptions.ToolboxName = "Bossdevice API Toolbox";
 toolboxOptions.ToolboxVersion = options.toolboxVersion;
