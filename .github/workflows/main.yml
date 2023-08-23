@@ -40,11 +40,9 @@ jobs:
           name: code-issues
           path: checkResults.json
 
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
         if: always()
         with:
-          fail_on: "test failures"
-          action_fail: true
-          files: |
-            results.xml
+          report_paths: 'results.xml'
+          fail_on_failure: true
