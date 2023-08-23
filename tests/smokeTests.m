@@ -9,13 +9,14 @@ classdef smokeTests < matlab.unittest.TestCase
     end
 
     methods (TestClassSetup)
-        function updateTarget(~)
+        function updateTarget(testCase)
             try
-                bd = bossdevice;
-                bd.targetObject.update;
+                testCase.bd = bossdevice;
             catch ME
                 disp(ME.message);
             end
+            % Always try to update target
+            testCase.bd.targetObject.update;
         end
     end
 
