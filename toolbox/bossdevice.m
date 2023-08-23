@@ -10,7 +10,7 @@ classdef bossdevice < handle
         beta
     end
 
-    properties (Access = protected)
+    properties (SetAccess = protected, Hidden)
         targetObject slrealtime.Target
     end
 
@@ -110,7 +110,7 @@ classdef bossdevice < handle
                     obj.firmwareFilepath = fullfile(firmwareFilepath,filename);
                 end
             else
-                error('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
+                warning('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
         end
             
