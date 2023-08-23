@@ -2,20 +2,19 @@ function results = testTask(tags)
 % Run unit tests
 
 arguments
-    tags {mustBeText} = '';
+    tags string {mustBeText} = "";
 end
 
 import matlab.unittest.TestRunner;
 import matlab.unittest.TestSuite;
 import matlab.unittest.Verbosity;
 import matlab.unittest.plugins.XMLPlugin;
-import matlab.unittest.selectors.HasTag;
 
 projObj = currentProject;
 
 suite = TestSuite.fromProject(projObj);
 if ~isempty(tags)
-    suite = suite.selectIf(HasTag(tags));
+    suite = suite.selectIf("Tag",tags);
 else
     disp('No tag was passed as input. All test cases will be executed.');
 end
