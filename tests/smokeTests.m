@@ -8,6 +8,13 @@ classdef smokeTests < matlab.unittest.TestCase
         bd bossdevice
     end
 
+    methods (TestClassSetup)
+        function updateTarget(~)
+            tg = slrealtime('bossdevice');
+            tg.update;
+        end
+    end
+
     methods (TestMethodTeardown)
         function clearBossdeviceObj(testCase)
             if ~isempty(testCase.bd) && testCase.bd.isConnected
