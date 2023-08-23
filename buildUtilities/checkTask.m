@@ -8,7 +8,7 @@ issues = codeIssues(projObj.RootFolder);
 % Encode results in JSON file and export
 if batchStartupOptionUsed
     jsonIssues = jsonencode(issues);
-    fid = fopen('checkResults.json','w');
+    fid = fopen(fullfile(projObj.RootFolder,'checkResults.json'),'w');
     fprintf(fid,'%s',jsonIssues);
     fclose(fid);
 end
