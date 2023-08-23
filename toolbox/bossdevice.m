@@ -10,7 +10,7 @@ classdef bossdevice < handle
         beta
     end
 
-    properties (Access = protected)
+    properties (SetAccess = protected, Hidden)
         targetObject slrealtime.Target
     end
 
