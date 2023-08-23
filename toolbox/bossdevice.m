@@ -14,6 +14,10 @@ classdef bossdevice < handle
         targetObject slrealtime.Target
     end
 
+    properties (SetAccess = protected)
+        firmwareFilepath
+    end
+
     properties (Dependent)
         sample_and_hold_seconds
         spatial_filter_weights
@@ -26,6 +30,7 @@ classdef bossdevice < handle
 
     properties (SetAccess = private, Dependent)
         isConnected logical
+        isInitialized logical
         isRunning logical
         isArmed logical
         isGeneratorRunning logical
@@ -91,15 +96,10 @@ classdef bossdevice < handle
                 obj.targetObject.TargetSettings.address = ipAddress;
                 fprintf('Added new target configuration for "%s" with IP address "%s".\n',targetName,ipAddress);
             end
-            try
-                obj.targetObject.connect; % May ask to update if versions do not match
-            catch ME
-                disp(ME.message);
-            end
 
             % Search firmware binary and prompt user if not found in MATLAB path
             if exist([obj.appName,'.mldatx'],"file")
-                firmwareFilepath = obj.appName;
+                obj.firmwareFilepath = obj.appName;
             elseif ~batchStartupOptionUsed
                 [filename, firmwareFilepath] = uigetfile([obj.appName,'.mldatx'],...
                     'Select the firmware binary to load on the bossdevice');
@@ -107,33 +107,37 @@ classdef bossdevice < handle
                     disp('User selected Cancel.');
                     return;
                 else
-                    firmwareFilepath = fullfile(firmwareFilepath,filename);
+                    obj.firmwareFilepath = fullfile(firmwareFilepath,filename);
                 end
             else
                 error('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
+        end
+            
+        function initialize(obj)
+            % Connect to bosdevice
+            obj.targetObject.connect;
 
             % Load firmware on the bossdevice if not loaded yet
-            if obj.targetObject.isConnected && ~obj.targetObject.isLoaded
+            if ~obj.targetObject.isLoaded
                 fprintf('Loading application "%s" on "%s"...\n',obj.appName,obj.targetObject.TargetSettings.name);
-                obj.targetObject.load(firmwareFilepath);
+                obj.targetObject.load(obj.firmwareFilepath);
                 fprintf('Application loaded. Ready to start.\n');
             end
 
             % Figure out some oscillation values
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded
-                obj.theta = bossdevice_oscillation(obj.targetObject, 'theta');
-                obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha');
-                obj.beta = bossdevice_oscillation(obj.targetObject, 'beta');
-            end
-
-            % Prompt user to start application if required
-            if obj.targetObject.isConnected && ~obj.targetObject.isRunning
-                warning('Bossdevice is not running. Use start method to start application.')
-            end
+            obj.theta = bossdevice_oscillation(obj.targetObject, 'theta');
+            obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha');
+            obj.beta = bossdevice_oscillation(obj.targetObject, 'beta');
         end
 
         function start(obj)
+            % Initialize bossdevice connection to enable backwards compatibility
+            if ~obj.isInitialized
+                obj.initialize;
+            end
+
+            % Start application on target if not running yet
             if ~obj.targetObject.isRunning
                 obj.targetObject.start("ReloadOnStop",true,"StopTime",Inf);
             else
@@ -258,7 +262,7 @@ classdef bossdevice < handle
 
         function generator_running = get.isGeneratorRunning(obj)
             if obj.targetObject.isConnected && obj.targetObject.isLoaded &&...
-                    (getsignal(obj.targetObject, [obj.appName,'/GEN'],4))
+                    (getsignal(obj.targetObject, [obj.appName,'/Unit Delay'],1))
                 generator_running = true;
             else
                 generator_running = false;
@@ -303,6 +307,14 @@ classdef bossdevice < handle
 
         function isConnected = get.isConnected(obj)
             isConnected = obj.targetObject.isConnected;
+        end
+
+        function isInitialized = get.isInitialized(obj)
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+                isInitialized = true;
+            else
+                isInitialized = false;
+            end
         end
 
         function sendPulse(obj, port)
