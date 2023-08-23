@@ -10,12 +10,7 @@ classdef smokeTests < matlab.unittest.TestCase
 
     methods (TestClassSetup)
         function updateTarget(testCase)
-            try
-                testCase.bd = bossdevice;
-            catch ME
-                disp(ME.message);
-            end
-            % Always try to update target
+            testCase.bd = bossdevice;
             testCase.bd.targetObject.update;
         end
     end
@@ -32,7 +27,7 @@ classdef smokeTests < matlab.unittest.TestCase
     methods (Test, TestTags = {'noHW'})
         % Test methods that do not require bossdevice or any target connected
         function noFirmware(testCase)
-            testCase.verifyError(@() bossdevice, 'bossapi:noMLDATX');
+            testCase.verifyWarning(@() bossdevice, 'bossapi:noMLDATX');
         end
 
         function noBossdevice(testCase)
