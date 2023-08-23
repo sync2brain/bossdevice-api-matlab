@@ -45,6 +45,10 @@ jobs:
           name: code-issues
           path: checkResults.json
 
+      - name: Check path
+        run: |
+          $env:path -split ";"
+
       - name: Check Python manually
         if: always()
         shell: bash
