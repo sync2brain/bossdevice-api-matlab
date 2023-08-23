@@ -29,7 +29,7 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v3
 
-      - name: Run commands
+      - name: Run MATLAB command
         run: |
           &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool check"
 
@@ -48,7 +48,7 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v3
 
-      - name: Run commands
+      - name: Run MATLAB command
         run: |
           &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test({'bdConnected'})"
 
