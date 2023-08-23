@@ -10,8 +10,12 @@ classdef smokeTests < matlab.unittest.TestCase
 
     methods (TestClassSetup)
         function updateTarget(~)
-            tg = slrealtime('bossdevice');
-            tg.update;
+            try
+                bd = bossdevice;
+                bd.targetObject.update;
+            catch ME
+                disp(ME.message);
+            end
         end
     end
 
