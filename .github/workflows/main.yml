@@ -50,7 +50,7 @@ jobs:
 
       - name: Run MATLAB command
         run: |
-          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test({'bdConnected'})"
+          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test({'noHW','bdConnected'})"
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
