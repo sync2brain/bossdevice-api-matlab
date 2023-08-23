@@ -40,9 +40,11 @@ jobs:
           name: code-issues
           path: checkResults.json
 
-      - name: Upload Test Results
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always()
-        uses: actions/upload-artifact@v3
         with:
-          name: Test Results
-          path: "results.xml"
+          fail_on: "test failures"
+          action_fail: true
+          files: |
+            results.xml
