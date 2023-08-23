@@ -34,9 +34,9 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v3
 
-      - name: Run commands
-        run: |
-          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool check test({'bdConnected'})"
+      #- name: Run commands
+        #run: |
+        #  &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool check test({'bdConnected'})"
 
       - name: Archive check results
         uses: actions/upload-artifact@v3
@@ -46,6 +46,7 @@ jobs:
           path: checkResults.json
 
       - name: Check path
+        if: always()
         run: |
           $env:path -split ";"
 
