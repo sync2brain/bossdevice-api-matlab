@@ -334,16 +334,13 @@ classdef bossdevice < handle
                 setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 0);
                 setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 0);
                 pause(0.1)
-                obj.generator_sequence(sequence_time_port_marker);
+                obj.generator_sequence = sequence_time_port_marker;
                 obj.manualTrigger;
             else
                 disp('No pulse sent because app is not running yet. Start app first.');
             end
         end
 
-    end
-
-    methods (Access = protected)
         function manualTrigger(obj)
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
             setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 0);
