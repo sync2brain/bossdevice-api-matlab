@@ -17,6 +17,9 @@ else
     warning('Share folder not found. Firmware dependencies will not be packaged in toolbox.');
 end
 
+% Update Speedgoat dependencies
+updateSGdeps;
+
 % Remove v from toolboxVersion
 options.toolboxVersion = erase(toolboxVersion,"v");
 

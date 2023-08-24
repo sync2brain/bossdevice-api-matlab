@@ -56,6 +56,8 @@ classdef bossdevice < handle
                 ipAddress {mustBeTextScalar} = '';
             end
 
+            toolboxPath = fileparts(which(mfilename));
+
             % Initialize toolbox settings
             s = settings;
 
@@ -81,6 +83,16 @@ classdef bossdevice < handle
                 ipAddress = s.bossdeviceAPI.TargetSettings.TargetIPAddress.FactoryValue;
             end
 
+            % Check and enable built-in Speedgoat dependencies
+            if ~exist('updateSGtools.p','file')
+                addpath(fullfile(toolboxPath,'dependencies','sg',matlabRelease.Release));
+            elseif exist('speedgoat','file')
+                % Using own full installation of Speedgoat I/O Blockset
+                % fprintf('Using own full installation of Speedgoat I/O Blockset v%s.\n',speedgoat.version);
+            else
+                error('Speedgoat dependencies not found. Please search out to technical support.');
+            end
+
             % Use default target if not passing any input argument
             tgs = slrealtime.Targets;
             if ~contains(tgs.getTargetNames,targetName,'IgnoreCase',true)
@@ -98,7 +110,6 @@ classdef bossdevice < handle
             end
 
             % Search firmware binary and prompt user if not found in MATLAB path
-            toolboxPath = fileparts(which(mfilename));
             firmwareSharePath = fullfile(toolboxPath,'dependencies','firmware',matlabRelease.Release,[obj.appName,'.mldatx']);
 
             if exist([obj.appName,'.mldatx'],"file")

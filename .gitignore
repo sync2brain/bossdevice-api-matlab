@@ -1,6 +1,6 @@
 work
 toolbox/html
-toolbox/dependencies/firmware
+toolbox/dependencies
 
 # Autosave files
 *.asv
