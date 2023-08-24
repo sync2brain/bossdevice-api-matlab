@@ -33,7 +33,7 @@ toolboxOptions.Description = "For a more detailed description refer to the toolb
 toolboxOptions.AuthorName = authorName;
 toolboxOptions.AuthorEmail = "support@sync2brain.com";
 toolboxOptions.AuthorCompany = "sync2brain";
-toolboxOptions.ToolboxImageFile = fullfile(projObj.RootFolder,"images/sync2brain-Logo-hell.png");
+toolboxOptions.ToolboxImageFile = fullfile(projObj.RootFolder,"images/bossdevice.png");
 % toolboxOptions.ToolboxGettingStartedGuide = fullfile(projObj.RootFolder,"toolbox/gettingStarted.mlx");
 
 if ~exist(fullfile(projObj.RootFolder,"releases"), 'dir')
