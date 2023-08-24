@@ -1,13 +1,21 @@
-function toolboxOptions = releaseTask(toolboxVersion, authorName)
+function toolboxOptions = releaseTask(toolboxVersion, authorName, shareFolder)
 %GENERATETOOLBOX Function that generates a toolbox for the boss device API
 
 arguments
     toolboxVersion string {mustBeTextScalar} = '0.0'
     authorName string {mustBeTextScalar} = "sync2brain" % Use committer name when packaging from CI
+    shareFolder {mustBeFolder} = getenv('firmwareSharePath')
 end
 
 % Get current project object
 projObj = currentProject;
+
+% Copy firmware in local share folder to toolbox to facilitate distribution
+if ~isempty(shareFolder)
+    copyfile(shareFolder,fullfile(projObj.RootFolder,'toolbox/dependencies/firmware/'));
+else
+    warning('Share folder not found. Firmware dependencies will not be packaged in toolbox.');
+end
 
 % Remove v from toolboxVersion
 options.toolboxVersion = erase(toolboxVersion,"v");
