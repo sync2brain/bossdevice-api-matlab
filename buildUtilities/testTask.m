@@ -13,7 +13,7 @@ import matlab.unittest.plugins.XMLPlugin;
 projObj = currentProject;
 
 suite = TestSuite.fromProject(projObj);
-if ~isempty(tags)
+if strlength(tags)>0
     suite = suite.selectIf("Tag",tags);
 else
     disp('No tag was passed as input. All test cases will be executed.');
