@@ -41,6 +41,10 @@ jobs:
           if-no-files-found: error
           path: checkResults.json
 
+      - name: Build HTML documentation
+        run: |
+          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool buildDoc"
+
   test:
     runs-on: matlab
     # Steps represent a sequence of tasks that will be executed as part of the job
