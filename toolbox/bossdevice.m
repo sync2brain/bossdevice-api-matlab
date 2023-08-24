@@ -98,8 +98,13 @@ classdef bossdevice < handle
             end
 
             % Search firmware binary and prompt user if not found in MATLAB path
+            toolboxPath = fileparts(which(mfilename));
+            firmwareSharePath = fullfile(toolboxPath,'dependencies','firmware',matlabRelease.Release,[obj.appName,'.mldatx']);
+
             if exist([obj.appName,'.mldatx'],"file")
                 obj.firmwareFilepath = obj.appName;
+            elseif isfile(firmwareSharePath)
+                obj.firmwareFilepath = firmwareSharePath;
             elseif ~batchStartupOptionUsed
                 [filename, firmwareFilepath] = uigetfile([obj.appName,'.mldatx'],...
                     'Select the firmware binary to load on the bossdevice');
