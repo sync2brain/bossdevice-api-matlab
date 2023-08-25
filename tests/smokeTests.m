@@ -1,7 +1,7 @@
 classdef smokeTests < matlab.unittest.TestCase
 
     properties (Constant)
-        firmwarePath = fullfile('C:\bossdevice_firmware',matlabRelease.Release)
+        firmwarePath = fullfile(getenv('firmwareSharePath'),matlabRelease.Release)
     end
 
     properties

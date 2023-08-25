@@ -1,6 +1,10 @@
 classdef exampleTests < matlab.unittest.TestCase
     %EXAMPLETESTS Execute all shipping examples
 
+    properties (Constant)
+        firmwarePath = fullfile(getenv('firmwareSharePath'),matlabRelease.Release)
+    end
+
     properties (TestParameter)
         exName = {'demo_mu_rhythm_phase_triggering'}
     end
@@ -10,6 +14,12 @@ classdef exampleTests < matlab.unittest.TestCase
     end
 
     methods (TestClassSetup)
+        function addFirmwarePath(testCase)
+            if isfolder(testCase.firmwarePath)
+                matlab.unittest.fixtures.PathFixture(testCase.firmwarePath);
+            end
+        end
+
         function updateTarget(testCase)
             testCase.bd = bossdevice;
             testCase.bd.targetObject.update;
