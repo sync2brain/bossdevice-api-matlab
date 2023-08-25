@@ -23,7 +23,7 @@
 1. Create an instance of the main control class bossdevice `bd = bossdevice` in the MATLAB command window.
 2. If not found in the MATLAB path, please select `mainmodel.mldatx` real-time application.
 3. Start firmware with `bd.start` on the remote device.
-4. Explore examples with `bossex.script_name` and methods available in the bossdevice object.
+4. Explore examples with `demo_script_name` and methods available in the bossdevice object.
 
 ## User manual
 Please download and install the toolbox in MATLAB for a complete access to the user manual. You will find more details about API properties and methods, example scripts and further technical information.
