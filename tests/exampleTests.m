@@ -6,7 +6,7 @@ classdef exampleTests < matlab.unittest.TestCase
     end
 
     properties (TestParameter)
-        exName = {'demo_mu_rhythm_phase_triggering'}
+        exName = {'demo_jittered_open_loop_stimulation'}
     end
 
     properties
@@ -21,6 +21,14 @@ classdef exampleTests < matlab.unittest.TestCase
             end
             testCase.bd = bossdevice;
             testCase.bd.targetObject.update;
+        end
+    end
+
+    methods (TestClassTeardown)
+        function rebootTarget(testCase)
+            disp('Rebooting bossdevice to teardown test class.');
+            testCase.bd.targetObject.reboot;
+            pause(10);
         end
     end
 
