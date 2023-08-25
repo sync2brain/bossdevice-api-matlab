@@ -14,6 +14,7 @@ ITI=[4 6]; %ITI is seconds - a random number between these two values
 
 %% Initializing BOSS Device API 
 bd=bossdevice;
+bd.start;
 
 %% Approach 1 - For Loop Based Open Loop Stimulation
 bd.configure_time_port_marker([0 1 1]); %Configuring Trigger Sequence in [Time Port Marker] format  

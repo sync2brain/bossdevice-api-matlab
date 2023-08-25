@@ -9,10 +9,16 @@ import matlab.unittest.TestRunner;
 import matlab.unittest.TestSuite;
 import matlab.unittest.Verbosity;
 import matlab.unittest.plugins.XMLPlugin;
+import matlab.unittest.parameters.Parameter;
 
 projObj = currentProject;
 
-suite = TestSuite.fromProject(projObj);
+% Get list of example scripts in path
+exName = {dir(fullfile(projObj.RootFolder,'toolbox/examples','**/*.m')).name}';
+exName = exName(isFileOnPath(exName));
+exParam = Parameter.fromData('exName',exName);
+
+suite = TestSuite.fromProject(projObj,'ExternalParameters',exParam);
 if strlength(tags)>0
     suite = suite.selectIf("Tag",tags);
 else
@@ -33,4 +39,11 @@ if ~batchStartupOptionUsed
     results.assertSuccess;
 end
 
+end
+
+function onPath = isFileOnPath(filename)
+onPath = boolean(zeros(1,length(filename)));
+for ii = 1:length(filename)
+    onPath(ii) = exist(filename{ii},"file")>0;
+end
 end

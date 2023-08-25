@@ -7,6 +7,7 @@
 
 %% Initializing BOSS Device 
 bd = bossdevice;
+bd.start;
 
 %% Configuring Scope
 sc = addscope(bd.tg, 'host', 255);

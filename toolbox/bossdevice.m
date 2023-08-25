@@ -129,10 +129,13 @@ classdef bossdevice < handle
                 warning('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
         end
-            
+
         function initialize(obj)
             % Connect to bosdevice
             obj.targetObject.connect;
+
+            % Set Ethernet IP in secondary interface
+            bossapi.setEthernetInterface(obj.targetObject,'wm1','192.168.200.255/24');
 
             % Load firmware on the bossdevice if not loaded yet
             if ~obj.targetObject.isLoaded
@@ -364,6 +367,27 @@ classdef bossdevice < handle
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 1);
             pause(0.1);
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 0);
+        end
+
+        %% Target object wrappers
+        function addInstrument(obj, inst)
+            arguments
+                obj
+                inst slrealtime.Instrument
+            end
+            obj.targetObject.addInstrument(inst);
+        end
+
+        function removeInstrument(obj, inst)
+            arguments
+                obj
+                inst slrealtime.Instrument
+            end
+            obj.targetObject.removeInstrument(inst);
+        end
+
+        function removeAllInstruments(obj)
+            obj.targetObject.removeAllInstruments;
         end
     end
 

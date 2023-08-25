@@ -1,7 +1,7 @@
 classdef smokeTests < matlab.unittest.TestCase
 
     properties (Constant)
-        firmwarePath = fullfile('C:\bossdevice_firmware',matlabRelease.Release)
+        firmwarePath = fullfile(getenv('firmwareSharePath'),matlabRelease.Release)
     end
 
     properties
@@ -12,6 +12,14 @@ classdef smokeTests < matlab.unittest.TestCase
         function updateTarget(testCase)
             testCase.bd = bossdevice;
             testCase.bd.targetObject.update;
+        end
+    end
+
+    methods (TestClassTeardown)
+        function rebootTarget(testCase)
+            disp('Rebooting bossdevice to teardown test class.');
+            testCase.bd.targetObject.reboot;
+            pause(30);
         end
     end
 
@@ -32,7 +40,9 @@ classdef smokeTests < matlab.unittest.TestCase
 
         function noBossdevice(testCase)
             import matlab.unittest.fixtures.PathFixture
-            testCase.applyFixture(PathFixture(testCase.firmwarePath));
+            if isfolder(testCase.firmwarePath)
+                testCase.applyFixture(PathFixture(testCase.firmwarePath));
+            end
             testCase.bd = bossdevice;
             testCase.verifyFalse(testCase.bd.isConnected);
         end
@@ -42,7 +52,9 @@ classdef smokeTests < matlab.unittest.TestCase
         % Test methods with bossdevice connected and reachable from the host PC
         function bdInitialization(testCase)
             import matlab.unittest.fixtures.PathFixture
-            testCase.applyFixture(PathFixture(testCase.firmwarePath));
+            if isfolder(testCase.firmwarePath)
+                testCase.applyFixture(PathFixture(testCase.firmwarePath));
+            end
             testCase.bd = bossdevice;
             testCase.bd.initialize;
             testCase.verifyTrue(testCase.bd.isConnected);
@@ -54,7 +66,9 @@ classdef smokeTests < matlab.unittest.TestCase
 
         function bdShortRun(testCase)
             import matlab.unittest.fixtures.PathFixture
-            testCase.applyFixture(PathFixture(testCase.firmwarePath));
+            if isfolder(testCase.firmwarePath)
+                testCase.applyFixture(PathFixture(testCase.firmwarePath));
+            end
             testCase.bd = bossdevice;
             testCase.bd.start;
             testCase.verifyTrue(testCase.bd.isRunning);

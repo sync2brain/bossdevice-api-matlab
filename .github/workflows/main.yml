@@ -28,6 +28,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
         uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.REPO_READ_TOKEN }}
 
       - name: Cache MATLAB build files
         uses: actions/cache@v3
@@ -59,6 +62,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
         uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.REPO_READ_TOKEN }}
 
       - name: Cache MATLAB build files
         uses: actions/cache@v3

@@ -1,0 +1,3 @@
+[submodule "toolbox/dependencies/+bossapi"]
+	path = toolbox/dependencies/+bossapi
+	url = ../bossapi.git
