@@ -34,8 +34,9 @@ classdef exampleTests < matlab.unittest.TestCase
 
     methods (TestMethodTeardown)
         function stopBossdevice(testCase)
-            if testCase.bd.isConnected
+            if testCase.bd.isConnected && testCase.bd.isRunning
                 testCase.bd.stop;
+                pause(5);
             end
         end
     end
