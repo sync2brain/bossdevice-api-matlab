@@ -35,7 +35,10 @@ classdef exampleTests < matlab.unittest.TestCase
     end
 
     methods (Test, TestTags = {'bdConnected'})
-        function runExampleScript(~, exName)
+        function runExampleScript(testCase, exName)
+            if batchStartupOptionUsed
+                testCase.assertTrue(isfolder(testCase.firmwarePath),'%s was not found.',testCase.firmwarePath);
+            end
             run(exName);
         end
     end
