@@ -14,13 +14,11 @@ classdef exampleTests < matlab.unittest.TestCase
     end
 
     methods (TestClassSetup)
-        function addFirmwarePath(testCase)
+        function setupBossdevice(testCase)
+            import matlab.unittest.fixtures.PathFixture
             if isfolder(testCase.firmwarePath)
-                matlab.unittest.fixtures.PathFixture(testCase.firmwarePath);
+                testCase.applyFixture(PathFixture(testCase.firmwarePath));
             end
-        end
-
-        function updateTarget(testCase)
             testCase.bd = bossdevice;
             testCase.bd.targetObject.update;
         end
@@ -35,9 +33,7 @@ classdef exampleTests < matlab.unittest.TestCase
     end
 
     methods (Test, TestTags = {'bdConnected'})
-        function runExampleScript(testCase, exName)
-            % Need to pass the existing bd testcas object to bd as how the script expects it
-            bd = testCase.bd;
+        function runExampleScript(~, exName)
             run(exName);
         end
     end
