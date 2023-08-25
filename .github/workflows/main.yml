@@ -51,6 +51,11 @@ jobs:
     runs-on: matlab
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:  
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+          
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
         uses: actions/checkout@v3
@@ -66,9 +71,10 @@ jobs:
         run: |
           &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test({'noHW','bdConnected'})"
 
-      - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v3
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: success() || failure()
         with:
-          report_paths: 'results.xml'
-          fail_on_failure: true
+          action_fail: true
+          files: |
+            results.xml
