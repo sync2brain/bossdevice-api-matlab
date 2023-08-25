@@ -36,9 +36,8 @@ classdef exampleTests < matlab.unittest.TestCase
 
     methods (Test, TestTags = {'bdConnected'})
         function runExampleScript(testCase, exName)
-            if batchStartupOptionUsed
-                testCase.assertTrue(isfolder(testCase.firmwarePath),sprintf('%s was not found.',testCase.firmwarePath));
-            end
+            % Need to pass the existing bd testcas object to bd as how the script expects it
+            bd = testCase.bd;
             run(exName);
         end
     end
