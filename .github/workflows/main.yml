@@ -45,7 +45,6 @@ jobs:
         if: success() || failure()
         with:
           name: code-issues
-          if-no-files-found: error
           path: checkResults.json
 
   test:
