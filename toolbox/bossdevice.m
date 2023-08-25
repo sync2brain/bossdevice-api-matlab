@@ -10,8 +10,12 @@ classdef bossdevice < handle
         beta
     end
 
-    properties (Access = protected)
+    properties (SetAccess = protected, Hidden)
         targetObject slrealtime.Target
+    end
+
+    properties (SetAccess = protected)
+        firmwareFilepath
     end
 
     properties (Dependent)
@@ -26,6 +30,7 @@ classdef bossdevice < handle
 
     properties (SetAccess = private, Dependent)
         isConnected logical
+        isInitialized logical
         isRunning logical
         isArmed logical
         isGeneratorRunning logical
@@ -50,6 +55,8 @@ classdef bossdevice < handle
                 targetName {mustBeTextScalar} = '';
                 ipAddress {mustBeTextScalar} = '';
             end
+
+            toolboxPath = fileparts(which(mfilename));
 
             % Initialize toolbox settings
             s = settings;
@@ -76,6 +83,16 @@ classdef bossdevice < handle
                 ipAddress = s.bossdeviceAPI.TargetSettings.TargetIPAddress.FactoryValue;
             end
 
+            % Check and enable built-in Speedgoat dependencies
+            if ~exist('updateSGtools.p','file')
+                addpath(fullfile(toolboxPath,'dependencies','sg',matlabRelease.Release));
+            elseif exist('speedgoat','file')
+                % Using own full installation of Speedgoat I/O Blockset
+                % fprintf('Using own full installation of Speedgoat I/O Blockset v%s.\n',speedgoat.version);
+            else
+                error('Speedgoat dependencies not found. Please search out to technical support.');
+            end
+
             % Use default target if not passing any input argument
             tgs = slrealtime.Targets;
             if ~contains(tgs.getTargetNames,targetName,'IgnoreCase',true)
@@ -91,15 +108,14 @@ classdef bossdevice < handle
                 obj.targetObject.TargetSettings.address = ipAddress;
                 fprintf('Added new target configuration for "%s" with IP address "%s".\n',targetName,ipAddress);
             end
-            try
-                obj.targetObject.connect; % May ask to update if versions do not match
-            catch ME
-                disp(ME.message);
-            end
 
             % Search firmware binary and prompt user if not found in MATLAB path
+            firmwareSharePath = fullfile(toolboxPath,'dependencies','firmware',matlabRelease.Release,[obj.appName,'.mldatx']);
+
             if exist([obj.appName,'.mldatx'],"file")
-                firmwareFilepath = obj.appName;
+                obj.firmwareFilepath = obj.appName;
+            elseif isfile(firmwareSharePath)
+                obj.firmwareFilepath = firmwareSharePath;
             elseif ~batchStartupOptionUsed
                 [filename, firmwareFilepath] = uigetfile([obj.appName,'.mldatx'],...
                     'Select the firmware binary to load on the bossdevice');
@@ -107,31 +123,48 @@ classdef bossdevice < handle
                     disp('User selected Cancel.');
                     return;
                 else
-                    firmwareFilepath = fullfile(firmwareFilepath,filename);
+                    obj.firmwareFilepath = fullfile(firmwareFilepath,filename);
                 end
             else
-                error('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
+                warning('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
+        end
+
+        function initialize(obj)
+            % Connect to bosdevice
+            obj.targetObject.connect;
 
             % Load firmware on the bossdevice if not loaded yet
-            if obj.targetObject.isConnected && ~obj.targetObject.isLoaded
+            if ~obj.targetObject.isLoaded
                 fprintf('Loading application "%s" on "%s"...\n',obj.appName,obj.targetObject.TargetSettings.name);
-                obj.targetObject.load(firmwareFilepath);
+                obj.targetObject.load(obj.firmwareFilepath);
                 fprintf('Application loaded. Ready to start.\n');
             end
 
             % Figure out some oscillation values
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded
-                obj.theta = bossdevice_oscillation(obj.targetObject, 'theta');
-                obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha');
-                obj.beta = bossdevice_oscillation(obj.targetObject, 'beta');
+            obj.theta = bossdevice_oscillation(obj.targetObject, 'theta');
+            obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha');
+            obj.beta = bossdevice_oscillation(obj.targetObject, 'beta');
+        end
+
+        function start(obj)
+            % Initialize bossdevice connection to enable backwards compatibility
+            if ~obj.isInitialized
+                obj.initialize;
             end
 
-            % Prompt user to start application if required
-            if obj.targetObject.isConnected && ~obj.targetObject.isRunning
-                warning('Bossdevice is not running. Use start method to start application.')
+            % Start application on target if not running yet
+            if ~obj.targetObject.isRunning
+                obj.targetObject.start("ReloadOnStop",true,"StopTime",Inf);
+            else
+                disp('Application is already running.');
             end
         end
+
+        function stop(obj)
+            obj.targetObject.stop;
+        end
+
 
         % getters and setters for dependent properties
         function duration = get.sample_and_hold_seconds(obj)
@@ -245,7 +278,7 @@ classdef bossdevice < handle
 
         function generator_running = get.isGeneratorRunning(obj)
             if obj.targetObject.isConnected && obj.targetObject.isLoaded &&...
-                    (getsignal(obj.targetObject, [obj.appName,'/GEN'],4))
+                    (getsignal(obj.targetObject, [obj.appName,'/Unit Delay'],1))
                 generator_running = true;
             else
                 generator_running = false;
@@ -280,6 +313,26 @@ classdef bossdevice < handle
             end
         end
 
+        function isRunning = get.isRunning(obj)
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+                isRunning = obj.targetObject.isRunning;
+            else
+                isRunning = false;
+            end
+        end
+
+        function isConnected = get.isConnected(obj)
+            isConnected = obj.targetObject.isConnected;
+        end
+
+        function isInitialized = get.isInitialized(obj)
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+                isInitialized = true;
+            else
+                isInitialized = false;
+            end
+        end
+
         function sendPulse(obj, port)
             arguments
                 obj
@@ -297,53 +350,13 @@ classdef bossdevice < handle
                 setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 0);
                 setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 0);
                 pause(0.1)
-                obj.generator_sequence(sequence_time_port_marker);
+                obj.generator_sequence = sequence_time_port_marker;
                 obj.manualTrigger;
             else
                 disp('No pulse sent because app is not running yet. Start app first.');
             end
         end
 
-        %% Target object wrappers
-        function isConnected = get.isConnected(obj)
-            isConnected = obj.targetObject.isConnected;
-        end
-        
-        function start(obj)
-            if ~obj.targetObject.isRunning
-                obj.targetObject.start("ReloadOnStop",true,"StopTime",Inf);
-            else
-                disp('Application is already running.');
-            end
-        end
-
-        function stop(obj)
-            obj.targetObject.stop;
-        end
-
-        function addInstrument(obj, inst)
-            obj.targetObject.addInstrument(inst);
-        end
-
-        function removeInstrument(obj, inst)
-            obj.targetObject.removeInstrument(inst);
-        end
-
-        function removeAllInstruments(obj)
-            obj.targetObject.removeAllInstruments;
-        end
-
-        function isRunning = get.isRunning(obj)
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded
-                isRunning = obj.targetObject.isRunning;
-            else
-                isRunning = false;
-            end
-        end
-
-    end
-
-    methods (Access = protected)
         function manualTrigger(obj)
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'enabled', 1);
             setparam(obj.targetObject, [obj.appName,'/TRG'], 'enabled', 0);
@@ -351,7 +364,28 @@ classdef bossdevice < handle
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 1);
             pause(0.1);
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 0);
-        end   
+        end
+
+        %% Target object wrappers
+        function addInstrument(obj, inst)
+            arguments
+                obj
+                inst slrealtime.Instrument
+            end
+            obj.targetObject.addInstrument(inst);
+        end
+
+        function removeInstrument(obj, inst)
+            arguments
+                obj
+                inst slrealtime.Instrument
+            end
+            obj.targetObject.removeInstrument(inst);
+        end
+
+        function removeAllInstruments(obj)
+            obj.targetObject.removeAllInstruments;
+        end
     end
 
 end

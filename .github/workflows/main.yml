@@ -1,5 +1,8 @@
 name: CI
 
+env:
+  MATLAB_VER: R2023a
+
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
@@ -19,49 +22,59 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: matlab
     # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
+    steps:  
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
         uses: actions/checkout@v3
-        
-      - name: Set up MATLAB
-        uses: matlab-actions/setup-matlab@v1
-    
-      - name: Run commands
-        uses: matlab-actions/run-command@v1
+
+      - name: Cache MATLAB build files
+        uses: actions/cache@v3
         with:
-          command: openProject(pwd); checkTask;
+          key: cache-matlab
+          path: |
+            buildUtilities/.buildtool
+
+      - name: Run MATLAB command
+        run: |
+          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool check"
 
       - name: Archive check results
         uses: actions/upload-artifact@v3
-        if: always()
+        if: success() || failure()
         with:
           name: code-issues
           path: checkResults.json
-          
+
   test:
-    runs-on: ubuntu-latest
+    runs-on: matlab
     # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
+    steps:  
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+          
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
         uses: actions/checkout@v3
-        
-      - name: Set up MATLAB
-        uses: matlab-actions/setup-matlab@v1
-    
-      - name: Run commands
-        uses: matlab-actions/run-command@v1
+
+      - name: Cache MATLAB build files
+        uses: actions/cache@v3
         with:
-          command: openProject(pwd); testTask("github");
-          
+          key: cache-matlab
+          path: |
+            buildUtilities/.buildtool
+
+      - name: Run MATLAB command
+        run: |
+          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test({'noHW','bdConnected'})"
+
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        if: success() || failure()
         with:
-          fail_on: "test failures"
           action_fail: true
           files: |
             results.xml
