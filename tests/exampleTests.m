@@ -28,7 +28,7 @@ classdef exampleTests < matlab.unittest.TestCase
         function rebootTarget(testCase)
             disp('Rebooting bossdevice to teardown test class.');
             testCase.bd.targetObject.reboot;
-            pause(10);
+            pause(30);
         end
     end
 
