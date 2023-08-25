@@ -18,6 +18,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
+      - name: Cache MATLAB build files
+        uses: actions/cache@v3
+        with:
+          key: cache-matlab
+          path: |
+            buildUtilities/.buildtool
+
       - name: Run MATLAB command
         run: |
           &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test('') package('${{  github.ref_name }}','${{  github.actor }}')"
