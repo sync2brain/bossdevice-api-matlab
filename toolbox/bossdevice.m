@@ -134,6 +134,9 @@ classdef bossdevice < handle
             % Connect to bosdevice
             obj.targetObject.connect;
 
+            % Set Ethernet IP in secondary interface
+            bossapi.setEthernetInterface(obj.targetObject,'wm1','192.168.200.255/24');
+
             % Load firmware on the bossdevice if not loaded yet
             if ~obj.targetObject.isLoaded
                 fprintf('Loading application "%s" on "%s"...\n',obj.appName,obj.targetObject.TargetSettings.name);
