@@ -6,14 +6,16 @@ classdef smokeTests < matlab.unittest.TestCase
 
     properties
         bd bossdevice
+        sgPath
+        isSGinstalled
     end
 
     methods (TestClassSetup)
         function setupBossdevice(testCase)
-            if exist('sg_path','file')
+            [testCase.isSGinstalled, testCase.sgPath] = bossapi.isSpeedgoatBlocksetInstalled;
+            if testCase.isSGinstalled
                 % If local installation of Speedgoat blockset is present, update toolbox dependencies and work with them
-                disp('Remove Speedgoat local installation.');
-                sg_path(0);
+                bossapi.removeSpeedgoatBlocksetFromPath(testCase.sgPath);
             end
 
             testCase.bd = bossdevice;
@@ -22,10 +24,10 @@ classdef smokeTests < matlab.unittest.TestCase
     end
 
     methods (TestClassTeardown)
-        function resetSgPath(~)
-            if exist('sg_path','file')
-                disp('Restore Speedgoat local installation.');
-                sg_path(1);
+        function resetSgPath(testCase)
+            if testCase.isSGinstalled
+                % If local installation of Speedgoat blockset is present, restore default paths
+                bossapi.addSpeedgoatBlocksetToPath(testCase.sgPath);
             end
         end
 
