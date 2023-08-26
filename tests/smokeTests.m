@@ -49,7 +49,9 @@ classdef smokeTests < matlab.unittest.TestCase
     methods (Test, TestTags = {'noHW'})
         % Test methods that do not require bossdevice or any target connected
         function noFirmware(testCase)
-            testCase.verifyWarning(@() bossdevice, 'bossapi:noMLDATX');
+            if batchStartupOptionUsed
+                testCase.verifyWarning(@() bossdevice, 'bossapi:noMLDATX');
+            end
         end
 
         function noBossdevice(testCase)
