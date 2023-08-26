@@ -1,24 +1,28 @@
 function updateSGdeps
 
 projObj = currentProject;
-sgToolsPath = fileparts(which('updateSGtools.p','-all'));
-if isstring(sgToolsPath)
-    sgToolsPath = sgToolsPath{end}; % Speedgoat I/O blockset path is always below the local project
-end
 
-fprintf('Updating Speedgoat dependencies in local project from %s...\n',sgToolsPath);
+assert(exist('speedgoatroot','file'),'Speedgoat dependencies not found installed in local system.');
 
-sgTools = dir(sgToolsPath);
+fprintf('Updating Speedgoat dependencies in local project from %s...\n',speedgoatroot);
+
+% Figure out list of Speedgoat tools to copy
+sgTools = dir(fullfile(speedgoatroot,'sg_resources'));
 sgTools = sgTools(~[sgTools.isdir]);
 
-destFolder = fullfile(projObj.RootFolder,'toolbox/dependencies/sg',matlabRelease.Release);
-if ~isfolder(destFolder)
-    mkdir(destFolder);
+% Create dependencies folder in local toolbox
+destFolder = fullfile(projObj.RootFolder,'toolbox/dependencies/sg');
+
+% Copy Speedgoat version resources to local toolbox folder
+if ~isfolder(fullfile(destFolder,matlabRelease.Release))
+    mkdir(fullfile(destFolder,matlabRelease.Release));
+end
+for i = 1:numel(sgTools)
+    copyfile(fullfile(sgTools(i).folder,sgTools(i).name),fullfile(destFolder,matlabRelease.Release));
 end
 
-for i = 1:numel(sgTools)
-    copyfile(fullfile(sgTools(i).folder,sgTools(i).name),destFolder);
-end
+% Copy common Speedgoat functions
+copyfile(fullfile(speedgoatroot,'sg_functions','+sg'),fullfile(destFolder,'+sg'));
 
 fprintf('Speedgoat dependencies updated in toolbox.\n');
 

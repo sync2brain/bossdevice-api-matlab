@@ -6,7 +6,7 @@
 - Simulink Real-Time&reg;
 - [Simulink Real-Time Target Support Package](https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package)
 - [bossdevice](https://sync2brain.com/) hardware
-- bossdevice firmware (MLDATX file)
+- bossdevice firmware (MLDATX file included in the toolbox installer)
 
 ## Enable bossdevice communication over Control PC
 1. Turn on the bossdevice and connect the `Control PC` Ethernet port on your bossdevice to an available Ethernet port on your computer.
@@ -20,9 +20,9 @@
 4. Click on the update command if prompted to update the software dependencies on the bossdevice.
 
 ## Get started
-1. Create an instance of the main control class bossdevice `bd = bossdevice` in the MATLAB command window.
-2. If not found in the MATLAB path, please select `mainmodel.mldatx` real-time application.
-3. Start firmware with `bd.start` on the remote device.
+1. Create an instance of the main control class bossdevice `bd = bossdevice` in the MATLAB command window from any working path, since the toolbox has already been added to your MATLAB path.
+2. If not found in the MATLAB path or you want to use a custom firmware version, please select `mainmodel.mldatx` real-time application.
+3. Initialize the bossdevice with `bd.initialize` and run the signal processing application on the remote device with `bd.start` in the MATLAB command window.
 4. Explore examples with `demo_script_name` and methods available in the bossdevice object.
 
 ## User manual

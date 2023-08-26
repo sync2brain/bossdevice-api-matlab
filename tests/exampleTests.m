@@ -15,6 +15,13 @@ classdef exampleTests < matlab.unittest.TestCase
 
     methods (TestClassSetup)
         function setupBossdevice(testCase)
+            if exist('sg_path','file')
+                % If local installation of Speedgoat blockset is present, update toolbox dependencies and work with them
+                updateSGdeps;
+                disp('Remove Speedgoat local installation.');
+                sg_path(0);
+            end
+
             import matlab.unittest.fixtures.PathFixture
             if isfolder(testCase.firmwarePath)
                 testCase.applyFixture(PathFixture(testCase.firmwarePath));
@@ -25,6 +32,13 @@ classdef exampleTests < matlab.unittest.TestCase
     end
 
     methods (TestClassTeardown)
+        function resetSgPath(~)
+            if exist('sg_path','file')
+                disp('Restore Speedgoat local installation.');
+                sg_path(1);
+            end
+        end
+
         function rebootTarget(testCase)
             disp('Rebooting bossdevice to teardown test class.');
             testCase.bd.targetObject.reboot;
