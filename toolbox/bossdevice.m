@@ -12,6 +12,7 @@ classdef bossdevice < handle
 
     properties (SetAccess = protected, Hidden)
         targetObject slrealtime.Target
+        sgDepsPath
     end
 
     properties (SetAccess = protected)
@@ -84,13 +85,13 @@ classdef bossdevice < handle
             end
 
             % Check and enable built-in Speedgoat dependencies
-            sgDepsPath = fullfile(toolboxPath,'dependencies','sg',matlabRelease.Release);
-            if exist('speedgoat','file')
+            obj.sgDepsPath = fullfile(toolboxPath,'dependencies','sg',matlabRelease.Release);
+            if exist('speedgoatroot','file')
                 % Using own full installation of Speedgoat I/O Blockset (for development or debugging purposes)
                 fprintf('[Debug] Using own full installation of Speedgoat I/O Blockset v%s.\n',speedgoat.version);
-            elseif isfolder(sgDepsPath)
+            elseif isfolder(obj.sgDepsPath)
                 % Try using built-in Speedgoat dependency
-                addpath(sgDepsPath);
+                addpath(obj.sgDepsPath);
                 assert(exist('updateSGtools.p','file'),...
                     sprintf('Speedgoat files not found in "%s". Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.',sgDepsPath));
             else
