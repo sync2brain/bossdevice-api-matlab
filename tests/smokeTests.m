@@ -6,26 +6,35 @@ classdef smokeTests < matlab.unittest.TestCase
 
     properties
         bd bossdevice
+        sgPath
+        isSGinstalled
     end
 
     methods (TestClassSetup)
         function setupBossdevice(testCase)
-            if exist('sg_path','file')
+            [testCase.isSGinstalled, testCase.sgPath] = bossapi.isSpeedgoatBlocksetInstalled;
+            if testCase.isSGinstalled
                 % If local installation of Speedgoat blockset is present, update toolbox dependencies and work with them
-                disp('Remove Speedgoat local installation.');
-                sg_path(0);
+                bossapi.removeSpeedgoatBlocksetFromPath(testCase.sgPath);
             end
 
             testCase.bd = bossdevice;
             testCase.bd.targetObject.update;
         end
+
+        function addFirmwarePath(testCase)
+            import matlab.unittest.fixtures.PathFixture
+            if isfolder(testCase.firmwarePath)
+                testCase.applyFixture(PathFixture(testCase.firmwarePath));
+            end
+        end
     end
 
     methods (TestClassTeardown)
-        function resetSgPath(~)
-            if exist('sg_path','file')
-                disp('Restore Speedgoat local installation.');
-                sg_path(1);
+        function resetSgPath(testCase)
+            if testCase.isSGinstalled
+                % If local installation of Speedgoat blockset is present, restore default paths
+                bossapi.addSpeedgoatBlocksetToPath(testCase.sgPath);
             end
         end
 
@@ -47,17 +56,7 @@ classdef smokeTests < matlab.unittest.TestCase
 
     methods (Test, TestTags = {'noHW'})
         % Test methods that do not require bossdevice or any target connected
-        function noFirmware(testCase)
-            if batchStartupOptionUsed
-                testCase.verifyWarning(@() bossdevice, 'bossapi:noMLDATX');
-            end
-        end
-
         function noBossdevice(testCase)
-            import matlab.unittest.fixtures.PathFixture
-            if isfolder(testCase.firmwarePath)
-                testCase.applyFixture(PathFixture(testCase.firmwarePath));
-            end
             testCase.bd = bossdevice;
             testCase.verifyFalse(testCase.bd.isConnected);
         end
@@ -66,10 +65,6 @@ classdef smokeTests < matlab.unittest.TestCase
     methods (Test, TestTags = {'bdConnected'})
         % Test methods with bossdevice connected and reachable from the host PC
         function bdInitialization(testCase)
-            import matlab.unittest.fixtures.PathFixture
-            if isfolder(testCase.firmwarePath)
-                testCase.applyFixture(PathFixture(testCase.firmwarePath));
-            end
             testCase.bd = bossdevice;
             testCase.bd.initialize;
             testCase.verifyTrue(testCase.bd.isConnected);
@@ -80,10 +75,6 @@ classdef smokeTests < matlab.unittest.TestCase
         end
 
         function bdShortRun(testCase)
-            import matlab.unittest.fixtures.PathFixture
-            if isfolder(testCase.firmwarePath)
-                testCase.applyFixture(PathFixture(testCase.firmwarePath));
-            end
             testCase.bd = bossdevice;
             testCase.bd.start;
             testCase.verifyTrue(testCase.bd.isRunning);

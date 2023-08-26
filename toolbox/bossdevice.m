@@ -47,6 +47,10 @@ classdef bossdevice < handle
             s.bossdeviceAPI.TargetSettings.TargetName.clearPersonalValue;
             s.bossdeviceAPI.TargetSettings.TargetIPAddress.clearPersonalValue;
         end
+
+        function doc()
+            web('bossdevice_api_landing_page.html');
+        end
     end
 
     methods
@@ -86,14 +90,15 @@ classdef bossdevice < handle
 
             % Check and enable built-in Speedgoat dependencies
             obj.sgDepsPath = fullfile(toolboxPath,'dependencies','sg',matlabRelease.Release);
-            if exist('speedgoatroot','file')
+            isSGinstalled = bossapi.isSpeedgoatBlocksetInstalled;
+            if isSGinstalled
                 % Using own full installation of Speedgoat I/O Blockset (for development or debugging purposes)
                 fprintf('[Debug] Using own full installation of Speedgoat I/O Blockset v%s.\n',speedgoat.version);
             elseif isfolder(obj.sgDepsPath)
                 % Try using built-in Speedgoat dependency
                 addpath(obj.sgDepsPath);
                 assert(exist('updateSGtools.p','file'),...
-                    sprintf('Speedgoat files not found in "%s". Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.',sgDepsPath));
+                    sprintf('Speedgoat files not found in "%s". Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.',obj.sgDepsPath));
             else
                 error('Speedgoat dependencies not found. Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.');
             end
@@ -115,23 +120,23 @@ classdef bossdevice < handle
             end
 
             % Search firmware binary and prompt user if not found in MATLAB path
-            firmwareSharePath = fullfile(toolboxPath,'dependencies','firmware',matlabRelease.Release,[obj.appName,'.mldatx']);
+            firmwareDepsPath = fullfile(toolboxPath,'dependencies','firmware',matlabRelease.Release,[obj.appName,'.mldatx']);
 
             if exist([obj.appName,'.mldatx'],"file")
                 obj.firmwareFilepath = obj.appName;
-            elseif isfile(firmwareSharePath)
-                obj.firmwareFilepath = firmwareSharePath;
+            elseif isfile(firmwareDepsPath)
+                obj.firmwareFilepath = firmwareDepsPath;
             elseif ~batchStartupOptionUsed
                 [filename, firmwareFilepath] = uigetfile([obj.appName,'.mldatx'],...
                     'Select the firmware binary to load on the bossdevice');
                 if isequal(filename,0)
-                    disp('User selected Cancel.');
+                    disp('User selected Cancel. Please select firmware mldatx file to complete bossdevice dependencies.');
                     return;
                 else
                     obj.firmwareFilepath = fullfile(firmwareFilepath,filename);
                 end
             else
-                warning('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
+                error('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
         end
 
@@ -372,6 +377,10 @@ classdef bossdevice < handle
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 1);
             pause(0.1);
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 0);
+        end
+
+        function openDocumentation(obj)
+            obj.doc;
         end
 
         %% Target object wrappers

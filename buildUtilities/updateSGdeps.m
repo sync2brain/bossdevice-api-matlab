@@ -2,12 +2,14 @@ function updateSGdeps
 
 projObj = currentProject;
 
-assert(exist('speedgoatroot','file'),'Speedgoat dependencies not found installed in local system.');
+[isSGinstalled, sgDefaultPath] = bossapi.isSpeedgoatBlocksetInstalled;
 
-fprintf('Updating Speedgoat dependencies in local project from %s...\n',speedgoatroot);
+assert(isSGinstalled,'Speedgoat dependencies not found installed in local system.');
+
+fprintf('Updating Speedgoat dependencies in local project from %s...\n',sgDefaultPath);
 
 % Figure out list of Speedgoat tools to copy
-sgTools = dir(fullfile(speedgoatroot,'sg_resources'));
+sgTools = dir(fullfile(sgDefaultPath,'sg_resources'));
 sgTools = sgTools(~[sgTools.isdir]);
 
 % Create dependencies folder in local toolbox
@@ -22,8 +24,9 @@ for i = 1:numel(sgTools)
 end
 
 % Copy common Speedgoat functions
-copyfile(fullfile(speedgoatroot,'sg_functions','+sg'),fullfile(destFolder,'+sg'));
-copyfile(fullfile(speedgoatroot,'sg_functions','+speedgoat'),fullfile(destFolder,'+speedgoat'));
+copyfile(fullfile(sgDefaultPath,'speedgoatroot.p'),destFolder);
+copyfile(fullfile(sgDefaultPath,'sg_functions','+sg'),fullfile(destFolder,'+sg'));
+copyfile(fullfile(sgDefaultPath,'sg_functions','+speedgoat'),fullfile(destFolder,'+speedgoat'));
 
 fprintf('Speedgoat dependencies updated in toolbox.\n');
 

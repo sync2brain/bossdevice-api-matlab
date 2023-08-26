@@ -30,7 +30,7 @@ jobs:
 
       - name: Run MATLAB command
         run: |
-          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test('') package('${{  github.ref_name }}','${{  github.actor }}')"
+          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test('bdConnected') package('${{  github.ref_name }}','${{  github.actor }}')"
       
       # Create new release
       - name: Release

@@ -1,5 +1,8 @@
 work
+.buildtool
 toolbox/html
+toolbox/dependencies/sg
+toolbox/dependencies/firmware
 
 # Autosave files
 *.asv
