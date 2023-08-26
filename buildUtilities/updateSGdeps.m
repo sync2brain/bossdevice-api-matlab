@@ -2,6 +2,7 @@ function updateSGdeps
 
 projObj = currentProject;
 sgToolsPath = fileparts(which('updateSGtools.p','-all'));
+assert(~isempty(sgToolsPath),'Speedgoat dependencies not found installed in local system.');
 if isstring(sgToolsPath)
     sgToolsPath = sgToolsPath{end}; % Speedgoat I/O blockset path is always below the local project
 end
