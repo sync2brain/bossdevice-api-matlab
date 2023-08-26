@@ -99,7 +99,7 @@ classdef bossdevice < handle
 
             % Use default target if not passing any input argument
             tgs = slrealtime.Targets;
-            if ~contains(tgs.getTargetNames,targetName,'IgnoreCase',true)
+            if ~any(matches(tgs.getTargetNames,targetName,'IgnoreCase',false))
                 tgs.addTarget(targetName);
                 isTargetNew = true;
             else
