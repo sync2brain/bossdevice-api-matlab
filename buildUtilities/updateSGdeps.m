@@ -23,6 +23,7 @@ end
 
 % Copy common Speedgoat functions
 copyfile(fullfile(speedgoatroot,'sg_functions','+sg'),fullfile(destFolder,'+sg'));
+copyfile(fullfile(speedgoatroot,'sg_functions','+speedgoat'),fullfile(destFolder,'+speedgoat'));
 
 fprintf('Speedgoat dependencies updated in toolbox.\n');
 
