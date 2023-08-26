@@ -90,7 +90,8 @@ classdef bossdevice < handle
 
             % Check and enable built-in Speedgoat dependencies
             obj.sgDepsPath = fullfile(toolboxPath,'dependencies','sg',matlabRelease.Release);
-            if exist('speedgoatroot','file')
+            isSGinstalled = bossapi.isSpeedgoatBlocksetInstalled;
+            if isSGinstalled
                 % Using own full installation of Speedgoat I/O Blockset (for development or debugging purposes)
                 fprintf('[Debug] Using own full installation of Speedgoat I/O Blockset v%s.\n',speedgoat.version);
             elseif isfolder(obj.sgDepsPath)
@@ -137,6 +138,10 @@ classdef bossdevice < handle
             else
                 warning('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
+        end
+
+        function delete(obj)
+            rmpath(obj.sgDepsPath);
         end
 
         function initialize(obj)
