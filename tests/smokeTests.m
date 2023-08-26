@@ -21,6 +21,13 @@ classdef smokeTests < matlab.unittest.TestCase
             testCase.bd = bossdevice;
             testCase.bd.targetObject.update;
         end
+
+        function addFirmwarePath(testCase)
+            import matlab.unittest.fixtures.PathFixture
+            if isfolder(testCase.firmwarePath)
+                testCase.applyFixture(PathFixture(testCase.firmwarePath));
+            end
+        end
     end
 
     methods (TestClassTeardown)
@@ -49,17 +56,7 @@ classdef smokeTests < matlab.unittest.TestCase
 
     methods (Test, TestTags = {'noHW'})
         % Test methods that do not require bossdevice or any target connected
-        function noFirmware(testCase)
-            if batchStartupOptionUsed
-                testCase.verifyWarning(@() bossdevice, 'bossapi:noMLDATX');
-            end
-        end
-
         function noBossdevice(testCase)
-            import matlab.unittest.fixtures.PathFixture
-            if isfolder(testCase.firmwarePath)
-                testCase.applyFixture(PathFixture(testCase.firmwarePath));
-            end
             testCase.bd = bossdevice;
             testCase.verifyFalse(testCase.bd.isConnected);
         end
@@ -68,10 +65,6 @@ classdef smokeTests < matlab.unittest.TestCase
     methods (Test, TestTags = {'bdConnected'})
         % Test methods with bossdevice connected and reachable from the host PC
         function bdInitialization(testCase)
-            import matlab.unittest.fixtures.PathFixture
-            if isfolder(testCase.firmwarePath)
-                testCase.applyFixture(PathFixture(testCase.firmwarePath));
-            end
             testCase.bd = bossdevice;
             testCase.bd.initialize;
             testCase.verifyTrue(testCase.bd.isConnected);
@@ -82,10 +75,6 @@ classdef smokeTests < matlab.unittest.TestCase
         end
 
         function bdShortRun(testCase)
-            import matlab.unittest.fixtures.PathFixture
-            if isfolder(testCase.firmwarePath)
-                testCase.applyFixture(PathFixture(testCase.firmwarePath));
-            end
             testCase.bd = bossdevice;
             testCase.bd.start;
             testCase.verifyTrue(testCase.bd.isRunning);

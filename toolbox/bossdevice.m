@@ -120,28 +120,24 @@ classdef bossdevice < handle
             end
 
             % Search firmware binary and prompt user if not found in MATLAB path
-            firmwareSharePath = fullfile(toolboxPath,'dependencies','firmware',matlabRelease.Release,[obj.appName,'.mldatx']);
+            firmwareDepsPath = fullfile(toolboxPath,'dependencies','firmware',matlabRelease.Release,[obj.appName,'.mldatx']);
 
             if exist([obj.appName,'.mldatx'],"file")
                 obj.firmwareFilepath = obj.appName;
-            elseif isfile(firmwareSharePath)
-                obj.firmwareFilepath = firmwareSharePath;
+            elseif isfile(firmwareDepsPath)
+                obj.firmwareFilepath = firmwareDepsPath;
             elseif ~batchStartupOptionUsed
                 [filename, firmwareFilepath] = uigetfile([obj.appName,'.mldatx'],...
                     'Select the firmware binary to load on the bossdevice');
                 if isequal(filename,0)
-                    disp('User selected Cancel.');
+                    disp('User selected Cancel. Please select firmware mldatx file to complete bossdevice dependencies.');
                     return;
                 else
                     obj.firmwareFilepath = fullfile(firmwareFilepath,filename);
                 end
             else
-                warning('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
+                error('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
-        end
-
-        function delete(obj)
-            % rmpath(obj.sgDepsPath);
         end
 
         function initialize(obj)
