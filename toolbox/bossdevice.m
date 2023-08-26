@@ -98,7 +98,7 @@ classdef bossdevice < handle
                 % Try using built-in Speedgoat dependency
                 addpath(obj.sgDepsPath);
                 assert(exist('updateSGtools.p','file'),...
-                    sprintf('Speedgoat files not found in "%s". Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.',sgDepsPath));
+                    sprintf('Speedgoat files not found in "%s". Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.',obj.sgDepsPath));
             else
                 error('Speedgoat dependencies not found. Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.');
             end
@@ -141,7 +141,7 @@ classdef bossdevice < handle
         end
 
         function delete(obj)
-            rmpath(obj.sgDepsPath);
+            % rmpath(obj.sgDepsPath);
         end
 
         function initialize(obj)
