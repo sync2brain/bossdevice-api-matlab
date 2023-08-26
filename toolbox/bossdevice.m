@@ -47,6 +47,10 @@ classdef bossdevice < handle
             s.bossdeviceAPI.TargetSettings.TargetName.clearPersonalValue;
             s.bossdeviceAPI.TargetSettings.TargetIPAddress.clearPersonalValue;
         end
+
+        function doc()
+            web('bossdevice_api_landing_page.html');
+        end
     end
 
     methods
@@ -372,6 +376,10 @@ classdef bossdevice < handle
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 1);
             pause(0.1);
             setparam(obj.targetObject, [obj.appName,'/GEN'], 'manualtrigger', 0);
+        end
+
+        function openDocumentation(obj)
+            obj.doc;
         end
 
         %% Target object wrappers
