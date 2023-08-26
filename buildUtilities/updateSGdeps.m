@@ -24,6 +24,7 @@ for i = 1:numel(sgTools)
 end
 
 % Copy common Speedgoat functions
+copyfile(fullfile(sgDefaultPath,'speedgoatroot.p'),destFolder);
 copyfile(fullfile(sgDefaultPath,'sg_functions','+sg'),fullfile(destFolder,'+sg'));
 copyfile(fullfile(sgDefaultPath,'sg_functions','+speedgoat'),fullfile(destFolder,'+speedgoat'));
 
