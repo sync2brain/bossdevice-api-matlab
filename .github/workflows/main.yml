@@ -35,7 +35,7 @@ jobs:
       - name: Cache MATLAB build files
         uses: actions/cache@v3
         with:
-          key: ${{ env.GITHUB_REPOSITORY }}
+          key: matlab-build-${{ env.GITHUB_REPOSITORY }}
           path: |
             buildUtilities/.buildtool
 
@@ -69,7 +69,7 @@ jobs:
       - name: Cache MATLAB build files
         uses: actions/cache@v3
         with:
-          key: ${{ env.GITHUB_REPOSITORY }}
+          key: matlab-build-${{ env.GITHUB_REPOSITORY }}
           path: |
             buildUtilities/.buildtool
 
