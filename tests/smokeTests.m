@@ -12,7 +12,6 @@ classdef smokeTests < matlab.unittest.TestCase
         function setupBossdevice(testCase)
             if exist('sg_path','file')
                 % If local installation of Speedgoat blockset is present, update toolbox dependencies and work with them
-                updateSGdeps;
                 disp('Remove Speedgoat local installation.');
                 sg_path(0);
             end
