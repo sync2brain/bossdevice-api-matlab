@@ -9,13 +9,27 @@ classdef smokeTests < matlab.unittest.TestCase
     end
 
     methods (TestClassSetup)
-        function updateTarget(testCase)
+        function setupBossdevice(testCase)
+            if exist('sg_path','file')
+                % If local installation of Speedgoat blockset is present, update toolbox dependencies and work with them
+                updateSGdeps;
+                disp('Remove Speedgoat local installation.');
+                sg_path(0);
+            end
+
             testCase.bd = bossdevice;
             testCase.bd.targetObject.update;
         end
     end
 
     methods (TestClassTeardown)
+        function resetSgPath(~)
+            if exist('sg_path','file')
+                disp('Restore Speedgoat local installation.');
+                sg_path(1);
+            end
+        end
+
         function rebootTarget(testCase)
             disp('Rebooting bossdevice to teardown test class.');
             testCase.bd.targetObject.reboot;
