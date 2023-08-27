@@ -78,6 +78,15 @@ jobs:
           path: |
             buildUtilities/.buildtool
 
+      - name: Download firmware artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ secrets.REPO_READ_TOKEN }}
+          repo: sync2brain/bossdevice-firmware
+          name: bossdevice-firmware-${{ matrix.matlabVer }}
+          path: toolbox/dependencies/firmware/${{ matrix.matlabVer }}
+          if_no_artifact_found: fail
+
       - name: Run MATLAB command
         run: |
           &"$env:ProgramFiles\MATLAB\${{ matrix.matlabVer }}\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test({'noHW','bdConnected'})"
