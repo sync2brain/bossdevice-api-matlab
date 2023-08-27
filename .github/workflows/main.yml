@@ -82,7 +82,9 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           github_token: ${{ secrets.REPO_READ_TOKEN }}
+          workflow: main.yml
           repo: sync2brain/bossdevice-firmware
+          search_artifacts: true
           name: bossdevice-firmware-${{ matrix.matlabVer }}
           path: toolbox/dependencies/firmware/${{ matrix.matlabVer }}
           if_no_artifact_found: fail
