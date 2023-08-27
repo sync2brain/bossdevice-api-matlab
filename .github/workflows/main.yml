@@ -84,6 +84,7 @@ jobs:
           github_token: ${{ secrets.REPO_READ_TOKEN }}
           workflow: main.yml
           repo: sync2brain/bossdevice-firmware
+          branch: main
           search_artifacts: true
           name: bossdevice-firmware-${{ matrix.matlabVer }}
           path: toolbox/dependencies/firmware/${{ matrix.matlabVer }}
