@@ -33,7 +33,6 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: firmware-${{ matrix.matlabVer }}
-          path: firmware
           
   packageToolbox:
     # The type of runner that the job will run on
@@ -57,7 +56,7 @@ jobs:
       - name: Download firmware folder
         uses: actions/download-artifact@v2
         with:
-          path: toolbox/dependencies/firmware
+          path: toolbox/dependencies
 
       - name: Run MATLAB command
         run: |
