@@ -10,7 +10,7 @@ on:
       - 'v*'
       
 jobs:
-  package:
+  packageToolbox:
     # The type of runner that the job will run on
     runs-on: matlab
     
@@ -27,6 +27,19 @@ jobs:
           key: matlab-buildtool
           path: |
             buildUtilities/.buildtool
+
+      # Download firmware mldatx file from bossdevice-firmware. Must create a step for every MATLAB release to add
+      - name: Download R2023a firmware artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ secrets.REPO_READ_TOKEN }}
+          workflow: main.yml
+          repo: sync2brain/bossdevice-firmware
+          branch: main
+          search_artifacts: true
+          name: bossdevice-firmware-R2023a
+          path: toolbox/dependencies/firmware
+          if_no_artifact_found: fail
 
       - name: Run MATLAB command
         run: |
