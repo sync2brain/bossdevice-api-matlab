@@ -26,14 +26,14 @@ jobs:
           branch: main
           search_artifacts: true
           name: bossdevice-firmware-${{ matrix.matlabVer }}
-          path: firmware/${{ matrix.matlabVer }}
+          path: temp/firmware/${{ matrix.matlabVer }}
           if_no_artifact_found: fail
     
       - name: Upload firmware folder
         uses: actions/upload-artifact@v3
         with:
           name: firmware-${{ matrix.matlabVer }}
-          path: .
+          path: temp
           if-no-files-found: error
           
   packageToolbox:
