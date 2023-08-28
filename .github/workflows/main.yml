@@ -101,14 +101,3 @@ jobs:
           action_fail: true
           files: |
             results.xml
-
-  uploadFirmwareDir:
-    runs-on: matlab
-    needs: test
-    steps:
-      - name: Upload firmware directory
-        uses: actions/upload-artifact@v3
-        with:
-          name: firmwareFolder
-          path: toolbox/dependencies/firmware
-          if-no-files-found: error
