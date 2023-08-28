@@ -10,36 +10,9 @@ on:
       - 'v*'
       
 jobs:
-  prepareFirmwareDir:
-    runs-on: self-hosted
-    strategy:
-      matrix:
-        matlabVer: [R2023a] # List of MATLAB releases to test
-
-    steps:
-      - name: Download firmware artifact
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          github_token: ${{ secrets.REPO_READ_TOKEN }}
-          workflow: main.yml
-          repo: sync2brain/bossdevice-firmware
-          branch: main
-          search_artifacts: true
-          name: bossdevice-firmware-${{ matrix.matlabVer }}
-          path: temp/firmware/${{ matrix.matlabVer }}
-          if_no_artifact_found: fail
-    
-      - name: Upload firmware folder
-        uses: actions/upload-artifact@v3
-        with:
-          name: firmware/${{ matrix.matlabVer }}
-          path: temp
-          if-no-files-found: error
-          
   packageToolbox:
     # The type of runner that the job will run on
     runs-on: matlab
-    needs: prepareFirmwareDir
     
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -55,10 +28,18 @@ jobs:
           path: |
             buildUtilities/.buildtool
 
-      - name: Download firmware folder
-        uses: actions/download-artifact@v2
+      # Download firmware mldatx file from bossdevice-firmware. Must create a step for every MATLAB release to add
+      - name: Download R2023a firmware artifact
+        uses: dawidd6/action-download-artifact@v2
         with:
-          path: toolbox/dependencies
+          github_token: ${{ secrets.REPO_READ_TOKEN }}
+          workflow: main.yml
+          repo: sync2brain/bossdevice-firmware
+          branch: main
+          search_artifacts: true
+          name: bossdevice-firmware-R2023a
+          path: toolbox/dependencies/firmware
+          if_no_artifact_found: fail
 
       - name: Run MATLAB command
         run: |
