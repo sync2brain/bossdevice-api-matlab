@@ -33,11 +33,7 @@ runner = TestRunner.withTextOutput('OutputDetail', Verbosity.Detailed);
 runner.addPlugin(XMLPlugin.producingJUnitFormat(fullfile(projObj.RootFolder,'results.xml')));
 
 results = runner.run(suite);
-
-% CI workflows evaluate test success from Test Report
-if ~batchStartupOptionUsed
-    results.assertSuccess;
-end
+results.assertSuccess;
 
 end
 
