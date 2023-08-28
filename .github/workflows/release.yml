@@ -33,6 +33,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: firmware-${{ matrix.matlabVer }}
+          path: .
+          if-no-files-found: error
           
   packageToolbox:
     # The type of runner that the job will run on
