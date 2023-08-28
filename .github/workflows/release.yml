@@ -32,7 +32,7 @@ jobs:
       - name: Upload firmware folder
         uses: actions/upload-artifact@v3
         with:
-          name: firmware-${{ matrix.matlabVer }}
+          name: firmware/${{ matrix.matlabVer }}
           path: temp
           if-no-files-found: error
           
