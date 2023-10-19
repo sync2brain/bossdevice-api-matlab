@@ -1,5 +1,5 @@
 %% Summary
-% This demo script uses BOSS Device and 2 different approaches to generate jittered open loop stimuls
+% This demo script uses BOSS Device and 2 different approaches to generate jittered open loop stimulus
 % Resources:   1) Required: BOSS Device Switch On
 %             2) BOSS Device Open Source MATLAB API
 %             3) The stimulator is Switched On, External Trigger mode is turned on and the Stimulator is Enabled
