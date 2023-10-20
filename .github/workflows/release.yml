@@ -20,6 +20,20 @@ jobs:
     runs-on: matlab
     
     steps:
+      # Download firmware mldatx file from bossdevice-firmware. Must create a step for every MATLAB release to add
+      - name: Download firmware artifacts
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ secrets.REPO_READ_TOKEN }}
+          workflow: main.yml
+          repo: sync2brain/bossdevice-firmware
+          branch: main
+          search_artifacts: true
+          name: bossdevice-firmware-*
+          name_is_regexp: true
+          path: toolbox/dependencies/firmware
+          if_no_artifact_found: fail
+          
       - name: Cache MATLAB build files
         uses: actions/cache@v3
         with:
