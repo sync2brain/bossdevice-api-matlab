@@ -12,6 +12,7 @@ on:
 jobs:
   main-workflow:
     uses: ./.github/workflows/main.yml
+    secrets: inherit
     
   packageToolbox:
     needs: main-workflow
