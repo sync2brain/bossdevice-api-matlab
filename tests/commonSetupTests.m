@@ -1,9 +1,5 @@
 classdef commonSetupTests < matlab.unittest.TestCase
 
-    properties (Constant)
-        firmwarePath = fullfile(getenv('firmwareSharePath'),matlabRelease.Release)
-    end
-
     properties
         bd bossdevice
         sgPath
@@ -25,13 +21,6 @@ classdef commonSetupTests < matlab.unittest.TestCase
             pause(30);
             % Set Ethernet IP in secondary interface
             bossapi.setEthernetInterface(testCase.bd.targetObject,'wm1','192.168.200.255/24');
-        end
-
-        function addFirmwarePath(testCase)
-            import matlab.unittest.fixtures.PathFixture
-            if isfolder(testCase.firmwarePath)
-                testCase.applyFixture(PathFixture(testCase.firmwarePath));
-            end
         end
     end
 

@@ -1,9 +1,5 @@
 classdef basicTests < matlab.unittest.TestCase
 
-    properties (Constant)
-        firmwarePath = fullfile(getenv('firmwareSharePath'),matlabRelease.Release)
-    end
-
     properties
         bd bossdevice
         sgPath
