@@ -21,6 +21,13 @@ jobs:
     runs-on: matlab
     
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Check out repo
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.REPO_READ_TOKEN }}
+          
       # Download firmware mldatx file from bossdevice-firmware. Must create a step for every MATLAB release to add
       - name: Download firmware artifacts
         uses: dawidd6/action-download-artifact@v2
