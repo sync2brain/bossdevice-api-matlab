@@ -90,7 +90,7 @@ jobs:
           branch: main
           search_artifacts: true
           name: bossdevice-firmware-${{ matrix.matlabVer }}
-          path: toolbox/dependencies/firmware/${{ matrix.matlabVer }}
+          path: toolbox/dependencies/firmware
           if_no_artifact_found: fail
 
       - name: Run MATLAB command
