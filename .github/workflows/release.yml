@@ -50,6 +50,7 @@ jobs:
       - name: Download Speedgoat dependencies artifacts
         uses: dawidd6/action-download-artifact@v2
         with:
+          search_artifacts: true
           name: speedgoat-deps-*
           name_is_regexp: true
           skip_unpack: true
