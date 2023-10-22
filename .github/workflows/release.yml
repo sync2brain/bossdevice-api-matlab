@@ -39,8 +39,12 @@ jobs:
           search_artifacts: true
           name: bossdevice-firmware-*
           name_is_regexp: true
-          path: toolbox/dependencies/firmware
+          skip_unpack: true
           if_no_artifact_found: fail
+
+      - name: Unzip firmware artifacts into firmware folder
+        run: |
+          Get-ChildItem '.' -Filter bossdevice-firmware-*.zip | Expand-Archive -DestinationPath 'toolbox\dependencies\firmware'
           
       - name: Cache MATLAB build files
         uses: actions/cache@v3
@@ -51,7 +55,7 @@ jobs:
 
       - name: Run MATLAB command
         run: |
-          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool package('${{  github.ref_name }}','${{  github.actor }}')"
+          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test('noHW'); buildtool package('${{  github.ref_name }}','${{  github.actor }}')"
       
       # Create new release
       - name: Release
