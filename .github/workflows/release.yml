@@ -28,7 +28,7 @@ jobs:
           submodules: 'recursive'
           token: ${{ secrets.REPO_READ_TOKEN }}
           
-      # Download firmware mldatx file from bossdevice-firmware. Must create a step for every MATLAB release to add
+      # Download firmware mldatx file from bossdevice-firmware
       - name: Download firmware artifacts
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -45,6 +45,19 @@ jobs:
       - name: Unzip firmware artifacts into firmware folder
         run: |
           Get-ChildItem '.' -Filter bossdevice-firmware-*.zip | Expand-Archive -DestinationPath 'toolbox\dependencies\firmware'
+      
+      # Download Speedgoat dependendencies
+      - name: Download Speedgoat dependencies artifacts
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: speedgoat-deps-*
+          name_is_regexp: true
+          skip_unpack: true
+          if_no_artifact_found: fail
+
+      - name: Unzip firmware artifacts into firmware folder
+        run: |
+          Get-ChildItem '.' -Filter speedgoat-deps-*.zip | Expand-Archive -DestinationPath 'toolbox\dependencies\sg' -Force
           
       - name: Cache MATLAB build files
         uses: actions/cache@v3
