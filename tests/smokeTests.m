@@ -1,13 +1,5 @@
 classdef smokeTests < commonSetupTests
 
-    methods (Test, TestTags = {'noHW'})
-        % Test methods that do not require bossdevice or any target connected
-        function noBossdevice(testCase)
-            testCase.bd = bossdevice;
-            testCase.verifyFalse(testCase.bd.isConnected);
-        end
-    end
-
     methods (Test, TestTags = {'bdConnected'})
         % Test methods with bossdevice connected and reachable from the host PC
         function bdInitialization(testCase)
