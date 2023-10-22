@@ -106,3 +106,10 @@ jobs:
           action_fail: true
           files: |
             results.xml
+
+      - name: Upload Speedgoat dependencies as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: speedgoat-deps-${{ matrix.matlabVer }}
+          path: toolbox\dependencies\sg
+          if-no-files-found: error
