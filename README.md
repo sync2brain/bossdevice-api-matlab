@@ -13,7 +13,7 @@
 2. On your computer, follow [these steps](https://www.mathworks.com/help/slrealtime/gs/development-computer-communication-setup-windows.html) to configure the local Ethernet interface on your PC with the IP address `192.168.7.2`.
 3. If you are working on Windows, please set the Development-to-Target Computer Ethernet Interface as `Private`. Follow the steps documented [here](https://www.mathworks.com/help/slrealtime/ug/troubleshoot-communication-failure-through-firewall.html).
 
-## Initial toolbox configuration
+## Installation and initial toolbox configuration
 1. Download `bossdevice-api-installer.mltbx` from the latest [release](https://github.com/sync2brain/bossdevice-api-matlab/releases) available in the GitHub project.
 2. Start MATLAB and install the bossdevice API toolbox with double click on `bossdevice-api-installer.mltbx`.
 3. In the MATLAB Command Window, call `bd = bossdevice` to add the bossdevice with the default settings to the list of targets. It will also try to establish connection. If you want to change either the name of the bossdevice or its default IP address in your local MATLAB settings, call `bd = bossdevice('bossdevice','192.168.7.5')` replacing the function arguments with the name and IP address you want to set on the real-time device.
