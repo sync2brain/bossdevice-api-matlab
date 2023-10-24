@@ -19,6 +19,8 @@
 3. In the MATLAB Command Window, call `bd = bossdevice` to add the bossdevice with the default settings to the list of targets. It will also try to establish connection. If you want to change either the name of the bossdevice or its default IP address in your local MATLAB settings, call `bd = bossdevice('bossdevice','192.168.7.5')` replacing the function arguments with the name and IP address you want to set on the real-time device.
 4. Click on the update command if prompted to update the software dependencies on the bossdevice.
 
+Optionally, for more information about how to get, install and manage add-ons for MATLAB like the bossdevice API toolbox, please visit [this documentation page](https://www.mathworks.com/help/matlab/matlab_env/get-add-ons.html).
+
 ## Get started
 1. Create an instance of the main control class bossdevice `bd = bossdevice` in the MATLAB command window from any working path, since the toolbox has already been added to your MATLAB path.
 2. If not found in the MATLAB path or you want to use a custom firmware version, please select `mainmodel.mldatx` real-time application.
