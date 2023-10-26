@@ -90,7 +90,7 @@ classdef bossdevice < handle
 
             % Check and enable built-in Speedgoat dependencies
             obj.sgDepsPath = fullfile(toolboxPath,'dependencies','sg',matlabRelease.Release);
-            isSGinstalled = bossapi.isSpeedgoatBlocksetInstalled;
+            isSGinstalled = bossapi.sg.isSpeedgoatBlocksetInstalled;
             if isSGinstalled
                 % Using own full installation of Speedgoat I/O Blockset (for development or debugging purposes)
                 fprintf('[Debug] Using own full installation of Speedgoat I/O Blockset v%s.\n',speedgoat.version);
