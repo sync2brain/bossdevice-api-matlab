@@ -96,6 +96,7 @@ classdef bossdevice < handle
                 fprintf('[Debug] Using own full installation of Speedgoat I/O Blockset v%s.\n',speedgoat.version);
             elseif isfolder(obj.sgDepsPath)
                 % Try using built-in Speedgoat dependency
+                addpath(fullfile(toolboxPath,'dependencies','sg'));
                 addpath(obj.sgDepsPath);
                 assert(exist('updateSGtools.p','file'),...
                     sprintf('Speedgoat files not found in "%s". Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.',obj.sgDepsPath));
