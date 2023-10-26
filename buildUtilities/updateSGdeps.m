@@ -2,7 +2,7 @@ function updateSGdeps
 
 projObj = currentProject;
 
-[isSGinstalled, sgDefaultPath] = bossapi.isSpeedgoatBlocksetInstalled;
+[isSGinstalled, sgDefaultPath] = bossapi.sg.isSpeedgoatBlocksetInstalled;
 
 assert(isSGinstalled,'Speedgoat dependencies not found installed in local system.');
 

@@ -8,10 +8,10 @@ classdef commonSetupTests < matlab.unittest.TestCase
 
     methods (TestClassSetup)
         function setupBossdevice(testCase)
-            [testCase.isSGinstalled, testCase.sgPath] = bossapi.isSpeedgoatBlocksetInstalled;
+            [testCase.isSGinstalled, testCase.sgPath] = bossapi.sg.isSpeedgoatBlocksetInstalled;
             if testCase.isSGinstalled
                 % If local installation of Speedgoat blockset is present, update toolbox dependencies and work with them
-                bossapi.removeSpeedgoatBlocksetFromPath(testCase.sgPath);
+                bossapi.sg.removeSpeedgoatBlocksetFromPath(testCase.sgPath);
             end
 
             testCase.bd = bossdevice;
@@ -28,7 +28,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
         function resetSgPath(testCase)
             if testCase.isSGinstalled
                 % If local installation of Speedgoat blockset is present, restore default paths
-                bossapi.addSpeedgoatBlocksetToPath(testCase.sgPath);
+                bossapi.sg.addSpeedgoatBlocksetToPath(testCase.sgPath);
             end
         end
 
