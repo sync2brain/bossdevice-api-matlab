@@ -141,6 +141,30 @@ classdef bossdevice < handle
             end
         end
 
+        function obj = changeBossdeviceIP(obj, targetIP, targetNetmask)
+            arguments
+                obj
+                targetIP {mustBeTextScalar}
+                targetNetmask {mustBeTextScalar} = '255.255.255.0'
+            end
+
+            % Change IP address on remote target
+            res = bossapi.changeRemoteTargetIP(obj.targetObject, targetIP, targetNetmask);
+            if res.ExitCode~=0
+                error(res.ErrorOutput);
+            end
+
+            % Reboot target to apply new settings
+            obj.targetObject.reboot;
+
+            % Apply new IP address to target settings on host PC
+            obj = bossdevice(obj.targetObject.TargetSettings.name, targetIP);
+
+            % Output message
+            fprintf('The IP address "%s" has been applied to the bossdevice "%s". The device is now rebooting, please wait 30 seconds before reinitializing.\n',...
+                targetIP,obj.targetObject.TargetSettings.name);
+        end
+
         function initialize(obj)
             % Connect to bosdevice
             obj.targetObject.connect;
