@@ -32,6 +32,9 @@ instObj.BufferData = true;
 bd.addInstrument(instObj);
 
 %% Retrieve signal data from bossdevice
+% Get buffered data once to empty the buffer of any previously existing data
+instObj.getBufferedData;
+
 disp('Waiting 10s to accumulate data in buffer...');
 pause(10);
 mapData = instObj.getBufferedData;
