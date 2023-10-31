@@ -60,6 +60,8 @@ disp('Done.');
 
 %% Visualize           
 polarhistogram(phaseError, 'Normalization', 'probability', 'BinWidth', pi/36);
+ax = gca;
+ax.ThetaZeroLocation = 'Top';
 title(sprintf('Circular mean = %.1f°\nCircular standard deviation = %.1f°', meanError, meanDev));
 
 

@@ -20,7 +20,7 @@ bd.start;
 bd.configure_time_port_marker([0 1 1]); %Configuring Trigger Sequence in [Time Port Marker] format  
 for TrialNumber=1:NumberOfTrials
     bd.manualTrigger
-    disp(['Triggered Trial #' num2str(TrialNumber)])
+    fprintf('Triggered Trial #%i out of %i.\n', TrialNumber, NumberOfTrials);
     min_inter_trig_interval= ITI(1)+ (ITI(2)-ITI(1)).*rand(1,1); %Assigning New Random ITI for this Trial to the BOSS Device
     pause(min_inter_trig_interval) %Wait for next trial start
 end
