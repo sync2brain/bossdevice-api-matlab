@@ -27,6 +27,9 @@ end
 copyfile(fullfile(sgDefaultPath,'speedgoatroot.p'),destFolder);
 copyfile(fullfile(sgDefaultPath,'sg_functions','+sg'),fullfile(destFolder,'+sg'));
 copyfile(fullfile(sgDefaultPath,'sg_functions','+speedgoat'),fullfile(destFolder,'+speedgoat'));
+if ~isMATLABReleaseOlderThan("R2023b")
+    copyfile(fullfile(sgDefaultPath,'sg_functions','sl_realtimeHardwareConfig.p'),destFolder);
+end
 
 fprintf('Speedgoat dependencies updated in toolbox.\n');
 
