@@ -147,6 +147,11 @@ classdef bossdevice < handle
             else
                 error('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
+
+            % Initialize oscillation properties with a new object instance if application is loaded
+            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+                initOscillationProps(obj);
+            end
         end
 
         function obj = changeBossdeviceIP(obj, targetIP, targetNetmask)
@@ -195,9 +200,6 @@ classdef bossdevice < handle
             % Initialize bossdevice connection to enable backwards compatibility
             if ~obj.isInitialized
                 obj.initialize;
-            elseif isempty(obj.alpha) || isempty(obj.beta) || isempty(obj.theta)
-                % Figure out some oscillation values
-                initOscillationProps(obj);
             end
 
             % Start application on target if not running yet
