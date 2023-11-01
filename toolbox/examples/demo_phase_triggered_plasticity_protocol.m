@@ -69,7 +69,7 @@ fprintf('\nDone\n');
 % this could be for excitability, where we have interleaved different conditions
 condition_index=0;
 while (condition_index <= no_of_trials)
-    fprintf('Processing condition %i out of %i...', condition_index, no_of_trials);
+    fprintf('Running trial %i out of %i...\n',condition_index,no_of_trials);
     if ~bd.isArmed
         bd.triggers_remaining = 1;
         bd.alpha.phase_target(1) = phase;
