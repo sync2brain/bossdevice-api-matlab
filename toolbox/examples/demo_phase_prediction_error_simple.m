@@ -40,8 +40,8 @@ disp('Done.');
 
 sigData = mapData.values;
 
-spf_sigData = squeeze(sigData{2}.data);
-osc_alpha_ipData = squeeze(sigData{1}.data);
+spf_sigData = squeeze(sigData{2}.data)';
+osc_alpha_ipData = interp1(sigData{1}.time,sigData{1}.data,sigData{2}.time);
 
 
 %% Phase error using standard non-causal methods
@@ -54,7 +54,7 @@ fs = 1/mean(diff(sigData{1}.time));
 PhaseErrorFilter = designfilt('bandpassfir', 'FilterOrder', round(fs), 'CutoffFrequency1', 9, 'CutoffFrequency2', 13, 'SampleRate', fs);
 
 % Compute phase prediction error
-[phaseError, meanError, meanDev] = bossapi.computePhasePredictionError(PhaseErrorFilter, spf_sigData(1,:), osc_alpha_ipData(1,:));
+[phaseError, meanError, meanDev] = bossapi.computePhasePredictionError(PhaseErrorFilter, spf_sigData(:,1), osc_alpha_ipData(:,1));
 
 disp('Done.');
 
