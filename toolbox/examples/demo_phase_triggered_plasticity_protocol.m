@@ -7,7 +7,7 @@
 % Press Ctrl+C on MATLAB command line to stop the script anytime
 
 %% Initializing Demo Script Variables;
-no_of_trials=25;
+no_of_trials=5;
 no_of_pulses=100;
 pulse_frequency=100; %Hz
 minimium_inter_trigger_interval=5; %s
@@ -26,9 +26,9 @@ bd=bossdevice;
 bd.start;
 bd.disarm;
 bd.sample_and_hold_seconds=0;
-bd.theta.ignore; pause(0.1)
-bd.beta.ignore; pause(0.1)
-bd.alpha.ignore; pause(0.1)
+bd.theta.ignore;
+bd.beta.ignore;
+bd.alpha.ignore;
 bd.num_eeg_channels=eeg_channels;
 
 %% Preparing a Plasticity Protocol Seqeuence for BOSS Device
@@ -50,25 +50,26 @@ bd.alpha.bpf_fir_coeffs = bpf_fir_coeffs;
 
 
 %% For plasticitz, we have the same condition, multiple times, we can run everything on the device:
-bd.triggers_remaining = 100;
+bd.triggers_remaining = 10;
 bd.alpha.phase_target(1) = phase;
 bd.alpha.phase_plusminus(1) = phase_tolerance;
 bd.configure_time_port_marker(plasticity_protocol_sequence)
 bd.min_inter_trig_interval = minimium_inter_trigger_interval;
-pause(0.1)
 bd.arm;
 
-fprintf('\nSystem running, pulses remaining: %03i', bd.triggers_remaining)
+fprintf('System running, pulses remaining: %i', bd.triggers_remaining);
 while (bd.triggers_remaining > 0)
     fprintf('\b\b\b%03i', bd.triggers_remaining);
-    pause(0.1)
+    pause(0.1);
 end
-fprintf('\b\b\bDone\n')
+fprintf('\nDone\n');
 
 
-%% Controlling BOSS Device for mu Alpha Phase Locked Triggering % this could be for excitability, where we have interleaved different conditions
+%% Controlling BOSS Device for mu Alpha Phase Locked Triggering
+% this could be for excitability, where we have interleaved different conditions
 condition_index=0;
 while (condition_index <= no_of_trials)
+    fprintf('Processing condition %i out of %i...', condition_index, no_of_trials);
     if ~bd.isArmed
         bd.triggers_remaining = 1;
         bd.alpha.phase_target(1) = phase;
@@ -82,11 +83,11 @@ while (condition_index <= no_of_trials)
     if(bd.triggers_remaining == 0)
         condition_index = condition_index + 1;
         bd.disarm;
-        disp Triggered!
+        disp('Triggered!');
         pause(minimium_inter_trigger_interval)
     end
     pause(0.01);
 end
 
 %% End
-disp ('Plasticity Protocol has been completed');
+disp('Plasticity Protocol has been completed');
