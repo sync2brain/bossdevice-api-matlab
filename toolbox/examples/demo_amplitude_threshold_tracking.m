@@ -59,6 +59,7 @@ while (condition_index <= no_of_trials)
 
     % Skip iteration if buffer is empty
     if isempty(sigData) || isempty(sigData{1}.time) || isempty(sigData{2}.time)
+        disp('Buffer empty in this iteration.');
         continue;
     end
 
