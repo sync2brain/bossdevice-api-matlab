@@ -31,7 +31,7 @@ Simulink.sdi.setSubPlotLayout(2,1);
 % Get latest SDI run
 runObj = Simulink.sdi.Run.getLatest;
 
-% Get signal objects and expand to conver multidimensional signals to scalar channels
+% Get signal objects and expand to convert multidimensional signals to scalar channels
 eegSig = runObj.getSignalsByName("eeg");
 eegSig.expand;
 conSig = runObj.getSignalsByName("con");
