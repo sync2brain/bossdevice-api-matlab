@@ -18,7 +18,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
             testCase.bd.targetObject.update;
 
             fprintf('Wait 30s for target to reboot after update and set IP address in secondary interface.\n');
-            pause(40);
+            pause(30);
             % Set Ethernet IP in secondary interface
             bossapi.setEthernetInterface(testCase.bd.targetObject,'wm1','192.168.200.255/24');
         end
@@ -35,6 +35,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
         function rebootTarget(testCase)
             disp('Rebooting bossdevice to teardown test class.');
             testCase.bd.targetObject.reboot;
+            pause(30);
         end
     end
 
