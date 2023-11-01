@@ -69,7 +69,7 @@ classdef bossdevice < handle
                 ipAddress {mustBeTextScalar} = '';
             end
 
-            toolboxPath = fileparts(which(mfilename));
+            toolboxPath = fileparts(fileparts(which(mfilename)));
 
             % Initialize toolbox settings
             s = settings;
