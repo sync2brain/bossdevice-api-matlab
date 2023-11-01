@@ -6,7 +6,7 @@
 % Press Ctrl+C on MATLAB command line to stop the script anytime
 
 %% Initializing Demo Script Variables;
-no_of_trials=10;
+no_of_trials=5;
 minimium_inter_trigger_interval=4; %s
 phase=0; %[positive]
 phase_tolerance=pi/40;
@@ -52,12 +52,14 @@ hAmplitudeDistributionAxes = subplot(2,1,2);
 condition_index=1;
 while (condition_index <= no_of_trials)
     fprintf('Running trial %i out of %i...\n',condition_index,no_of_trials);
-    pause(0.1);
+    pause(0.2);
 
     mapData = inst.getBufferedData;
     sigData = mapData.values;
 
-    plot(hAmplitudeHistoryAxes,sigData{1}.time,sigData{1}.data(:,1));
+    if ~isempty(sigData{1}.time)
+        plot(hAmplitudeHistoryAxes,sigData{1}.time,sigData{1}.data(:,1));
+    end
 
     % remove post-stimulus data
     % amplitude_clean = sigData{1}.data(1:numel(sigData{2}.data),:);
