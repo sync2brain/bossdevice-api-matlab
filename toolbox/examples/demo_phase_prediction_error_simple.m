@@ -32,7 +32,7 @@ instObj.BufferData = true;
 bd.addInstrument(instObj);
 
 %% Retrieve signal data from bossdevice
-tWait = 20;
+tWait = 10;
 fprintf('Waiting %is to accumulate data in buffer...\n',tWait);
 pause(tWait);
 mapData = instObj.getBufferedData;
@@ -40,8 +40,8 @@ disp('Done.');
 
 sigData = mapData.values;
 
-spf_sigData = squeeze(sigData{1}.data);
-osc_alpha_ipData = squeeze(sigData{2}.data);
+spf_sigData = squeeze(sigData{2}.data);
+osc_alpha_ipData = squeeze(sigData{1}.data);
 
 
 %% Phase error using standard non-causal methods
