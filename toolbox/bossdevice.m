@@ -53,6 +53,14 @@ classdef bossdevice < handle
         end
     end
 
+    methods (Access=protected)
+        function initOscillationProps(obj)
+            obj.theta = bossdevice_oscillation(obj.targetObject, 'theta');
+            obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha');
+            obj.beta = bossdevice_oscillation(obj.targetObject, 'beta');
+        end
+    end
+
     methods
         function obj = bossdevice(targetName, ipAddress)
             %BOSSDEVICE Construct an instance of this class
@@ -180,15 +188,16 @@ classdef bossdevice < handle
             end
 
             % Figure out some oscillation values
-            obj.theta = bossdevice_oscillation(obj.targetObject, 'theta');
-            obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha');
-            obj.beta = bossdevice_oscillation(obj.targetObject, 'beta');
+            initOscillationProps(obj);
         end
 
         function start(obj)
             % Initialize bossdevice connection to enable backwards compatibility
             if ~obj.isInitialized
                 obj.initialize;
+            elseif isempty(obj.alpha) || isempty(obj.beta) || isempty(obj.theta)
+                % Figure out some oscillation values
+                initOscillationProps(obj);
             end
 
             % Start application on target if not running yet
