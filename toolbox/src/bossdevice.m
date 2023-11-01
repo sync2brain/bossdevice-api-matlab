@@ -49,7 +49,7 @@ classdef bossdevice < handle
         end
 
         function doc()
-            web('bossdevice_api_landing_page.html');
+            openBossdeviceDoc;
         end
     end
 
