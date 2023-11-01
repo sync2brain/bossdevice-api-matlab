@@ -58,7 +58,7 @@ while (condition_index <= no_of_trials)
     sigData = mapData.values;
 
     % Skip iteration if buffer is empty
-    if isempty(sigData) || isempty(sigData{1}.time) || isempty(sigData{2}.time)
+    if isempty(sigData) || numel(sigData) < 2
         disp('Buffer empty in this iteration.');
         continue;
     end
