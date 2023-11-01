@@ -52,14 +52,17 @@ hAmplitudeDistributionAxes = subplot(2,1,2);
 condition_index=1;
 while (condition_index <= no_of_trials)
     fprintf('Running trial %i out of %i...\n',condition_index,no_of_trials);
-    pause(0.2);
+    pause(0.1);
 
     mapData = inst.getBufferedData;
     sigData = mapData.values;
 
-    if ~isempty(sigData{1}.time)
-        plot(hAmplitudeHistoryAxes,sigData{1}.time,sigData{1}.data(:,1));
+    % Skip iteration if buffer is empty
+    if isempty(sigData) || isempty(sigData{1}.time) || isempty(sigData{2}.time)
+        continue;
     end
+
+    plot(hAmplitudeHistoryAxes,sigData{1}.time,sigData{1}.data(:,1));
 
     % remove post-stimulus data
     % amplitude_clean = sigData{1}.data(1:numel(sigData{2}.data),:);
