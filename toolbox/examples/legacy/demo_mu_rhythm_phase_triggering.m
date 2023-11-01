@@ -24,9 +24,9 @@ bd=bossdevice;
 bd.start;
 bd.disarm;
 bd.sample_and_hold_seconds=0;
-bd.theta.ignore; pause(0.1)
-bd.beta.ignore; pause(0.1)
-bd.alpha.ignore; pause(0.1)
+bd.theta.ignore;
+bd.beta.ignore;
+bd.alpha.ignore;
 bd.num_eeg_channels=eeg_channels; 
 
 %% Preparing an Individual Peak Frequency based Band Pass Filter for mu Alpha
