@@ -26,7 +26,7 @@ bd.alpha.bpf_fir_coeffs = firls(70, [0 6 9 13 16 (500/2)]/(500/2), [0 0 1 1 0 0]
 %% Configuring an instrument buffer to acquire data
 instObj = slrealtime.Instrument;
 instObj.addSignal('spf_sig');
-instObj.addSignal('osc_alpha_ip');
+instObj.addSignal('osc','BusElement','alpha.ip');
 instObj.BufferData = true;
 
 bd.addInstrument(instObj);
