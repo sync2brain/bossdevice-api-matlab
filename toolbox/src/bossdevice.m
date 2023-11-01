@@ -121,7 +121,7 @@ classdef bossdevice < handle
                 isTargetNew = false;
             end
 
-            % Initialize and connect to the bossdevice
+            % Modify target IP settings
             obj.targetObject = slrealtime(targetName);
             if isTargetNew || ~strcmp(obj.targetObject.TargetSettings.address,ipAddress)
                 obj.targetObject.TargetSettings.address = ipAddress;
