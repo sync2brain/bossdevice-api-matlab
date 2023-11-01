@@ -32,8 +32,9 @@ instObj.BufferData = true;
 bd.addInstrument(instObj);
 
 %% Retrieve signal data from bossdevice
-disp('Waiting 10s to accumulate data in buffer...');
-pause(10);
+tWait = 20;
+fprintf('Waiting %is to accumulate data in buffer...\n',tWait);
+pause(tWait);
 mapData = instObj.getBufferedData;
 disp('Done.');
 
