@@ -2,19 +2,19 @@ function issues = checkTask
 
 projObj = currentProject;
 
+disp('Analyzing code...');
+
 % Identify code issues
 issues = codeIssues(projObj.RootFolder);
 
 % Encode results in JSON file and export
 if batchStartupOptionUsed
-    jsonIssues = jsonencode(issues);
-    fid = fopen(fullfile(projObj.RootFolder,'checkResults.json'),'w');
-    fprintf(fid,'%s',jsonIssues);
-    fclose(fid);
+    issues.export('results');
 end
 
-% Assert code results
-% assert(isempty(issues.Issues),...
-%     formattedDisplayText(issues.Issues(:,["Location" "Severity" "Description"])));
+disp('Code analysis complete.');
+
+% Display code issues
+formattedDisplayText(issues.Issues(:,["Location" "Severity" "Description"]));
 
 end
