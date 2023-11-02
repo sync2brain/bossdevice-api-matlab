@@ -1,7 +1,7 @@
 name: Package toolbox and publish release
 
 env:
-  MATLAB_VER: R2023a
+  MATLAB_VER: R2023b
 
 # Run workflow when a tag is created
 on:
