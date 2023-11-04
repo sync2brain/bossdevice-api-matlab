@@ -74,7 +74,7 @@ jobs:
           &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test('noHW') package('${{  github.ref_name }}','${{  github.actor }}');"
       
       # Create new release
-      - name: Release
+      - name: Create a new release
         uses: softprops/action-gh-release@v1
         with:
           files: releases/bossdevice-api-installer.mltbx
