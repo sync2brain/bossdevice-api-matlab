@@ -33,9 +33,11 @@ classdef commonSetupTests < matlab.unittest.TestCase
         end
 
         function rebootTarget(testCase)
-            disp('Rebooting bossdevice to teardown test class.');
-            testCase.bd.targetObject.reboot;
-            pause(30);
+            if ~isempty(testCase.bd)
+                disp('Rebooting bossdevice to teardown test class.');
+                testCase.bd.targetObject.reboot;
+                pause(30);
+            end
         end
     end
 
