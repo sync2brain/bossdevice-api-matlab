@@ -17,8 +17,8 @@ classdef commonSetupTests < matlab.unittest.TestCase
             testCase.bd = bossdevice;
             testCase.bd.targetObject.update;
 
-            fprintf('Wait 30s for target to reboot after update and set IP address in secondary interface.\n');
-            pause(30);
+            fprintf('Wait 40s for target to reboot after update and set IP address in secondary interface.\n');
+            pause(40);
             % Set Ethernet IP in secondary interface
             bossapi.setEthernetInterface(testCase.bd.targetObject,'wm1','192.168.200.255/24');
         end
