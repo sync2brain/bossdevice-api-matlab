@@ -10,10 +10,10 @@ bd = bossdevice;
 bd.start;
 
 % Prepare instrument object with signals to stream
-inst = slrealtime.Instrument;
-inst.addSignal('mainmodel/UDP/Decode UDP Packet',3); % Former UDP/raw_mrk
-inst.addSignal('mainmodel/Unit Delay',1); % Former gen_running
-bd.addInstrument(inst);
+instObj = slrealtime.Instrument;
+instObj.addSignal('biosignal','BusElement','mrk'); % Former UDP/raw_mrk
+instObj.addSignal('mainmodel/Unit Delay',1); % Former gen_running
+bd.addInstrument(instObj);
 
 %% Configure scopes in SDI
 
@@ -26,7 +26,7 @@ Simulink.sdi.setSubPlotLayout(1,1);
 runObj = Simulink.sdi.Run.getLatest;
 
 % Get signal objects and add to subplot
-mrkSig = runObj.getSignalsByName('mrk');
+mrkSig = runObj.getSignalsByName('biosignal.mrk');
 mrkSig.plotOnSubPlot(1,1,true);
 
 genRunSig = runObj.getSignalsByName('gen_running');
