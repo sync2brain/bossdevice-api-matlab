@@ -3,7 +3,7 @@
 
 ## Requirements
 - MATLAB&reg; R2022b or newer in their latest update available.
-- Simulink Real-Time&reg;
+- [Simulink Real-Time&reg;](https://www.mathworks.com/products/simulink-real-time.html)
 - [Simulink Real-Time Target Support Package](https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package)
 - [bossdevice](https://sync2brain.com/) hardware
 - bossdevice firmware (MLDATX file included in the toolbox installer)
