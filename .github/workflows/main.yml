@@ -60,8 +60,10 @@ jobs:
     strategy:
       fail-fast: false # Run with every MATLAB version independently
       matrix:
-        matlabVer: [R2023a, R2023b] # List of MATLAB releases to test
+        matlabVer: [R2022b, R2023a, R2023b] # List of MATLAB releases to test
+        
     runs-on: matlab
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:  
       - name: Setup Python
@@ -76,12 +78,12 @@ jobs:
           submodules: 'recursive'
           token: ${{ secrets.REPO_READ_TOKEN }}
 
-      - name: Cache MATLAB build files
-        uses: actions/cache@v3
-        with:
-          key: matlab-buildtool
-          path: |
-            buildUtilities/.buildtool
+      #- name: Cache MATLAB build files
+      #  uses: actions/cache@v3
+      #  with:
+      #    key: matlab-buildtool
+      #    path: |
+      #      buildUtilities/.buildtool
 
       - name: Download firmware artifact
         uses: dawidd6/action-download-artifact@v2
@@ -96,8 +98,12 @@ jobs:
           if_no_artifact_found: fail
 
       - name: Run MATLAB command
+        timeout-minutes: 30
         run: |
-          &"$env:ProgramFiles\MATLAB\${{ matrix.matlabVer }}\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test({'noHW','bdConnected'})"
+          &"$env:ProgramFiles\MATLAB\${{ matrix.matlabVer }}\bin\matlab.exe" -batch "openProject(pwd); updateSGdeps; testTask({'noHW','bdConnected'});"
+        # MATLAB R2022b does not support input arguments to buildtool
+        #run: |
+        #  &"$env:ProgramFiles\MATLAB\${{ matrix.matlabVer }}\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test({'noHW','bdConnected'});"
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
@@ -109,6 +115,7 @@ jobs:
             results.xml
 
       - name: Upload Speedgoat dependencies as artifacts
+        if: ${{ github.ref == 'refs/heads/master' }}
         uses: actions/upload-artifact@v3
         with:
           name: speedgoat-deps-${{ matrix.matlabVer }}
