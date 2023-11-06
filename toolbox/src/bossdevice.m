@@ -97,19 +97,29 @@ classdef bossdevice < handle
             end
 
             % Check and enable built-in Speedgoat dependencies
-            obj.sgDepsPath = fullfile(toolboxPath,'dependencies','sg',matlabRelease.Release);
+            obj.sgDepsPath = fullfile(toolboxPath,'dependencies','sg');
             isSGinstalled = bossapi.sg.isSpeedgoatBlocksetInstalled;
+            
             if isSGinstalled
                 % Using own full installation of Speedgoat I/O Blockset (for development or debugging purposes)
                 fprintf('[Debug] Using own full installation of Speedgoat I/O Blockset v%s.\n',speedgoat.version);
-            elseif isfolder(obj.sgDepsPath)
+
+                % Remove any possible instance of SG dependencies from the path
+                rmpath(genpath(obj.sgDepsPath));
+
+            elseif isfolder(fullfile(obj.sgDepsPath,matlabRelease.Release))
                 % Try using built-in Speedgoat dependency
-                addpath(fullfile(toolboxPath,'dependencies','sg'));
+                % MATLAB Toolbox installer adds everything to the path. We must remove first everything and
+                % only add manually to the path the required folder corresponding to the current MATLAB release
+                rmpath(genpath(obj.sgDepsPath));
                 addpath(obj.sgDepsPath);
+                addpath(fullfile(obj.sgDepsPath,matlabRelease.Release));
                 assert(exist('updateSGtools.p','file'),...
-                    sprintf('Speedgoat files not found in "%s". Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.',obj.sgDepsPath));
+                    sprintf('Speedgoat files not found in "%s". Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.',fullfile(obj.sgDepsPath,matlabRelease.Release)));
+
             else
                 error('Speedgoat dependencies not found. Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.');
+
             end
 
             % Use default target if not passing any input argument
