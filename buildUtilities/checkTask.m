@@ -10,9 +10,9 @@ issues = codeIssues([...
     fullfile(projObj.RootFolder,'toolbox','src'),...
     fullfile(projObj.RootFolder,'toolbox','examples')]);
 
-% Encode results in JSON file and export
+% Export results in SARIF format
 if batchStartupOptionUsed
-    issues.export('results');
+    issues.export('results.sarif');
 end
 
 disp('Code analysis complete.');
