@@ -40,15 +40,27 @@ disp('Done.');
 
 sigData = mapData.values;
 
-spf_sigData = squeeze(sigData{2}.data)';
-osc_alpha_ipData = interp1(sigData{1}.time,sigData{1}.data,sigData{2}.time);
+% Extract data and downsample fast signal
+osc_alpha_ipData = sigData{1}.data;
+spf_sigData = downsample(squeeze(sigData{2}.data)',2);
+
+% Compute sample frequency
+fs = 1/mean(diff(sigData{1}.time));
+
+% Compensante offset in instantaneous predicted phase
+numSamples = 3;
+osc_alpha_ipData = osc_alpha_ipData(1+numSamples:end,:);
+
+% Use same number of samples from SPF
+if size(osc_alpha_ipData,1) > size(spf_sigData,1)
+    osc_alpha_ipData = osc_alpha_ipData(1:size(spf_sigData,1),:);
+else
+    spf_sigData = spf_sigData(1:size(osc_alpha_ipData,1),:);
+end
 
 
 %% Phase error using standard non-causal methods
 disp('Determining phase using standard non-causal methods...');
-
-% Compute sample frequency
-fs = 1/mean(diff(sigData{1}.time));
 
 % Build zero phase band-pass filter
 PhaseErrorFilter = designfilt('bandpassfir', 'FilterOrder', round(fs), 'CutoffFrequency1', 9, 'CutoffFrequency2', 13, 'SampleRate', fs);
