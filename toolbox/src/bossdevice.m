@@ -105,7 +105,9 @@ classdef bossdevice < handle
                 fprintf('[Debug] Using own full installation of Speedgoat I/O Blockset v%s.\n',speedgoat.version);
 
                 % Remove any possible instance of SG dependencies from the path
-                rmpath(genpath(obj.sgDepsPath));
+                if exist('sg','dir')
+                    rmpath(genpath(obj.sgDepsPath));
+                end
 
             elseif isfolder(fullfile(obj.sgDepsPath,matlabRelease.Release))
                 % Try using built-in Speedgoat dependency
