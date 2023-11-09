@@ -16,9 +16,8 @@ classdef commonSetupTests < matlab.unittest.TestCase
 
             testCase.bd = bossdevice;
             testCase.bd.targetObject.update;
-
-            fprintf('Wait 40s for target to reboot after update and set IP address in secondary interface.\n');
-            pause(40);
+            testCase.waitTargetReady(testCase.bd.targetObject);
+            
             % Set Ethernet IP in secondary interface
             bossapi.setEthernetInterface(testCase.bd.targetObject,'wm1','192.168.200.255/24');
         end
@@ -33,10 +32,10 @@ classdef commonSetupTests < matlab.unittest.TestCase
         end
 
         function rebootTarget(testCase)
-            if ~isempty(testCase.bd)
+            if ~isempty(testCase.bd) && testCase.bd.isConnected
                 disp('Rebooting bossdevice to teardown test class.');
                 testCase.bd.targetObject.reboot;
-                pause(30);
+                testCase.waitTargetReady(testCase.bd.targetObject);
             end
         end
     end
@@ -46,6 +45,43 @@ classdef commonSetupTests < matlab.unittest.TestCase
             if ~isempty(testCase.bd) && testCase.bd.isConnected
                 testCase.bd.stop;
                 testCase.bd.targetObject.disconnect;
+            end
+        end
+    end
+
+    methods (Static, Access = protected)
+        function pingSuccesful = waitTargetReady(tgObj, numAttempts)
+            arguments
+                tgObj slrealtime.Target
+                numAttempts {mustBePositive,mustBeInteger} = 10
+            end
+
+            pingSuccesful = false;
+            i = 1;
+            while i <= numAttempts
+                fprintf('Pinging target "%s" at "%s" (%i/%i)...\n',...
+                    tgObj.TargetSettings.name, tgObj.TargetSettings.address, i, numAttempts);
+
+                [status,~] = system(['ping ' tgObj.TargetSettings.address]);
+                if status == 1
+                    i = i+1;
+                    % Wait 3s before next ping attempt
+                    pause(3);
+
+                elseif status == 0
+                    % Ping successful
+                    fprintf('Ping successful.\n');
+                    pingSuccesful = true;
+                    break;
+
+                elseif i == numAttempts
+                    error('Speedgoat target "%s" could not be reached in the IP address "%s".',...
+                        tgObj.TargetSettings.name, tgObj.TargetSettings.address);
+
+                else
+                    error('Error executing waitTargetReady.');
+
+                end
             end
         end
     end
