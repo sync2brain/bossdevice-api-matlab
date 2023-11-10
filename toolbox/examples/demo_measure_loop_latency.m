@@ -9,12 +9,6 @@
 bd = bossdevice;
 bd.start;
 
-% Prepare instrument object with signals to stream
-instObj = slrealtime.Instrument;
-instObj.addSignal('biosignal','BusElement','mrk'); % Former UDP/raw_mrk
-instObj.addSignal('mainmodel/Unit Delay',1); % Former gen_running
-bd.addInstrument(instObj);
-
 %% Configure scopes in SDI
 
 % Open Simulation Data Inspect (SDI) and prepare plot layout

@@ -9,12 +9,6 @@ if bd.isRunning
     bd.stop;
 end
 
-% Prepare instrument object with signals to stream
-inst = slrealtime.Instrument;
-inst.addSignal("eeg");
-inst.addSignal("con");
-bd.addInstrument(inst);
-
 % Run real-time simulation for 5s
 bd.start;
 pause(5);
@@ -32,7 +26,7 @@ Simulink.sdi.setSubPlotLayout(2,1);
 runObj = Simulink.sdi.Run.getLatest;
 
 % Get signal objects and expand to convert multidimensional signals to scalar channels
-eegSig = runObj.getSignalsByName("eeg");
+eegSig = runObj.getSignalsByName("biosignal.eeg");
 eegSig.expand;
 conSig = runObj.getSignalsByName("con");
 conSig.expand;
