@@ -112,7 +112,7 @@ jobs:
           check_name: "Test Results ${{ matrix.matlabVer }}"
           action_fail: true
           files: |
-            results.xml
+            work/results.xml
 
       - name: Upload Speedgoat dependencies as artifacts
         if: ${{ github.ref == 'refs/heads/master' }}

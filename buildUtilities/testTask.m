@@ -30,7 +30,7 @@ if isempty(suite)
 end
 
 runner = TestRunner.withTextOutput('OutputDetail', Verbosity.Detailed);
-runner.addPlugin(XMLPlugin.producingJUnitFormat(fullfile(projObj.RootFolder,'results.xml')));
+runner.addPlugin(XMLPlugin.producingJUnitFormat(fullfile(projObj.RootFolder,'work/results.xml')));
 
 results = runner.run(suite);
 results.assertSuccess;
