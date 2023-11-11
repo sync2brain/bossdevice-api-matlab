@@ -25,7 +25,7 @@ bd.alpha.bpf_fir_coeffs = firls(70, [0 6 9 13 16 (500/2)]/(500/2), [0 0 1 1 0 0]
 
 %% Configuring an instrument buffer to acquire data
 instObj = slrealtime.Instrument;
-instObj.addSignal('spf_sig');
+instObj.addSignal('spf_sig_500Hz');
 instObj.addSignal('osc','BusElement','alpha.ip');
 instObj.BufferData = true;
 
@@ -42,7 +42,7 @@ sigData = mapData.values;
 
 % Extract data and downsample fast signal
 osc_alpha_ipData = sigData{1}.data;
-spf_sigData = downsample(squeeze(sigData{2}.data)',2);
+spf_sigData = squeeze(sigData{2}.data)';
 
 % Compute sample frequency
 fs = 1/mean(diff(sigData{1}.time));
@@ -50,13 +50,7 @@ fs = 1/mean(diff(sigData{1}.time));
 % Compensante offset in instantaneous predicted phase
 numSamples = 3;
 osc_alpha_ipData = osc_alpha_ipData(1+numSamples:end,:);
-
-% Use same number of samples from SPF
-if size(osc_alpha_ipData,1) > size(spf_sigData,1)
-    osc_alpha_ipData = osc_alpha_ipData(1:size(spf_sigData,1),:);
-else
-    spf_sigData = spf_sigData(1:size(osc_alpha_ipData,1),:);
-end
+spf_sigData = spf_sigData(1:size(osc_alpha_ipData,1),:);
 
 
 %% Phase error using standard non-causal methods
