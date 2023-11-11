@@ -105,7 +105,7 @@ classdef bossdevice < handle
                 fprintf('[Debug] Using own full installation of Speedgoat I/O Blockset v%s.\n',speedgoat.version);
 
                 % Remove any possible instance of SG dependencies from the path
-                if exist('sg','dir')
+                if exist('dependencies/sg','dir')
                     rmpath(genpath(obj.sgDepsPath));
                 end
 
