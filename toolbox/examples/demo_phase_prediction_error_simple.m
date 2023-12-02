@@ -48,9 +48,9 @@ spf_sigData = squeeze(sigData{2}.data)';
 fs = 1/mean(diff(sigData{1}.time));
 
 % Compensante offset in instantaneous predicted phase
-numSamples = 3;
-osc_alpha_ipData = osc_alpha_ipData(1+numSamples:end,:);
-spf_sigData = spf_sigData(1:size(osc_alpha_ipData,1),:);
+numSamples = bd.alpha.offset_samples;
+spf_sigData = spf_sigData(1+numSamples:end,2);
+osc_alpha_ipData = osc_alpha_ipData(1:size(spf_sigData,1),end);
 
 
 %% Phase error using standard non-causal methods
@@ -69,7 +69,7 @@ disp('Done.');
 polarhistogram(phaseError, 'Normalization', 'probability', 'BinWidth', pi/36);
 ax = gca;
 ax.ThetaZeroLocation = 'Top';
-title(sprintf('Circular mean = %.1f°\nCircular standard deviation = %.1f°', meanError, meanDev));
+title(sprintf('Circular mean = %.1fÂ°\nCircular standard deviation = %.1fÂ°', meanError, meanDev));
 
 
 %% Stop and reset instrumentation
