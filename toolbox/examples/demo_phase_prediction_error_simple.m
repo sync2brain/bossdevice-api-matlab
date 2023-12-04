@@ -14,7 +14,7 @@ bd.num_eeg_channels = 1;
 bd.num_aux_channels = 1;
 bd.spatial_filter_weights = 1;
 
-bd.alpha.offset_samples = 5; %this depends on the loop-delay
+bd.alpha.offset_samples = 3; %this depends on the loop-delay
 
 
 %% Setting Filters to BOSS Device
@@ -49,7 +49,7 @@ fs = 1/mean(diff(sigData{1}.time));
 
 % Compensante offset in instantaneous predicted phase
 numSamples = bd.alpha.offset_samples;
-spf_sigData = spf_sigData(1+numSamples:end,2);
+spf_sigData = spf_sigData(1+numSamples:end, 1);
 osc_alpha_ipData = osc_alpha_ipData(1:size(spf_sigData,1),end);
 
 
