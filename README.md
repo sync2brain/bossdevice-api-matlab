@@ -11,7 +11,9 @@
 ## Enable bossdevice communication over Control PC
 1. Turn on the bossdevice and connect the `Control PC` Ethernet port on your bossdevice to an available Ethernet port on your computer.
 2. On your computer, follow [these steps](https://www.mathworks.com/help/slrealtime/gs/development-computer-communication-setup-windows.html) to configure the local Ethernet interface on your PC with the IP address `192.168.7.2`.
-3. If you are working on Windows, please set the Development-to-Target Computer Ethernet Interface as `Private`. Follow the steps documented [here](https://www.mathworks.com/help/slrealtime/ug/troubleshoot-communication-failure-through-firewall.html).
+3. If you are working on Windows, ensure a stable and robust connection between the development PC and the bossdevice:
+   * Set the Development-to-Target Computer Ethernet Interface as `Private`. Please, follow the steps documented [here](https://www.mathworks.com/help/slrealtime/ug/troubleshoot-communication-failure-through-firewall.html).
+   * If you are not allowed by the IT security settings in your company or institution to change the Ethernet Interface's profile or the Development-to-Target Computer Ethernet Interface keeps reverting to `Public` after some time or even after every system's reboot, follow the alternative steps described [here](https://www.mathworks.com/matlabcentral/answers/2020516-how-can-i-establish-communication-with-a-speedgoat-target-computer-via-an-ethernet-interface-configu).
 
 ## Installation and initial toolbox configuration
 1. Download `bossdevice-api-installer.mltbx` from the latest [release](https://github.com/sync2brain/bossdevice-api-matlab/releases) available in the GitHub project.
