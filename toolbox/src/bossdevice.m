@@ -452,6 +452,10 @@ classdef bossdevice < handle
         function removeAllInstruments(obj)
             obj.targetObject.removeAllInstruments;
         end
+
+        function reboot(obj)
+            obj.targetObject.reboot;
+        end
     end
 
 end
