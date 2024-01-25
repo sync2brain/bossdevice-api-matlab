@@ -14,7 +14,7 @@ classdef bossdevice_oscillation
         amplitude_max
         lpf_fir_coeffs % Nyquist filter before decimating the signal from 5 kHz to the sample rate of the oscillation
         bpf_fir_coeffs % band pass filter coefficients
-        offset_samples
+        offset_samples {mustBeInteger, mustBePositive} % Number of samples for analysis counting backwards w.r.t. to the last value
     end
    
     methods
