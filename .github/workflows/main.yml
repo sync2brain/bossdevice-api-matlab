@@ -36,13 +36,6 @@ jobs:
           submodules: 'recursive'
           token: ${{ secrets.REPO_READ_TOKEN }}
 
-      - name: Cache MATLAB build files
-        uses: actions/cache@v3
-        with:
-          key: matlab-buildtool
-          path: |
-            buildUtilities/.buildtool
-
       - name: Run MATLAB command
         run: |
           &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool check"
