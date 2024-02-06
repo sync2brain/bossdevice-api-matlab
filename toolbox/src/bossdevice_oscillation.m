@@ -34,7 +34,7 @@ classdef bossdevice_oscillation
                 obj.amplitude_min = getparam(obj.targetObj, ['mainmodel/bosslogic/EVD/' obj.name], 'amplitude_min');
                 obj.amplitude_max = getparam(obj.targetObj, ['mainmodel/bosslogic/EVD/' obj.name], 'amplitude_max');
             else
-                warning('bossdevice is not connected. Switch the device on and reinitialize this object.');
+                error('bossdevice is not ready. Please run <a href="matlab:%s.initialize"> and try again.',inputname(1));
             end
         end
               
