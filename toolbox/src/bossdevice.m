@@ -99,7 +99,7 @@ classdef bossdevice < handle
             % Check and enable built-in Speedgoat dependencies
             obj.sgDepsPath = fullfile(toolboxPath,'dependencies','sg');
             isSGinstalled = bossapi.sg.isSpeedgoatBlocksetInstalled;
-            
+
             if isSGinstalled
                 % Using own full installation of Speedgoat I/O Blockset (for development or debugging purposes)
                 fprintf('[Debug] Using own full installation of Speedgoat I/O Blockset v%s.\n',speedgoat.version);
@@ -162,8 +162,10 @@ classdef bossdevice < handle
             end
 
             % Initialize oscillation properties with a new object instance if application is loaded
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+            if obj.isInitialized
                 initOscillationProps(obj);
+            else
+                warning('bossdevice is not ready. Initialize your bossdevice object before further processing. For example, if you are using "bd = bossdevice", run "bd.initialize".');
             end
         end
 
@@ -230,20 +232,16 @@ classdef bossdevice < handle
 
         % getters and setters for dependent properties
         function duration = get.sample_and_hold_seconds(obj)
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded
-                duration = getparam(obj.targetObject, [obj.appName,'/bosslogic/UDP'], 'sample_and_hold_seconds');
-            end
+                duration = obj.getparam('UDP', 'sample_and_hold_seconds');
         end
 
         function  set.sample_and_hold_seconds(obj, duration)
-            setparam(obj.targetObject, [obj.appName,'/bosslogic/UDP'], 'sample_and_hold_seconds', duration);
+            obj.setparam('UDP', 'sample_and_hold_seconds', duration);
         end
 
 
         function spatial_filter_weights = get.spatial_filter_weights(obj)
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded
-                spatial_filter_weights = getparam(obj.targetObject, [obj.appName,'/bosslogic/OSC'], 'weights');
-            end
+                spatial_filter_weights = getparam(obj, 'OSC', 'weights');
         end
 
         function set.spatial_filter_weights(obj, weights)
@@ -263,24 +261,20 @@ classdef bossdevice < handle
             if size(weights, 1) < num_rows
                 weights(num_rows, 1) = 0; % fill with zeros
             end
-            setparam(obj.targetObject, [obj.appName,'/bosslogic/OSC'], 'weights', single(weights))
+            setparam(obj, 'OSC', 'weights', single(weights));
         end
 
 
         function interval = get.min_inter_trig_interval(obj)
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded
-                interval = getparam(obj.targetObject, [obj.appName,'/bosslogic/TRG'], 'min_inter_trig_interval');
-            end
+            interval = getparam(obj, 'TRG', 'min_inter_trig_interval');
         end
 
         function set.min_inter_trig_interval(obj, interval)
-            setparam(obj.targetObject, [obj.appName,'/bosslogic/TRG'], 'min_inter_trig_interval', interval);
+            setparam(obj, 'TRG', 'min_inter_trig_interval', interval);
         end
 
         function val = get.triggers_remaining(obj)
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded
-                val = getsignal(obj.targetObject,[obj.appName,'/bosslogic/TRG/Count Down'],1);
-            end
+                val = getsignal(obj,'TRG/Count Down',1);
         end
 
         function set.triggers_remaining(obj, val)
@@ -288,40 +282,34 @@ classdef bossdevice < handle
                 obj
                 val uint16
             end
-            obj.targetObject.setparam([obj.appName,'/bosslogic/TRG'], 'countdown_reset', 0);
-            obj.targetObject.setparam([obj.appName,'/bosslogic/TRG'], 'countdown_initialcount', val);
-            obj.targetObject.setparam([obj.appName,'/bosslogic/TRG'], 'countdown_reset', 1);
+            obj.setparam('TRG', 'countdown_reset', 0);
+            obj.setparam('TRG', 'countdown_initialcount', val);
+            obj.setparam('TRG', 'countdown_reset', 1);
         end
 
         function sequence = get.generator_sequence(obj)
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded
-                sequence = getparam(obj.targetObject, [obj.appName,'/bosslogic/GEN'], 'sequence_time_port_marker');
-            end
+            sequence = getparam(obj, 'GEN', 'sequence_time_port_marker');
         end
 
         function set.generator_sequence(obj, sequence)
-            setparam(obj.targetObject, [obj.appName,'/bosslogic/GEN'], 'sequence_time_port_marker', sequence);
+            setparam(obj, 'GEN', 'sequence_time_port_marker', sequence);
         end
 
         function n = get.num_eeg_channels(obj)
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded
-                n = getparam(obj.targetObject, [obj.appName,'/bosslogic/UDP'], 'num_eeg_channels');
-            end
+                n = getparam(obj, 'UDP', 'num_eeg_channels');
         end
 
         function set.num_eeg_channels(obj, n)
-            setparam(obj.targetObject, [obj.appName,'/bosslogic/UDP'], 'num_eeg_channels', n);
+            setparam(obj, 'UDP', 'num_eeg_channels', n);
         end
 
 
         function n = get.num_aux_channels(obj)
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded
-                n = getparam(obj.targetObject, [obj.appName,'/bosslogic/UDP'], 'num_aux_channels');
-            end
+                n = getparam(obj, 'UDP', 'num_aux_channels');
         end
 
         function set.num_aux_channels(obj, n)
-            setparam(obj.targetObject, [obj.appName,'/bosslogic/UDP'], 'num_aux_channels', n);
+            setparam(obj, 'UDP', 'num_aux_channels', n);
         end
 
         function configure_time_port_marker(obj, sequence)
@@ -339,8 +327,7 @@ classdef bossdevice < handle
         end
 
         function generator_running = get.isGeneratorRunning(obj)
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded &&...
-                    (getsignal(obj.targetObject, [obj.appName,'/bosslogic/Unit Delay'],1))
+            if getsignal(obj, 'Unit Delay',1)
                 generator_running = true;
             else
                 generator_running = false;
@@ -358,17 +345,18 @@ classdef bossdevice < handle
         function set.isArmed(obj, isArmed)
             if isArmed
                 assert(~obj.isGeneratorRunning, 'Cannot arm target while generator is running.');
-                setparam(obj.targetObject, [obj.appName,'/bosslogic/GEN'], 'enabled', 1);
-                setparam(obj.targetObject, [obj.appName,'/bosslogic/TRG'], 'enabled', 1);
+                setparam(obj, 'GEN', 'enabled', 1);
+                setparam(obj, 'TRG', 'enabled', 1);
+                if ~obj.isRunning
+                    disp('bossdevice is armed and ready to start.');
+                end
             else
-                setparam(obj.targetObject, [obj.appName,'/bosslogic/TRG'], 'enabled', 0);
+                setparam(obj, 'TRG', 'enabled', 0);
             end
         end
 
         function isArmed = get.isArmed(obj)
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded &&...
-                    (getparam(obj.targetObject, [obj.appName,'/bosslogic/GEN'], 'enabled') == 1 && ...
-                    getparam(obj.targetObject, [obj.appName,'/bosslogic/TRG'], 'enabled') == 1)
+            if (getparam(obj, 'GEN', 'enabled') == 1 && getparam(obj, 'TRG', 'enabled') == 1)
                 isArmed = true;
             else
                 isArmed = false;
@@ -376,7 +364,7 @@ classdef bossdevice < handle
         end
 
         function isRunning = get.isRunning(obj)
-            if obj.targetObject.isConnected && obj.targetObject.isLoaded
+            if obj.isInitialized
                 isRunning = obj.targetObject.isRunning;
             else
                 isRunning = false;
@@ -401,16 +389,16 @@ classdef bossdevice < handle
                 port {mustBeScalarOrEmpty}
             end
 
-            if obj.targetObject.isRunning
+            if obj.isRunning
                 marker = port;
 
                 sequence_time_port_marker = obj.generator_sequence;
                 sequence_time_port_marker = zeros(size(sequence_time_port_marker));
                 sequence_time_port_marker(1,:) = [0 port marker]; % 0 seconds after the trigger, trigger port 1 and send marker 1
 
-                setparam(obj.targetObject, [obj.appName,'/bosslogic/GEN'], 'enabled', 0);
-                setparam(obj.targetObject, [obj.appName,'/bosslogic/TRG'], 'enabled', 0);
-                setparam(obj.targetObject, [obj.appName,'/bosslogic/GEN'], 'manualtrigger', 0);
+                setparam(obj, 'GEN', 'enabled', 0);
+                setparam(obj, 'TRG', 'enabled', 0);
+                setparam(obj, 'GEN', 'manualtrigger', 0);
                 pause(0.1)
                 obj.generator_sequence = sequence_time_port_marker;
                 obj.manualTrigger;
@@ -420,12 +408,12 @@ classdef bossdevice < handle
         end
 
         function manualTrigger(obj)
-            setparam(obj.targetObject, [obj.appName,'/bosslogic/GEN'], 'enabled', 1);
-            setparam(obj.targetObject, [obj.appName,'/bosslogic/TRG'], 'enabled', 0);
+            setparam(obj, 'GEN', 'enabled', 1);
+            setparam(obj, 'TRG', 'enabled', 0);
 
-            setparam(obj.targetObject, [obj.appName,'/bosslogic/GEN'], 'manualtrigger', 1);
+            setparam(obj, 'GEN', 'manualtrigger', 1);
             pause(0.1);
-            setparam(obj.targetObject, [obj.appName,'/bosslogic/GEN'], 'manualtrigger', 0);
+            setparam(obj, 'GEN', 'manualtrigger', 0);
         end
 
         function openDocumentation(obj)
@@ -455,6 +443,22 @@ classdef bossdevice < handle
 
         function reboot(obj)
             obj.targetObject.reboot;
+        end
+
+        function setparam(obj, path, varargin)
+            setparam(obj.targetObject, [obj.appName,'/bosslogic/', path], varargin{:});
+        end
+
+        function getparam(obj, path, varargin)
+            if obj.isInitialized
+                getparam(obj.targetObject, [obj.appName,'/bosslogic/', path], varargin{:});
+            end
+        end
+
+        function getsignal(obj, path, varargin)
+            if obj.isInitialized
+                getparam(obj.targetObject, [obj.appName,'/bosslogic/', path], varargin{:});
+            end
         end
     end
 
