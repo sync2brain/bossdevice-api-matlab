@@ -232,7 +232,7 @@ classdef bossdevice < handle
 
         % getters and setters for dependent properties
         function duration = get.sample_and_hold_seconds(obj)
-                duration = obj.getparam('UDP', 'sample_and_hold_seconds');
+            duration = obj.getparam('UDP', 'sample_and_hold_seconds');
         end
 
         function  set.sample_and_hold_seconds(obj, duration)
@@ -241,7 +241,7 @@ classdef bossdevice < handle
 
 
         function spatial_filter_weights = get.spatial_filter_weights(obj)
-                spatial_filter_weights = getparam(obj, 'OSC', 'weights');
+            spatial_filter_weights = getparam(obj, 'OSC', 'weights');
         end
 
         function set.spatial_filter_weights(obj, weights)
@@ -274,7 +274,7 @@ classdef bossdevice < handle
         end
 
         function val = get.triggers_remaining(obj)
-                val = getsignal(obj,'TRG/Count Down',1);
+            val = getsignal(obj,'TRG/Count Down',1);
         end
 
         function set.triggers_remaining(obj, val)
@@ -296,7 +296,7 @@ classdef bossdevice < handle
         end
 
         function n = get.num_eeg_channels(obj)
-                n = getparam(obj, 'UDP', 'num_eeg_channels');
+            n = getparam(obj, 'UDP', 'num_eeg_channels');
         end
 
         function set.num_eeg_channels(obj, n)
@@ -305,7 +305,7 @@ classdef bossdevice < handle
 
 
         function n = get.num_aux_channels(obj)
-                n = getparam(obj, 'UDP', 'num_aux_channels');
+            n = getparam(obj, 'UDP', 'num_aux_channels');
         end
 
         function set.num_aux_channels(obj, n)
@@ -449,15 +449,15 @@ classdef bossdevice < handle
             setparam(obj.targetObject, [obj.appName,'/bosslogic/', path], varargin{:});
         end
 
-        function getparam(obj, path, varargin)
+        function val = getparam(obj, path, varargin)
             if obj.isInitialized
-                getparam(obj.targetObject, [obj.appName,'/bosslogic/', path], varargin{:});
+                val = getparam(obj.targetObject, [obj.appName,'/bosslogic/', path], varargin{:});
             end
         end
 
-        function getsignal(obj, path, varargin)
+        function val = getsignal(obj, path, varargin)
             if obj.isInitialized
-                getparam(obj.targetObject, [obj.appName,'/bosslogic/', path], varargin{:});
+                val = getsignal(obj.targetObject, [obj.appName,'/bosslogic/', path], varargin{:});
             end
         end
     end
