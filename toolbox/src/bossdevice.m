@@ -161,11 +161,11 @@ classdef bossdevice < handle
                 error('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
 
-            % Initialize oscillation properties with a new object instance if application is loaded
-            if obj.isInitialized
-                initOscillationProps(obj);
+            % Initialize bossdevice if it is connected
+            if obj.isConnected
+                obj.initialize;
             else
-                warning('bossdevice is not ready. Initialize your bossdevice object before further processing. For example, if you are using "bd = bossdevice", run "bd.initialize".');
+                disp('Connect the bossdevice and initialize your bossdevice object to start. For example, if you are using "bd = bossdevice", run "bd.initialize".');
             end
         end
 
