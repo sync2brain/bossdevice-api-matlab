@@ -20,7 +20,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
             bossapi.waitTargetReady(testCase.bd.targetObject);
             
             % Wait additional seconds since the target may respond ping but not be ready yet
-            pause(10);
+            pause(15);
 
             % Set Ethernet IP in secondary interface
             bossapi.setEthernetInterface(testCase.bd.targetObject,'wm1','192.168.200.255/24');
