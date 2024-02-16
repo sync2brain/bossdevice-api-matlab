@@ -1,15 +1,19 @@
 # Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
 
-env:
-  MATLAB_VER: R2023b
-
 on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+    paths-ignore:
+      - 'README.md'
+      - '.github/workflows/release.yml'
+      - 'toolbox'
+      - 'tests'
+      - 'resources'
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-  # Allows you to run this workflow calling it from another workflow
-  workflow_call:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -30,15 +34,19 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    runs-on: matlab
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v2
+
       - name: Run MATLAB command
-        run: |
-          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); buildDoc;"
+        uses: matlab-actions/run-command@v2
+        with:
+          command: openProject(pwd); buildDoc;
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
