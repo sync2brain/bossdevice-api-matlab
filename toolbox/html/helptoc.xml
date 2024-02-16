@@ -3,7 +3,7 @@
 <toc version="2.0">
     <!-- First tocitem specifies top level in Help browser Contents pane -->
     <!-- This can be a roadmap page, as shown below, or a content page -->
-    <tocitem target="bossdevice_api_landing_page.html">bossdevice API
+    <tocitem target="index.html">bossdevice API
         <!-- Nest tocitems to create hierarchical entries in  Contents-->
         <!-- To include icons, use the following syntax for tocitems: -->
         <!-- <tocitem target="foo.html" image="HelpIcon.NAME"> -->
