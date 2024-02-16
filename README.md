@@ -32,7 +32,9 @@ Optionally, for more information about how to get, install and manage add-ons fo
 6. Open the documentation `openBossdeviceDoc` and explore examples with `demo_script_name` and methods available in the bossdevice object.
 
 ## User manual
-Please download and install the toolbox in MATLAB for a complete access to the user manual with the command `openBossdeviceDoc` in the MATLAB console. You will find more details about API properties and methods, example scripts and further technical information.
+Visit our online documentation available [here](https://sync2brain.github.io/bossdevice-api-matlab/).
+
+Download and install the toolbox in MATLAB for a complete access to the user manual with the command `openBossdeviceDoc` in the MATLAB console. You will find more details about API properties and methods, example scripts and further technical information.
 
 ## Feedback, questions and troubleshooting
 If you have any issue to report or enhancement to request, please create a new [Issue](https://github.com/sync2brain/bossdevice-api-matlab/issues). If you have any other topic to discuss like a question about usage, a tip to share with the community or other topic of interest, please check out our on-going [Discussions](https://github.com/sync2brain/bossdevice-api-matlab/discussions).
