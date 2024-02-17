@@ -9,9 +9,9 @@ on:
       - 'README.md'
       - '.github/workflows/release.yml'
       - '.github/workflows/main.yml'
-      - 'toolbox'
-      - 'tests'
-      - 'resources'
+      - 'toolbox/**'
+      - 'tests/**'
+      - 'resources/**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
