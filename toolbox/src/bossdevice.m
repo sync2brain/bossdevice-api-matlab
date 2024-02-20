@@ -383,7 +383,7 @@ classdef bossdevice < handle
         function sendPulse(obj, port)
             arguments
                 obj
-                port {mustBeScalarOrEmpty}
+                port {mustBeInteger,mustBeInRange(port,1,4)}
             end
 
             if obj.isRunning
