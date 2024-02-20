@@ -232,7 +232,7 @@ classdef bossdevice < handle
             duration = obj.getparam('UDP', 'sample_and_hold_seconds');
         end
 
-        function  set.sample_and_hold_seconds(obj, duration)
+        function set.sample_and_hold_seconds(obj, duration)
             obj.setparam('UDP', 'sample_and_hold_seconds', duration);
         end
 
