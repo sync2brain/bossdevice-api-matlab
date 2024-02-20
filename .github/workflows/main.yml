@@ -12,7 +12,7 @@ on:
       - 'README.md'
       - '.github/workflows/release.yml'
       - '.github/workflows/doc.yml'
-      - 'docSource'
+      - 'docSource/**'
       
   pull_request:
     branches: [ "master" ]
