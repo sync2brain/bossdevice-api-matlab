@@ -100,20 +100,17 @@ classdef bossdevice < handle
             obj.sgDepsPath = fullfile(toolboxPath,'dependencies','sg');
             isSGinstalled = bossapi.sg.isSpeedgoatBlocksetInstalled;
 
+            % Remove any possible instance of SG dependencies from the path
+            sgAllPaths = strsplit(genpath(obj.sgDepsPath),';');
+            cellfun(@(path) rmpath(path), sgAllPaths(ismember(sgAllPaths,strsplit(path,';'))));
+
             if isSGinstalled
                 % Using own full installation of Speedgoat I/O Blockset (for development or debugging purposes)
                 fprintf('[Debug] Using own full installation of Speedgoat I/O Blockset v%s.\n',speedgoat.version);
 
-                % Remove any possible instance of SG dependencies from the path
-                if exist('dependencies/sg','dir')
-                    rmpath(genpath(obj.sgDepsPath));
-                end
-
             elseif isfolder(fullfile(obj.sgDepsPath,matlabRelease.Release))
-                % Try using built-in Speedgoat dependency
                 % MATLAB Toolbox installer adds everything to the path. We must remove first everything and
                 % only add manually to the path the required folder corresponding to the current MATLAB release
-                rmpath(genpath(obj.sgDepsPath));
                 addpath(obj.sgDepsPath);
                 addpath(fullfile(obj.sgDepsPath,matlabRelease.Release));
                 assert(exist('updateSGtools.p','file'),...
