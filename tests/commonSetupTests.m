@@ -8,6 +8,9 @@ classdef commonSetupTests < matlab.unittest.TestCase
 
     methods (TestClassSetup)
         function setupBossdevice(testCase)
+            import matlab.unittest.constraints.Eventually
+            import matlab.unittest.constraints.IsTrue
+
             [testCase.isSGinstalled, testCase.sgPath] = bossapi.sg.isSpeedgoatBlocksetInstalled;
             if testCase.isSGinstalled
                 % If local installation of Speedgoat blockset is present, update toolbox dependencies and work with them
@@ -17,13 +20,12 @@ classdef commonSetupTests < matlab.unittest.TestCase
             % Update target and wait until it has rebooted
             testCase.bd = bossdevice;
             testCase.bd.targetObject.update;
-            bossapi.waitTargetReady(testCase.bd.targetObject);
-            
-            % Wait additional seconds since the target may respond ping but not be ready yet
-            pause(15);
 
-            % Set Ethernet IP in secondary interface
-            bossapi.setEthernetInterface(testCase.bd.targetObject,'wm1','192.168.200.255/24');
+            testCase.assertThat(@() bossapi.pingTarget(testCase.bd.targetObject),...
+                Eventually(IsTrue,"WithTimeoutOf",60),'Should wait until bossdevice has rebooted.');
+
+            % Wait additional seconds since the target may respond ping but not be ready yet
+            pause(5);
         end
     end
 
@@ -36,10 +38,15 @@ classdef commonSetupTests < matlab.unittest.TestCase
         end
 
         function rebootTarget(testCase)
+            import matlab.unittest.constraints.Eventually
+            import matlab.unittest.constraints.IsTrue
+            
             if ~isempty(testCase.bd) && testCase.bd.isConnected
                 disp('Rebooting bossdevice to teardown test class.');
-                testCase.bd.targetObject.reboot;
-                bossapi.waitTargetReady(testCase.bd.targetObject);
+                testCase.bd.reboot;
+
+                testCase.assertThat(@() bossapi.pingTarget(testCase.bd.targetObject),...
+                    Eventually(IsTrue,"WithTimeoutOf",60),'Should wait until bossdevice has rebooted.');
             end
         end
     end
@@ -48,9 +55,8 @@ classdef commonSetupTests < matlab.unittest.TestCase
         function clearBossdeviceObj(testCase)
             if ~isempty(testCase.bd) && testCase.bd.isConnected
                 testCase.bd.stop;
-                testCase.bd.targetObject.disconnect;
             end
         end
     end
-    
+
 end

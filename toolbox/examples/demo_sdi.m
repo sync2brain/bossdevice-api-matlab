@@ -14,9 +14,6 @@ bd.start;
 pause(5);
 bd.stop;
 
-% Clear all instrumentation objects
-bd.removeAllInstruments;
-
 % Open Simulation Data Inspect (SDI) and prepare plot layout
 Simulink.sdi.view;
 Simulink.sdi.clearAllSubPlots;
