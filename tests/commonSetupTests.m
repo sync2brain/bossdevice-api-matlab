@@ -47,6 +47,9 @@ classdef commonSetupTests < matlab.unittest.TestCase
 
                 testCase.assertThat(@() bossapi.pingTarget(testCase.bd.targetObject),...
                     Eventually(IsTrue,"WithTimeoutOf",60),'Should wait until bossdevice has rebooted.');
+
+                % Wait additional seconds since the target may respond ping but not be ready yet
+                pause(5);
             end
         end
     end
