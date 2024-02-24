@@ -6,7 +6,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
         isSGinstalled
     end
 
-    properties (ClassSetupParameter)
+    properties (Constant)
         waitTimeReboot = 10;
     end
 
