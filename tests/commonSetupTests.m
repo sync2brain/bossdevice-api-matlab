@@ -7,7 +7,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
     end
 
     properties (Constant)
-        waitTimeReboot = 20;
+        waitTimeReboot = 60;
     end
 
     methods (TestClassSetup)
