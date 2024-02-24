@@ -6,6 +6,10 @@ classdef commonSetupTests < matlab.unittest.TestCase
         isSGinstalled
     end
 
+    properties (ClassSetupParameter)
+        waitTimeReboot = 10;
+    end
+
     methods (TestClassSetup)
         function setupBossdevice(testCase)
             import matlab.unittest.constraints.Eventually
@@ -25,7 +29,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
                 Eventually(IsTrue,"WithTimeoutOf",60),'Should wait until bossdevice has rebooted.');
 
             % Wait additional seconds since the target may respond ping but not be ready yet
-            pause(5);
+            pause(testCase.waitTimeReboot);
         end
     end
 
@@ -49,7 +53,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
                     Eventually(IsTrue,"WithTimeoutOf",60),'Should wait until bossdevice has rebooted.');
 
                 % Wait additional seconds since the target may respond ping but not be ready yet
-                pause(5);
+                pause(testCase.waitTimeReboot);
             end
         end
     end
