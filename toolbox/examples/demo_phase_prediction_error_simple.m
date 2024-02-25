@@ -76,4 +76,4 @@ title(sprintf('Circular mean = %.1f°\nCircular standard deviation = %.1f°', me
 
 %% Stop and reset instrumentation
 bd.stop;
-bd.removeAllInstruments;
+bd.removeInstrument(instObj);
