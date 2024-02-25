@@ -47,4 +47,3 @@ bd.manualTrigger;
 
 %% Clean up
 bd.stop;
-bd.removeAllInstruments;
