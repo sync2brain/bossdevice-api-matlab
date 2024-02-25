@@ -94,7 +94,7 @@ jobs:
           if_no_artifact_found: fail
 
       - name: Run MATLAB command
-        timeout-minutes: 30
+        timeout-minutes: 15
         run: |
           &"$env:ProgramFiles\MATLAB\${{ matrix.matlabVer }}\bin\matlab.exe" -batch "openProject(pwd); updateSGdeps; testTask({'noHW','bdConnected'});"
         # MATLAB R2022b does not support input arguments to buildtool
