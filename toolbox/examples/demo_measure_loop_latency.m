@@ -43,7 +43,3 @@ s(1000,3) = 0; % fill with zeros (TODO: this should be done in the API)
 bd.generator_sequence = s;
 
 bd.manualTrigger;
-
-
-%% Clean up
-bd.stop;
