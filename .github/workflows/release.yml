@@ -1,7 +1,7 @@
 name: Package toolbox and publish release
 
 env:
-  MATLAB_VER: R2023b
+  MATLAB_VER: ${{ vars.MATLAB_VER }}
 
 # Run workflow when a tag is created
 on:
@@ -67,11 +67,11 @@ jobs:
         with:
           key: matlab-buildtool
           path: |
-            buildUtilities/.buildtool
+            .buildtool
 
       - name: Run MATLAB command
         run: |
-          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test('noHW') package('${{  github.ref_name }}','${{  github.actor }}');"
+          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); buildtool test('noHW') package('${{  github.ref_name }}','${{  github.actor }}');"
       
       # Create new release
       - name: Create a new release

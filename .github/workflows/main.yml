@@ -1,7 +1,7 @@
 name: CI
 
 env:
-  MATLAB_VER: R2023b
+  MATLAB_VER: ${{ vars.MATLAB_VER }}
 
 # Controls when the workflow will run
 on:
@@ -41,13 +41,13 @@ jobs:
 
       - name: Run MATLAB command
         run: |
-          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool check"
+          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); buildtool check"
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v2
         with:
           # Path to SARIF file relative to the root of the repository
-          sarif_file: buildUtilities/results.sarif
+          sarif_file: results.sarif
           # Optional category for the results
           # Used to differentiate multiple results for one commit
           category: matlab
@@ -74,12 +74,12 @@ jobs:
           submodules: 'recursive'
           token: ${{ secrets.REPO_READ_TOKEN }}
 
-      #- name: Cache MATLAB build files
-      #  uses: actions/cache@v3
-      #  with:
-      #    key: matlab-buildtool
-      #    path: |
-      #      buildUtilities/.buildtool
+      - name: Cache MATLAB build files
+        uses: actions/cache@v3
+        with:
+          key: matlab-buildtool
+          path: |
+            .buildtool
 
       - name: Download firmware artifact
         uses: dawidd6/action-download-artifact@v2
@@ -99,7 +99,7 @@ jobs:
           &"$env:ProgramFiles\MATLAB\${{ matrix.matlabVer }}\bin\matlab.exe" -batch "openProject(pwd); updateSGdeps; testTask({'noHW','bdConnected'});"
         # MATLAB R2022b does not support input arguments to buildtool
         #run: |
-        #  &"$env:ProgramFiles\MATLAB\${{ matrix.matlabVer }}\bin\matlab.exe" -batch "openProject(pwd); cd('buildUtilities'); buildtool test({'noHW','bdConnected'});"
+        #  &"$env:ProgramFiles\MATLAB\${{ matrix.matlabVer }}\bin\matlab.exe" -batch "openProject(pwd); buildtool test({'noHW','bdConnected'});"
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
@@ -108,7 +108,7 @@ jobs:
           check_name: "Test Results ${{ matrix.matlabVer }}"
           action_fail: true
           files: |
-            work/results.xml
+            results.xml
 
       - name: Upload Speedgoat dependencies as artifacts
         if: ${{ github.ref == 'refs/heads/master' }}
