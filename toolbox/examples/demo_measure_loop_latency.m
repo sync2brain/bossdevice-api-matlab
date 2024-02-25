@@ -36,6 +36,8 @@ Simulink.sdi.addTrigger(genRunSig,...
 % Display data cursors
 Simulink.sdi.setNumCursors(2);
 
+% Cursors must be moved manually in the SDI plot for an accurate measurement of the total delay.
+
 
 %% Generate trigger
 s = [0, 1, 0];
