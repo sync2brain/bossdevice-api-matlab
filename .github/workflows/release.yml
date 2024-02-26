@@ -10,13 +10,8 @@ on:
       - 'v*'
       
 jobs:
-  main-workflow:
-    uses: ./.github/workflows/main.yml
-    secrets: inherit
-    
-  packageToolbox:
-    needs: main-workflow
-    
+   
+  packageToolbox:   
     # The type of runner that the job will run on
     runs-on: matlab
     
@@ -71,7 +66,7 @@ jobs:
 
       - name: Run MATLAB command
         run: |
-          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "openProject(pwd); buildtool test('noHW') package('${{  github.ref_name }}','${{  github.actor }}');"
+          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "buildtool package('${{  github.ref_name }}','${{  github.actor }}');"
       
       # Create new release
       - name: Create a new release
