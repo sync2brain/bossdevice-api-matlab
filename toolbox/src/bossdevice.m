@@ -23,7 +23,7 @@ classdef bossdevice < handle
         sample_and_hold_seconds
         spatial_filter_weights
         min_inter_trig_interval
-        triggers_remaining uint16
+        triggers_remaining
         generator_sequence
         num_eeg_channels
         num_aux_channels
@@ -277,7 +277,7 @@ classdef bossdevice < handle
         function set.triggers_remaining(obj, val)
             arguments
                 obj
-                val uint16
+                val
             end
 
             if obj.isRunning
