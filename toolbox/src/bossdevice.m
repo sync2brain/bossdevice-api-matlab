@@ -330,7 +330,7 @@ classdef bossdevice < handle
         end
 
         function generator_running = get.isGeneratorRunning(obj)
-            generator_running = getsignal(obj, 'GEN', 4);
+            generator_running = getsignal(obj, 'Rate Transition2', 1);
         end
 
         function obj = arm(obj)
