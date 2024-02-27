@@ -330,7 +330,7 @@ classdef bossdevice < handle
         end
 
         function generator_running = get.isGeneratorRunning(obj)
-            if getsignal(obj, 'Unit Delay',1)
+            if getsignal(obj, 'GEN', 4)
                 generator_running = true;
             else
                 generator_running = false;
