@@ -425,8 +425,10 @@ classdef bossdevice < handle
 
         function delete(obj)
             % Class destructor
-            obj.targetObject.stop;
-            obj.targetObject.disconnect;
+            if obj.targetObject.isConnected
+                obj.targetObject.stop;
+                obj.targetObject.disconnect;
+            end
         end
 
         %% Target object wrappers
