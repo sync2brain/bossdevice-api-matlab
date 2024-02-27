@@ -16,7 +16,7 @@ classdef bossdevice < handle
     end
 
     properties (SetAccess = protected)
-        firmwareFilepath {mustBeFile}
+        firmwareFilepath
     end
 
     properties (Dependent)
