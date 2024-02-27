@@ -5,9 +5,9 @@ classdef bossdevice < handle
     %   Supported for Matlab version 2023a
 
     properties
-        theta
-        alpha
-        beta
+        theta bossdevice_oscillation
+        alpha bossdevice_oscillation
+        beta bossdevice_oscillation
     end
 
     properties (SetAccess = protected, Hidden)
@@ -16,7 +16,7 @@ classdef bossdevice < handle
     end
 
     properties (SetAccess = protected)
-        firmwareFilepath
+        firmwareFilepath {mustBeFile}
     end
 
     properties (Dependent)
@@ -30,11 +30,11 @@ classdef bossdevice < handle
     end
 
     properties (SetAccess = private, Dependent)
-        isConnected logical
-        isInitialized logical
-        isRunning logical
-        isArmed logical
-        isGeneratorRunning logical
+        isConnected(1,1) logical
+        isInitialized(1,1) logical
+        isRunning(1,1) logical
+        isArmed(1,1) logical
+        isGeneratorRunning(1,1) logical
     end
 
     properties (Constant, Hidden)
@@ -330,11 +330,7 @@ classdef bossdevice < handle
         end
 
         function generator_running = get.isGeneratorRunning(obj)
-            if getsignal(obj, 'GEN', 4)
-                generator_running = true;
-            else
-                generator_running = false;
-            end
+            generator_running = getsignal(obj, 'GEN', 4);
         end
 
         function obj = arm(obj)
