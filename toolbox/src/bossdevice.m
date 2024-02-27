@@ -423,6 +423,12 @@ classdef bossdevice < handle
             obj.doc;
         end
 
+        function delete(obj)
+            % Class destructor
+            obj.targetObject.stop;
+            obj.targetObject.disconnect;
+        end
+
         %% Target object wrappers
         function addInstrument(obj, inst)
             arguments
