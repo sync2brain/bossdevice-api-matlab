@@ -279,9 +279,15 @@ classdef bossdevice < handle
                 obj
                 val uint16
             end
-            obj.setparam('TRG', 'countdown_initialcount', val);
-            obj.setparam('TRG', 'countdown_reset', 1);
-            obj.setparam('TRG', 'countdown_reset', 0);
+
+            if obj.isRunning
+                % Due to the lack of tunability of initial conditions. Revisit after R2024a
+                obj.setparam('TRG', 'countdown_initialcount', val);
+                obj.setparam('TRG', 'countdown_reset', 1);
+                obj.setparam('TRG', 'countdown_reset', 0);
+            else
+                error('Remaining triggers cannot be set unless application is running. Start the bossdevice before calling this method.');
+            end
         end
 
         function sequence = get.generator_sequence(obj)
