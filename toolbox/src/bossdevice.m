@@ -277,7 +277,7 @@ classdef bossdevice < handle
         function set.triggers_remaining(obj, val)
             arguments
                 obj
-                val
+                val uint32
             end
 
             if obj.isRunning
