@@ -107,7 +107,7 @@ jobs:
         #  &"$env:ProgramFiles\MATLAB\${{ matrix.matlabVer }}\bin\matlab.exe" -batch "openProject(pwd); buildtool test({'noHW','bdConnected'});"
 
       - name: Publish Test Results
-        uses: publish-unit-test-result-action/windows@v2
+        uses: EnricoMi/publish-unit-test-result-action/windows@v2
         if: success() || failure()
         with:
           check_name: "Test Results ${{ matrix.matlabVer }}"
