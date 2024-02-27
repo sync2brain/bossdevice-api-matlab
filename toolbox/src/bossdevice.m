@@ -279,9 +279,9 @@ classdef bossdevice < handle
                 obj
                 val uint16
             end
-            obj.setparam('TRG', 'countdown_reset', 0);
             obj.setparam('TRG', 'countdown_initialcount', val);
             obj.setparam('TRG', 'countdown_reset', 1);
+            obj.setparam('TRG', 'countdown_reset', 0);
         end
 
         function sequence = get.generator_sequence(obj)
