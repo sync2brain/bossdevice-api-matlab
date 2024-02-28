@@ -422,6 +422,7 @@ classdef bossdevice < handle
             % Class destructor
             if obj.targetObject.isConnected
                 obj.targetObject.stop;
+                pause(2);
                 obj.targetObject.disconnect;
             end
         end
