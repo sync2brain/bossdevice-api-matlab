@@ -109,7 +109,7 @@ jobs:
 
       - name: Upload Speedgoat dependencies as artifacts
         if: ${{ github.ref == 'refs/heads/master' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: speedgoat-deps-${{ matrix.matlabVer }}
           path: toolbox\dependencies\sg
