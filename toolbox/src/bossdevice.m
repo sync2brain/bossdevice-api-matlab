@@ -2,7 +2,6 @@ classdef bossdevice < handle
     %BOSSDEVICE Application Programming Interface
     %   API to control the bossdevice from Matlab
     %   Requires Simulink Real-Time toolbox
-    %   Supported for Matlab version 2023a
 
     properties
         theta bossdevice_oscillation
@@ -424,6 +423,7 @@ classdef bossdevice < handle
             % Class destructor
             if obj.targetObject.isConnected
                 obj.targetObject.stop;
+                pause(2);
                 obj.targetObject.disconnect;
             end
         end

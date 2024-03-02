@@ -18,14 +18,14 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.REPO_READ_TOKEN }}
           
       # Download firmware mldatx file from bossdevice-firmware
       - name: Download firmware artifacts
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v3
         with:
           github_token: ${{ secrets.REPO_READ_TOKEN }}
           workflow: main.yml
@@ -43,7 +43,7 @@ jobs:
       
       # Download Speedgoat dependendencies
       - name: Download Speedgoat dependencies artifacts
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v3
         with:
           github_token: ${{ secrets.REPO_READ_TOKEN }}
           workflow: main.yml
@@ -58,7 +58,7 @@ jobs:
           Get-ChildItem '.' -Filter speedgoat-deps-*.zip | Expand-Archive -DestinationPath 'toolbox\dependencies\sg' -Force
           
       - name: Cache MATLAB build files
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: matlab-buildtool
           path: |
@@ -70,7 +70,7 @@ jobs:
       
       # Create new release
       - name: Create a new release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: releases/bossdevice-api-installer.mltbx
           fail_on_unmatched_files: true

@@ -39,7 +39,7 @@ jobs:
     steps:  
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.REPO_READ_TOKEN }}
@@ -57,30 +57,24 @@ jobs:
           # Used to differentiate multiple results for one commit
           category: matlab
 
-  test:
+  build-and-test:
     strategy:
       fail-fast: false # Run with every MATLAB version independently
       matrix:
         matlabVer: [R2022b, R2023a, R2023b] # List of MATLAB releases to test
-        
     runs-on: matlab
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:  
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.8
-          
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.REPO_READ_TOKEN }}
 
       - name: Cache MATLAB build files
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: matlab-buildtool
           path: |
@@ -106,19 +100,42 @@ jobs:
         #run: |
         #  &"$env:ProgramFiles\MATLAB\${{ matrix.matlabVer }}\bin\matlab.exe" -batch "openProject(pwd); buildtool test({'noHW','bdConnected'});"
 
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action/windows@v2
-        if: success() || failure()
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          check_name: "Test Results ${{ matrix.matlabVer }}"
-          action_fail: true
-          files: |
-            results.xml
+          name: Test Results (MATLAB ${{ matrix.matlabVer }})
+          path: results.xml
 
       - name: Upload Speedgoat dependencies as artifacts
         if: ${{ github.ref == 'refs/heads/master' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: speedgoat-deps-${{ matrix.matlabVer }}
           path: toolbox\dependencies\sg
           if-no-files-found: error
+
+  publish-test-results:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      # only needed unless run with comment_mode: off
+      pull-requests: write
+      # only needed for private repository
+      contents: read
+      # only needed for private repository
+      issues: read
+    if: always()
+
+    steps:
+      - name: Download Test Results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: Test Results*
+          path: artifacts
+          
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: "artifacts/**/*.xml"
