@@ -70,7 +70,7 @@ jobs:
       
       # Create new release
       - name: Create a new release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v1
         with:
           files: releases/bossdevice-api-installer.mltbx
           fail_on_unmatched_files: true
