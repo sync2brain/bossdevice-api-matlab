@@ -64,9 +64,15 @@ jobs:
           path: |
             .buildtool
 
+      - name: Prepend MATLAB to PATH on Windows (PowerShell)
+        if: runner.os == 'Windows'
+        run: echo "$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
       - name: Run MATLAB command
-        run: |
-          &"$env:ProgramFiles\MATLAB\$env:MATLAB_VER\bin\matlab.exe" -batch "buildtool package('${{  github.ref_name }}','${{  github.actor }}');"
+        uses: matlab-actions/run-command@v2
+        timeout-minutes: 15
+        with:
+          command: buildtool package('${{  github.ref_name }}','${{  github.actor }}');
       
       # Create new release
       - name: Create a new release
