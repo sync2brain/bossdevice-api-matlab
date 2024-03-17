@@ -271,7 +271,7 @@ classdef bossdevice < handle
         end
 
         function val = get.triggers_remaining(obj)
-            val = getsignal(obj,'TRG/Count Down',1);
+            val = getsignal(obj,'TRG',2);
         end
 
         function set.triggers_remaining(obj, val)
