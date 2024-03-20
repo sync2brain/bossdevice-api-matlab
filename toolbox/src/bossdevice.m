@@ -428,6 +428,7 @@ classdef bossdevice < handle
             end
         end
 
+
         %% Target object wrappers
         function addInstrument(obj, inst)
             arguments
@@ -467,6 +468,14 @@ classdef bossdevice < handle
             if obj.isInitialized
                 val = getsignal(obj.targetObject, [obj.appName,'/bosslogic/', path], varargin{:});
             end
+        end
+
+        function stopRecording(obj)
+            obj.targetObject.stopRecording;
+        end
+
+        function startRecording(obj)
+            obj.targetObject.startRecording;
         end
     end
 
