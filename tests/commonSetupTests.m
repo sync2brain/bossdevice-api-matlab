@@ -25,7 +25,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
             testCase.bd = bossdevice;
             testCase.bd.targetObject.update;
 
-            testCase.assertThat(@() bossapi.pingTarget(testCase.bd.targetObject),...
+            testCase.assertThat(@() bossapi.tg.pingTarget(testCase.bd.targetObject),...
                 Eventually(IsTrue,"WithTimeoutOf",60),'Should wait until bossdevice has rebooted.');
 
             % Wait additional seconds since the target may respond ping but not be ready yet
@@ -49,7 +49,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
                 disp('Rebooting bossdevice to teardown test class.');
                 testCase.bd.reboot;
 
-                testCase.assertThat(@() bossapi.pingTarget(testCase.bd.targetObject),...
+                testCase.assertThat(@() bossapi.tg.pingTarget(testCase.bd.targetObject),...
                     Eventually(IsTrue,"WithTimeoutOf",60),'Should wait until bossdevice has rebooted.');
 
                 % Wait additional seconds since the target may respond ping but not be ready yet
