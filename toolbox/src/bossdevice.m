@@ -173,7 +173,7 @@ classdef bossdevice < handle
             end
 
             % Change IP address on remote target
-            res = bossapi.changeRemoteTargetIP(obj.targetObject, targetIP, targetNetmask);
+            res = bossapi.tg.changeRemoteTargetIP(obj.targetObject, targetIP, targetNetmask);
             if res.ExitCode~=0
                 error(res.ErrorOutput);
             end
@@ -196,7 +196,7 @@ classdef bossdevice < handle
             % Load firmware on the bossdevice if not loaded yet
             if ~obj.targetObject.isLoaded
                 % Set Ethernet IP in secondary interface
-                bossapi.setEthernetInterface(obj.targetObject,'wm1','192.168.200.255/24');
+                bossapi.tg.setEthernetInterface(obj.targetObject,'wm1','192.168.200.255/24');
 
                 fprintf('Loading application "%s" on "%s"...\n',obj.appName,obj.targetObject.TargetSettings.name);
                 obj.targetObject.load(obj.firmwareFilepath);
