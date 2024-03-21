@@ -1,2 +1,2 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<Info Type="Basic" Visible="1" Icon="" File="buildUtilities/releaseTask.m" Name="releaseTask"/>
+<Info File="buildUtilities/releaseTask.m" GroupUUID="02d94034-3a78-4d5a-b803-d74a674a706d" Icon="" Name="releaseTask" Type="Basic" Visible="1"/>

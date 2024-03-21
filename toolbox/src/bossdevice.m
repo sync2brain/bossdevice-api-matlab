@@ -428,6 +428,14 @@ classdef bossdevice < handle
             end
         end
 
+        function createRecording(obj, recordingDuration)
+            arguments
+                obj
+                recordingDuration (1,1) {mustBePositive} = 30
+            end
+            bossapi.inst.createRecording(recordingDuration, obj.targetObject);
+        end
+
 
         %% Target object wrappers
         function addInstrument(obj, inst)
