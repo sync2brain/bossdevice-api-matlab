@@ -62,7 +62,7 @@ disp('Determining phase using standard non-causal methods...');
 PhaseErrorFilter = designfilt('bandpassfir', 'FilterOrder', round(fs), 'CutoffFrequency1', 9, 'CutoffFrequency2', 13, 'SampleRate', fs);
 
 % Compute phase prediction error
-[phaseError, meanError, meanDev] = bossapi.computePhasePredictionError(PhaseErrorFilter, spf_sigData(:,1), osc_alpha_ipData(:,1));
+[phaseError, meanError, meanDev] = bossapi.boss.computePhasePredictionError(PhaseErrorFilter, spf_sigData(:,1), osc_alpha_ipData(:,1));
 
 disp('Done.');
 
