@@ -45,9 +45,9 @@ jobs:
         uses: matlab-actions/setup-matlab@v2
 
       - name: Run MATLAB command
-        uses: matlab-actions/run-command@v2
+        uses: matlab-actions/run-build@v2
         with:
-          command: openProject(pwd); buildDoc;
+          tasks: buildDoc
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
