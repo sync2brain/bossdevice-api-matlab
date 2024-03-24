@@ -40,6 +40,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.REPO_READ_TOKEN }}
 
       - name: Set up MATLAB
         uses: matlab-actions/setup-matlab@v2
