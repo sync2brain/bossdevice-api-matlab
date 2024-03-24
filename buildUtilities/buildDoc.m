@@ -4,6 +4,9 @@ function buildDoc
 projObj = currentProject;
 
 % Export documentation to HTML before packaging toolbox
-exportToHTML(fullfile(projObj.RootFolder,'docSource'),fullfile(projObj.RootFolder,'toolbox','html')); 
+bossapi.exportToHTML(fullfile(projObj.RootFolder,'docSource'),fullfile(projObj.RootFolder,'toolbox','html'));
+
+% Build searchable database
+builddocsearchdb(outputFolder);
 
 end
