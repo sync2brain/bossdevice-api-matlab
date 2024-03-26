@@ -1,8 +1,5 @@
 name: CI
 
-env:
-  MATLAB_VER: ${{ vars.MATLAB_VER }}
-
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
@@ -62,7 +59,7 @@ jobs:
     strategy:
       fail-fast: false # Run with every MATLAB version independently
       matrix:
-        matlabVer: [R2022b, R2023a, R2023b] # List of MATLAB releases to test
+        matlabVer: [R2022b, R2023a, R2023b, R2024a] # List of MATLAB releases to test
     runs-on: matlab
 
     # Steps represent a sequence of tasks that will be executed as part of the job
