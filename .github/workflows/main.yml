@@ -62,7 +62,7 @@ jobs:
     strategy:
       fail-fast: false # Run with every MATLAB version independently
       matrix:
-        matlabVer: [R2022b, R2023a, R2023b, R2024a] # List of MATLAB releases to test
+        matlabVer: [R2023b, R2024a] # List of MATLAB releases to test
     runs-on: matlab
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -101,9 +101,7 @@ jobs:
         uses: matlab-actions/run-command@v2
         timeout-minutes: 15
         with:
-          command: openProject(pwd); updateSGdeps; testTask({'noHW','bdConnected'});
-        # MATLAB R2022b does not support input arguments to buildtool
-        # command: openProject(pwd); buildtool test({'noHW','bdConnected'});
+          command: openProject(pwd); buildtool test({'noHW','bdConnected'});
 
       - name: Upload Test Results
         if: always()
@@ -127,12 +125,7 @@ jobs:
       checks: write
       # only needed unless run with comment_mode: off
       pull-requests: write
-      # only needed for private repository
-      contents: read
-      # only needed for private repository
-      issues: read
     if: always()
-
     steps:
       - name: Download Test Results
         uses: actions/download-artifact@v4
