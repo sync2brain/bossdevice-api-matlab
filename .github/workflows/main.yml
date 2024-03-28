@@ -41,6 +41,9 @@ jobs:
           submodules: 'recursive'
           token: ${{ secrets.REPO_READ_TOKEN }}
 
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v2
+
       - name: Run MATLAB build
         uses: matlab-actions/run-build@v2
         with:
