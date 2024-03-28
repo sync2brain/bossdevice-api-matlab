@@ -53,7 +53,7 @@ jobs:
           skip_unpack: true
           if_no_artifact_found: fail
 
-      - name: Unzip firmware artifacts into firmware folder
+      - name: Unzip Speedgoat artifacts into sg folder
         run: |
           Get-ChildItem '.' -Filter speedgoat-deps-*.zip | Expand-Archive -DestinationPath 'toolbox\dependencies\sg' -Force
           
