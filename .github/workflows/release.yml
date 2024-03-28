@@ -31,6 +31,7 @@ jobs:
           workflow: main.yml
           repo: sync2brain/bossdevice-firmware
           branch: main
+          check_artifacts: true # Try to download firmware created in older releases too and are still available
           search_artifacts: true
           name: bossdevice-firmware-*
           name_is_regexp: true
