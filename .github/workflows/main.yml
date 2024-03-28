@@ -119,7 +119,7 @@ jobs:
           if-no-files-found: error
 
   publish-test-results:
-    needs: build-and-test
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       checks: write
