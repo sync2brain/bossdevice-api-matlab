@@ -68,6 +68,10 @@ classdef bossdevice < handle
                 ipAddress {mustBeTextScalar} = '';
             end
 
+            % Verify if SLRT Target Support Package is installed
+            bossapi.tg.checkSLRTSupportPkg;
+            
+            % Get bossdevice API toolbox path
             toolboxPath = fileparts(fileparts(which(mfilename)));
 
             % Initialize toolbox settings
