@@ -14,6 +14,11 @@ classdef bossdevice < handle
         sgDepsPath
     end
 
+    properties (SetAccess = immutable, Hidden)
+        toolboxPath
+        firmwareDepsPath
+    end
+
     properties (SetAccess = protected)
         firmwareFilepath
     end
@@ -74,7 +79,7 @@ classdef bossdevice < handle
             end
             
             % Get bossdevice API toolbox path
-            toolboxPath = fileparts(fileparts(which(mfilename)));
+            obj.toolboxPath = fileparts(fileparts(which(mfilename)));
 
             % Initialize toolbox settings
             s = settings;
@@ -102,7 +107,7 @@ classdef bossdevice < handle
             end
 
             % Check and enable built-in Speedgoat dependencies
-            obj.sgDepsPath = fullfile(toolboxPath,'dependencies','sg');
+            obj.sgDepsPath = fullfile(obj.toolboxPath,'dependencies','sg');
             isSGinstalled = bossapi.sg.isSpeedgoatBlocksetInstalled;
 
             % Remove any possible instance of SG dependencies from the path
@@ -143,22 +148,16 @@ classdef bossdevice < handle
             end
 
             % Search firmware binary and prompt user if not found in MATLAB path
-            firmwareDepsPath = fullfile(toolboxPath,'dependencies','firmware',matlabRelease.Release,[obj.appName,'.mldatx']);
+            obj.firmwareDepsPath = fullfile(obj.toolboxPath,'dependencies','firmware',matlabRelease.Release,[obj.appName,'.mldatx']);
 
             % Figure out what firmware file to assign
-            if isfile(firmwareDepsPath)
-                obj.firmwareFilepath = firmwareDepsPath;
+            if isfile(obj.firmwareDepsPath)
+                obj.firmwareFilepath = obj.firmwareDepsPath;
             elseif exist([obj.appName,'.mldatx'],"file")
-                obj.firmwareFilepath = obj.appName;
+                obj.firmwareFilepath = which([obj.appName,'.mldatx']);
             elseif ~batchStartupOptionUsed
-                [filename, firmwareFilepath] = uigetfile([obj.appName,'.mldatx'],...
-                    'Select the firmware binary to load on the bossdevice');
-                if isequal(filename,0)
-                    disp('User selected Cancel. Please select firmware mldatx file to complete bossdevice dependencies.');
-                    return;
-                else
-                    obj.firmwareFilepath = fullfile(firmwareFilepath,filename);
-                end
+               obj.selectFirmware;
+               disp('Please run installFirmwareOnToolbox to permanently copy the firmware file into the toolbox and skip this step.');
             else
                 error('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
@@ -168,6 +167,29 @@ classdef bossdevice < handle
                 obj.initialize;
             else
                 disp('Connect the bossdevice and initialize your bossdevice object to start. For example, if you are using "bd = bossdevice", run "bd.initialize".');
+            end
+        end
+
+        function obj = selectFirmware(obj)
+            [filename, filepath] = uigetfile([obj.appName,'.mldatx'],...
+                'Select the firmware binary to load on the bossdevice');
+            if isequal(filename,0)
+                disp('User selected Cancel. Please select firmware mldatx file to complete bossdevice dependencies.');
+                return;
+            else
+                obj.firmwareFilepath = fullfile(filepath,filename);
+            end
+        end
+
+        function obj = installFirmwareOnToolbox(obj)
+            if isfile(obj.firmwareFilepath)
+                if ~isfolder(fileparts(obj.firmwareDepsPath))
+                    mkdir(fileparts(obj.firmwareDepsPath));
+                end
+                copyfile(obj.firmwareFilepath,fileparts(obj.firmwareDepsPath),'f');
+                obj.firmwareFilepath = obj.firmwareDepsPath;
+            else
+                error('Firmware file is not located.');
             end
         end
 

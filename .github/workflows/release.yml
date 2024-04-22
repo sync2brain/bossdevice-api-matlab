@@ -32,14 +32,9 @@ jobs:
           repo: sync2brain/bossdevice-firmware
           branch: main
           search_artifacts: true
-          name: bossdevice-firmware-*
-          name_is_regexp: true
-          skip_unpack: true
+          name: bossdevice-firmware-${{ vars.MATLAB_VER }}
           if_no_artifact_found: fail
-
-      - name: Unzip firmware artifacts into firmware folder
-        run: |
-          Get-ChildItem '.' -Filter bossdevice-firmware-*.zip | Expand-Archive -DestinationPath 'toolbox\dependencies\firmware'
+          path: work
       
       # Download Speedgoat dependendencies
       - name: Download Speedgoat dependencies artifacts
