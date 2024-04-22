@@ -6,7 +6,7 @@
 - [Simulink Real-Time&reg;](https://www.mathworks.com/products/simulink-real-time.html)
 - [Simulink Real-Time Target Support Package](https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package) (no additional license required, installable from within MATLAB when you have Simulink Real-Time installed)
 - [bossdevice](https://sync2brain.com/) hardware
-- bossdevice firmware (MLDATX file included in the toolbox installer)
+- [bossdevice firmware](https://sync2brain.com/downloads)
 
 ## Enable bossdevice communication over Control PC
 1. Turn on the bossdevice and connect the `Control PC` Ethernet port on your bossdevice to an available Ethernet port on your computer.

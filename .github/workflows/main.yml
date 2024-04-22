@@ -90,7 +90,7 @@ jobs:
           branch: main
           search_artifacts: true
           name: bossdevice-firmware-${{ matrix.matlabVer }}
-          path: toolbox/dependencies/firmware
+          path: work
           if_no_artifact_found: fail
 
       - name: Prepend MATLAB to PATH on Windows (PowerShell)
