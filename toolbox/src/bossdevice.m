@@ -166,7 +166,9 @@ classdef bossdevice < handle
             if obj.isConnected
                 obj.initialize;
             else
-                disp('Connect the bossdevice and initialize your bossdevice object to start. For example, if you are using "bd = bossdevice", run "bd.initialize".');
+                if ~batchStartupOptionUsed
+                    disp('Connect the bossdevice and initialize your bossdevice object to start. For example, if you are using "bd = bossdevice", run "bd.initialize".');
+                end
             end
         end
 
