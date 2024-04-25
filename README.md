@@ -3,8 +3,8 @@
 
 ## Requirements
 - MATLAB&reg; R2023b or newer in their latest update available.
-- [Simulink Real-Time&reg;](https://www.mathworks.com/products/simulink-real-time.html)
-- [Simulink Real-Time Target Support Package](https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package) (no additional license required, installable from within MATLAB when you have Simulink Real-Time installed)
+- [Simulink&reg; Real-Time&trade;](https://www.mathworks.com/products/simulink-real-time.html)
+- [Simulink&reg; Real-Time&trade; Target Support Package](https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package) (no additional license required, installable from within MATLAB when you have Simulink Real-Time installed)
 - [bossdevice](https://sync2brain.com/) hardware
 - [bossdevice firmware](https://sync2brain.com/downloads)
 
