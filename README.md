@@ -17,9 +17,11 @@
 
 ## Installation and initial toolbox configuration
 1. Download `bossdevice-api-installer.mltbx` from the latest [release](https://github.com/sync2brain/bossdevice-api-matlab/releases) available in the GitHub project.
-2. Start MATLAB and install the bossdevice API toolbox with double click on `bossdevice-api-installer.mltbx`.
-3. In the MATLAB Command Window, call `bd = bossdevice` to add the bossdevice with the default settings to the list of targets. If you want to change either the name of the bossdevice or its default IP address in your local MATLAB settings, call `bd = bossdevice('bossdevice','192.168.7.5')` replacing the function arguments with the name and IP address you want to set on the real-time device.
-4. Open the documentation `openBossdeviceDoc` or `bd.doc`.
+2. Download the bossdevice firmware binary file for your MATLAB Release from [our downloads portal](https://sync2brain.com/downloads).
+3. Start MATLAB and install the bossdevice API toolbox with double click on `bossdevice-api-installer.mltbx`.
+4. In the MATLAB Command Window, call `bd = bossdevice` to add the bossdevice with the default settings to the list of targets. If you want to change either the name of the bossdevice or its default IP address in your local MATLAB settings, call `bd = bossdevice('bossdevice','192.168.7.5')` replacing the function arguments with the name and IP address you want to set on the real-time device.
+5. When prompted, select the bossdevice firmware binary file with the mldatx extension you have downloaded above. Please note you may run `bd.installFirmwareOnToolbox` afterwards to copy the firmware file into your local toolbox folder, so that you can skip this step in later sessions.
+6. Open the documentation `openBossdeviceDoc` or `bd.doc`.
 
 Optionally, for more information about how to get, install and manage add-ons for MATLAB like the bossdevice API toolbox, please visit [this documentation page](https://www.mathworks.com/help/matlab/matlab_env/get-add-ons.html).
 
