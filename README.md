@@ -29,7 +29,7 @@ Optionally, for more information about how to get, install and manage add-ons fo
 1. Create an instance of the main control class bossdevice `bd = bossdevice` in the MATLAB command window from any working path, since the toolbox has already been added to your MATLAB path.
 2. If not found in the MATLAB path or you want to use a custom firmware version, please select `mainmodel.mldatx` real-time application.
 3. Initialize the bossdevice with `bd.initialize`.
-4. Click on the update command if prompted to update the software dependencies on the bossdevice.
+4. If your version of the bossdevice does not match your current version of MATLAB, you may get a `Target computer software version mismatch` error. In that scenario, please simply click on the underlined `update(tg)` command. The bossdevice hardware will be upgraded automatically. After some seconds, you can rerun `bd.initialize`.
 5. Run the signal processing application on the remote device with `bd.start` in the MATLAB command window.
 6. Open the documentation `openBossdeviceDoc` and explore examples with `demo_script_name` and methods available in the bossdevice object.
 
