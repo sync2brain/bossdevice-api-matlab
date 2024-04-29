@@ -10,6 +10,7 @@ classdef smokeTests < commonSetupTests
             testCase.verifyFalse(testCase.bd.isRunning);
             testCase.verifyFalse(testCase.bd.isArmed);
             testCase.verifyFalse(testCase.bd.isGeneratorRunning);
+            pause(1);
         end
 
         function bdShortRun(testCase)
