@@ -3,7 +3,7 @@ function openBossdeviceDoc
 %   Prompts user to build HTML documentation if not available or open doc sources
 
 thisFolder = fileparts(which(mfilename));
-docInit = fullfile(thisFolder,'bossdevice_api_landing_page.html');
+docInit = fullfile(thisFolder,'index.html');
 
 if ~exist(docInit,'file')
     answer = questdlg('HTML documentation was not found. Do you want to build it from sources now or open the doc sources directly?',...
