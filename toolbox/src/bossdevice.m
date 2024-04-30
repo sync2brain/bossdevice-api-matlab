@@ -191,7 +191,7 @@ classdef bossdevice < handle
                 copyfile(obj.firmwareFilepath,fileparts(obj.firmwareDepsPath),'f');
                 obj.firmwareFilepath = obj.firmwareDepsPath;
             else
-                error('Firmware file is not located.');
+                error('Firmware file is not located. Run method selectFirmware first.');
             end
         end
 
