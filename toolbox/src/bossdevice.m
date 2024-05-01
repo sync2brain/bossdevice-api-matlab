@@ -176,8 +176,7 @@ classdef bossdevice < handle
             [filename, filepath] = uigetfile([obj.appName,'.mldatx'],...
                 'Select the firmware binary to load on the bossdevice');
             if isequal(filename,0)
-                disp('User selected Cancel. Please select firmware mldatx file to complete bossdevice dependencies.');
-                return;
+                error('User selected Cancel. Please select firmware mldatx file to complete bossdevice dependencies.');
             else
                 obj.firmwareFilepath = fullfile(filepath,filename);
             end
