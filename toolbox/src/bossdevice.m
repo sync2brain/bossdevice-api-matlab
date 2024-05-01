@@ -344,7 +344,11 @@ classdef bossdevice < handle
             setparam(obj, 'UDP', 'num_aux_channels', n);
         end
 
-        function configure_time_port_marker(obj, sequence)
+        function obj = configure_time_port_marker(obj, sequence)
+            arguments
+                obj bossdevice
+                sequence {mustBeNumeric}
+            end
             numRows = size(obj.generator_sequence, 1);
 
             assert(size(sequence, 1) <= numRows, 'Sequence exceeds maximum number of rows.');
