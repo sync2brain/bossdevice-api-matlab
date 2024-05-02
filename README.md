@@ -5,7 +5,7 @@
 - MATLAB&reg; R2023b or newer in their latest update available.
 - [Simulink&reg; Real-Time&trade;](https://www.mathworks.com/products/simulink-real-time.html)
 - [Simulink&reg; Real-Time&trade; Target Support Package](https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package) (no additional license required, installable from within MATLAB when you have Simulink Real-Time installed)
-- [bossdevice](https://sync2brain.com/) hardware
+- [bossdevice processor](https://sync2brain.com/boss-device-research)
 - [bossdevice firmware](https://sync2brain.com/downloads)
 ### Optional
 The following products are required for some advanced functionality such as designing custom filters but are not strictly required for a standard operation or triggering of the bossdevice.
