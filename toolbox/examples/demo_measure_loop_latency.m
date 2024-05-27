@@ -39,9 +39,5 @@ Simulink.sdi.setNumCursors(2);
 % Cursors must be moved manually in the SDI plot for an accurate measurement of the total delay.
 
 
-%% Generate trigger
-s = [0, 1, 0];
-s(1000,3) = 0; % fill with zeros (TODO: this should be done in the API)
-bd.generator_sequence = s;
-
-bd.manualTrigger;
+%% Send pulse
+bd.sendPulse(1); % Send single pulse on port 1
