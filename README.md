@@ -14,6 +14,9 @@ The following products are required for some advanced functionality such as desi
 ## Enable bossdevice communication over Control PC
 1. Turn on the bossdevice and connect the `Control PC` Ethernet port on your bossdevice to an available Ethernet port on your computer.
 2. On your computer, follow [these steps](https://www.mathworks.com/help/slrealtime/gs/development-computer-communication-setup-windows.html) to configure the local Ethernet interface on your PC with the IP address `192.168.7.2`.
+### Optional
+If you cannot connect to the bossdevice facing message errors like `Error: Cannot connect to target 'bossdevice': Cannot connect to target.` or experience frequent disconnection issues, please check out the following recommended steps.
+
 3. If you are working on Windows, ensure a stable and robust connection between the development PC and the bossdevice:
    * Set the Development-to-Target Computer Ethernet Interface as `Private`. Please, follow the steps documented [here](https://www.mathworks.com/help/slrealtime/ug/troubleshoot-communication-failure-through-firewall.html).
    * If you are not allowed by the IT security settings in your company or institution to change the Ethernet Interface's profile or the Development-to-Target Computer Ethernet Interface keeps reverting to `Public` after some time or even after every system's reboot, please run PowerShell with administrator rights, and execute the command `New-NetFirewallRule -DisplayName "bossdevice" -Direction Inbound -LocalPort 5505-5507,5510-5512,5515-5517 -Protocol UDP -Action Allow -Profile Any -RemoteAddress 192.168.7.5`. See [reference](https://www.mathworks.com/matlabcentral/answers/2020516-how-can-i-establish-communication-with-a-speedgoat-target-computer-via-an-ethernet-interface-configu).
