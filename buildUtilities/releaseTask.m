@@ -15,7 +15,7 @@ options.toolboxVersion = erase(toolboxVersion,"v");
 % Toolbox Parameter Configuration
 toolboxOptions = matlab.addons.toolbox.ToolboxOptions(fullfile(projObj.RootFolder,"toolbox"), "71e8748d-9f0b-4242-b8f1-1d61b60aa4dc");
 
-toolboxOptions.ToolboxName = "Bossdevice API Toolbox";
+toolboxOptions.ToolboxName = "BOSSdevice API Toolbox";
 toolboxOptions.ToolboxVersion = options.toolboxVersion;
 toolboxOptions.Summary = projObj.Description;
 toolboxOptions.Description = "For a more detailed description refer to the toolbox README.md file. ↵↵ Contact email: support@sync2brain.com";
