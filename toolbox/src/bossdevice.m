@@ -300,7 +300,7 @@ classdef bossdevice < handle
         end
 
         function val = get.triggers_remaining(obj)
-            val = getsignal(obj,'TRG',2);
+            val = getsignal(obj,{'TRG','TRG/Count Down'},1);
         end
 
         function set.triggers_remaining(obj, val)
@@ -505,9 +505,19 @@ classdef bossdevice < handle
             end
         end
 
-        function val = getsignal(obj, path, varargin)
+        function val = getsignal(obj, path, portIndex)
+            arguments
+                obj 
+                path {mustBeText}
+                portIndex {mustBeScalarOrEmpty}
+            end
+
             if obj.isInitialized
-                val = getsignal(obj.targetObject, [obj.appName,'/bosslogic/', path], varargin{:});
+                if ~iscell(path)
+                    val = getsignal(obj.targetObject, [obj.appName,'/bosslogic/', path], portIndex);
+                else
+                    val = getsignal(obj.targetObject, [{[obj.appName,'/bosslogic/', path{1}]},path(2:end)], portIndex);
+                end
             end
         end
 

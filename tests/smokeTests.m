@@ -3,18 +3,15 @@ classdef smokeTests < commonSetupTests
     methods (Test, TestTags = {'bdConnected'})
         % Test methods with bossdevice connected and reachable from the host PC
         function bdInitialization(testCase)
-            testCase.bd = bossdevice;
             testCase.bd.initialize;
             testCase.verifyTrue(testCase.bd.isConnected);
             testCase.verifyTrue(testCase.bd.isInitialized);
             testCase.verifyFalse(testCase.bd.isRunning);
             testCase.verifyFalse(testCase.bd.isArmed);
             testCase.verifyFalse(testCase.bd.isGeneratorRunning);
-            pause(1);
         end
 
         function bdShortRun(testCase)
-            testCase.bd = bossdevice;
             testCase.bd.start;
             testCase.verifyTrue(testCase.bd.isRunning);
             testCase.bd.stop;
@@ -22,6 +19,11 @@ classdef smokeTests < commonSetupTests
             % The application needs some time to be reloaded
             pause(1);
             testCase.verifyTrue(testCase.bd.isInitialized);
+        end
+
+        function getTriggersRunning(testCase)
+            testCase.bd.start;
+            testCase.verifyGreaterThan(testCase.bd.triggers_remaining,0);
         end
     end
 

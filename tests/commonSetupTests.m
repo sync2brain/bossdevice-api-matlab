@@ -14,6 +14,9 @@ classdef commonSetupTests < matlab.unittest.TestCase
         function setupBossdevice(testCase)
             import matlab.unittest.constraints.Eventually
             import matlab.unittest.constraints.IsTrue
+            import matlab.unittest.fixtures.SuppressedWarningsFixture
+            
+            testCase.applyFixture(SuppressedWarningsFixture("MATLAB:pfileOlderThanMfile"));
 
             [testCase.isSGinstalled, testCase.sgPath] = bossapi.sg.isSpeedgoatBlocksetInstalled;
             if testCase.isSGinstalled
