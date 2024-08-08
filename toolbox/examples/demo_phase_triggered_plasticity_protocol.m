@@ -51,7 +51,7 @@ bd.alpha.bpf_fir_coeffs = bpf_fir_coeffs;
 bd.triggers_remaining = 10;
 bd.alpha.phase_target(1) = phase;
 bd.alpha.phase_plusminus(1) = phase_tolerance;
-bd.configure_generator_sequence(plasticity_protocol_sequence)
+bd.configure_generator_sequence(plasticity_protocol_sequence);
 bd.min_inter_trig_interval = minimium_inter_trigger_interval;
 bd.arm;
 
