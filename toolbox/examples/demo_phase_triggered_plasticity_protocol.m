@@ -70,6 +70,7 @@ while (condition_index <= no_of_trials)
     fprintf('Running trial %i out of %i...\n',condition_index,no_of_trials);
     if ~bd.isArmed
         bd.triggers_remaining = 1;
+        pause(0.1);
         bd.arm;
     end
     % trigger has been executed, move to the next condition
