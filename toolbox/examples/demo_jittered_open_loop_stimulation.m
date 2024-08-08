@@ -26,9 +26,8 @@ for TrialNumber=1:NumberOfTrials
 end
 disp('Trials Completed')
 %% Approach 2 - BOSS Device Sequence Generator Based Open Loop Stimulation
-time_port_marker_sequence=[];
 Time=0;
-time_port_marker_sequence(NumberOfTrials,3)=0; %Pre filling the array 
+time_port_marker_sequence(NumberOfTrials,4)=0; %Pre filling the array 
 for TrialNumber=1:NumberOfTrials
     Time=Time+ITI(1)+ (ITI(2)-ITI(1)).*rand(1,1); %Generating Sequence of Jittered ITIs for all Trials 
     Port=1; %In order to generatre trigger always on first port , use 2 for 2nd port and 3 for third port
