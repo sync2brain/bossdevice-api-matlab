@@ -378,6 +378,7 @@ classdef bossdevice < handle
                     disp('bossdevice is armed and ready to start.');
                 end
             else
+                setparam(obj, 'GEN', 'enabled', 0);
                 setparam(obj, 'TRG', 'enabled', 0);
             end
         end
