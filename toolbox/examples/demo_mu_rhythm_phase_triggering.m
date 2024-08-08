@@ -36,7 +36,7 @@ bd.beta.ignore;
 bd.alpha.ignore;
 bd.num_eeg_channels=eeg_channels;
 bd.min_inter_trig_interval = minimium_inter_trigger_interval;
-bd.configure_time_port_marker(([0, 1, 0]))
+bd.configure_generator_sequence([0 0.001 1 0]); % Configuring Trigger Sequence in [Time PulseWidth Port Marker] format
 bd.alpha.phase_plusminus(1) = phase_tolerance;
 bd.triggers_remaining = no_of_trials;
 
