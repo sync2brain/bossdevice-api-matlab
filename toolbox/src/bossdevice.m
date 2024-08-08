@@ -320,11 +320,11 @@ classdef bossdevice < handle
         end
 
         function sequence = get.generator_sequence(obj)
-            sequence = getparam(obj, 'GEN', 'sequence_time_port_marker');
+            sequence = getparam(obj, 'GEN', 'sequence_time_duration_port_marker');
         end
 
         function set.generator_sequence(obj, sequence)
-            setparam(obj, 'GEN', 'sequence_time_port_marker', sequence);
+            setparam(obj, 'GEN', 'sequence_time_duration_port_marker', sequence);
         end
 
         function n = get.num_eeg_channels(obj)
@@ -344,22 +344,17 @@ classdef bossdevice < handle
             setparam(obj, 'UDP', 'num_aux_channels', n);
         end
 
-        function obj = configure_time_port_marker(obj, sequence)
+        function obj = configure_generator_sequence(obj, sequence)
             arguments
                 obj bossdevice
                 sequence {mustBeNumeric}
             end
-            numRows = size(obj.generator_sequence, 1);
+            sizeRefSeq = size(obj.generator_sequence);
 
-            assert(size(sequence, 1) <= numRows, 'Sequence exceeds maximum number of rows.');
-            assert(size(sequence, 2) <= 3, 'Sequence cannot have more than 3 columns');
-            if size(sequence, 2) == 1
-                sequence = [sequence ones(size(sequence))];
-            end
-            if size(sequence, 1) < numRows
-                sequence(numRows, 3) = 0; % fill with zeros
-            end
-            obj.generator_sequence = sequence;
+            assert(size(sequence, 1) <= sizeRefSeq(1), 'Sequence exceeds maximum number of rows (%i).', sizeRefSeq(1));
+            assert(size(sequence, 2) == sizeRefSeq(2), 'Sequence must have %i columns.', sizeRefSeq(2));
+
+            obj.generator_sequence = [sequence; zeros(sizeRefSeq(1)-size(sequence,1), sizeRefSeq(2))];
         end
 
         function generator_running = get.isGeneratorRunning(obj)
@@ -424,15 +419,12 @@ classdef bossdevice < handle
             if obj.isRunning
                 marker = port;
 
-                sequence_time_port_marker = obj.generator_sequence;
-                sequence_time_port_marker = zeros(size(sequence_time_port_marker));
-                sequence_time_port_marker(1,:) = [0 port marker]; % 0 seconds after the trigger, trigger port 1 and send marker 1
-
                 setparam(obj, 'GEN', 'enabled', 0);
                 setparam(obj, 'TRG', 'enabled', 0);
                 setparam(obj, 'GEN', 'manualtrigger', 0);
-                pause(0.1)
-                obj.generator_sequence = sequence_time_port_marker;
+
+                obj.configure_generator_sequence([0 0.001 port marker]); % 0 seconds after the trigger and during 0.001 seconds, trigger port 1 and send marker 1
+
                 obj.manualTrigger;
             else
                 disp('No pulse sent because app is not running yet. Start app first.');
