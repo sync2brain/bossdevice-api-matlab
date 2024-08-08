@@ -31,6 +31,7 @@ classdef bossdevice < handle
         generator_sequence
         num_eeg_channels
         num_aux_channels
+        marker_pulse_width_sec
     end
 
     properties (SetAccess = private, Dependent)
@@ -342,6 +343,14 @@ classdef bossdevice < handle
 
         function set.num_aux_channels(obj, n)
             setparam(obj, 'UDP', 'num_aux_channels', n);
+        end
+
+        function val = get.marker_pulse_width_sec(obj)
+            val = getparam(obj, 'GEN', 'marker_pulse_width_sec');
+        end
+
+        function set.marker_pulse_width_sec(obj, val)
+            setparam(obj, 'GEN', 'marker_pulse_width_sec', val);
         end
 
         function obj = configure_generator_sequence(obj, sequence)
