@@ -367,7 +367,7 @@ classdef bossdevice < handle
         end
 
         function generator_running = get.isGeneratorRunning(obj)
-            generator_running = getsignal(obj, 'Unit Delay', 1);
+            generator_running = obj.getsignal('GEN',5);
         end
 
         function obj = arm(obj)
@@ -420,20 +420,24 @@ classdef bossdevice < handle
             end
         end
 
-        function sendPulse(obj, port)
+        function sendPulse(obj, port, width, marker)
             arguments
                 obj
                 port {mustBeInteger,mustBeInRange(port,1,4)}
+                width {mustBeScalarOrEmpty, mustBeNonnegative} = 0.001
+                marker {mustBeScalarOrEmpty, mustBeInteger} = []
             end
 
             if obj.isRunning
-                marker = port;
+                if isempty(marker)
+                    marker = port;
+                end
 
                 setparam(obj, 'GEN', 'enabled', 0);
                 setparam(obj, 'TRG', 'enabled', 0);
                 setparam(obj, 'GEN', 'manualtrigger', 0);
 
-                obj.configure_generator_sequence([0 0.001 port marker]); % 0 seconds after the trigger and during 0.001 seconds, trigger port 1 and send marker 1
+                obj.configure_generator_sequence([0 width port marker]); % 0 seconds after the trigger and during 0.001 seconds, trigger port 1 and send marker 1
 
                 obj.manualTrigger;
             else
@@ -446,8 +450,16 @@ classdef bossdevice < handle
             setparam(obj, 'TRG', 'enabled', 0);
 
             setparam(obj, 'GEN', 'manualtrigger', 1);
-            pause(0.1);
             setparam(obj, 'GEN', 'manualtrigger', 0);
+
+            disp('Triggering sequence...');
+
+            % Block execution of manualTrigger while generator is running
+            while obj.isGeneratorRunning
+                pause(0.1);
+            end
+
+            disp('Sequence completed.');
         end
 
         function openDocumentation(obj)
@@ -504,6 +516,8 @@ classdef bossdevice < handle
         function val = getparam(obj, path, varargin)
             if obj.isInitialized
                 val = getparam(obj.targetObject, [obj.appName,'/bosslogic/', path], varargin{:});
+            else
+                val = [];
             end
         end
 
