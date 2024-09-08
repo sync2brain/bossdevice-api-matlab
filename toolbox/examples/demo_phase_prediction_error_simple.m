@@ -20,13 +20,13 @@ bd.alpha.offset_samples = 3; %this depends on the loop-delay
 
 %% Setting Filters to BOSS Device
 % this allows calibrating the oscillation analysis to an individual peak frequency
-bd.alpha.bpf_fir_coeffs = firls(70, [0 6 9 13 16 (500/2)]/(500/2), [0 0 1 1 0 0], [1 1 1]);
+% bd.alpha.bpf_fir_coeffs = firls(70, [0 6 9 13 16 (500/2)]/(500/2), [0 0 1 1 0 0], [1 1 1]);
 %fvtool(bd.alpha.bpf_fir_coeffs, 'Fs', 500) % visualize filter
 
 
 %% Configuring an instrument buffer to acquire data
 instObj = slrealtime.Instrument;
-instObj.addSignal('spf_sig_500Hz');
+instObj.addSignal('spf_sig');
 instObj.addSignal('osc','BusElement','alpha.ip');
 instObj.BufferData = true;
 
@@ -42,27 +42,26 @@ disp('Done.');
 sigData = mapData.values;
 
 % Extract data and downsample fast signal
-osc_alpha_ipData = sigData{1}.data;
-spf_sigData = squeeze(sigData{2}.data)';
+osc_alpha_ip = timetable(seconds(sigData{1}.time),sigData{1}.data(:,1));
+spf_sig = squeeze(sigData{2}.data)';
+spf_sig = timetable(seconds(sigData{2}.time),spf_sig(:,1));
 
-% Compute sample frequency
-fs = 1/mean(diff(sigData{1}.time));
+syncedData = synchronize(osc_alpha_ip, spf_sig, 'first', 'nearest');
 
 % Compensante offset in instantaneous predicted phase
 numSamples = bd.alpha.offset_samples;
-assert(numSamples >= 1)
-spf_sigData = spf_sigData(1+numSamples-1:end, 1);
-osc_alpha_ipData = osc_alpha_ipData(1:size(spf_sigData,1),end);
+assert(numSamples >= 1);
 
 
 %% Phase error using standard non-causal methods
 disp('Determining phase using standard non-causal methods...');
 
-% Build zero phase band-pass filter
-PhaseErrorFilter = designfilt('bandpassfir', 'FilterOrder', round(fs), 'CutoffFrequency1', 9, 'CutoffFrequency2', 13, 'SampleRate', fs);
+% Obtain applied filter
+oscBPFcoeffs = bd.getparam('OSC/alpha', 'bpf_fir_coeffs');
 
 % Compute phase prediction error
-[phaseError, meanError, meanDev] = bossapi.boss.computePhasePredictionError(PhaseErrorFilter, spf_sigData(:,1), osc_alpha_ipData(:,1));
+[phaseError, meanError, meanDev] = bossapi.boss.computePhasePredictionError(oscBPFcoeffs,...
+                        syncedData.Var1_spf_sig(1+numSamples:end), syncedData.Var1_osc_alpha_ip(1:end-numSamples));
 
 disp('Done.');
 
@@ -71,9 +70,9 @@ disp('Done.');
 polarhistogram(phaseError, 'Normalization', 'probability', 'BinWidth', pi/36);
 ax = gca;
 ax.ThetaZeroLocation = 'Top';
+ax.ThetaLim = [-180 180];
 title(sprintf('Circular mean = %.1f°\nCircular standard deviation = %.1f°', meanError, meanDev));
 
 
 %% Stop and reset instrumentation
 bd.stop;
-bd.removeInstrument(instObj);

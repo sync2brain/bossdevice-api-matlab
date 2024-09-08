@@ -115,4 +115,3 @@ disp('Experiment finished');
 
 %% Clean up
 bd.stop;
-bd.removeAllInstruments;
