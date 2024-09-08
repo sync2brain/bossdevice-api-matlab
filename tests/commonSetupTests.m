@@ -65,6 +65,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
         function clearBossdeviceObj(testCase)
             if ~isempty(testCase.bd) && testCase.bd.isConnected
                 testCase.bd.stop;
+                testCase.bd.removeAllInstruments;
             end
         end
     end
