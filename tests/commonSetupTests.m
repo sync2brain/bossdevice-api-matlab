@@ -36,6 +36,12 @@ classdef commonSetupTests < matlab.unittest.TestCase
         end
     end
 
+    methods (TestMethodSetup)
+        function restoreInstrument(testCase)
+            testCase.bd.restoreInstrument;
+        end
+    end
+
     methods (TestClassTeardown)
         function resetSgPath(testCase)
             if testCase.isSGinstalled

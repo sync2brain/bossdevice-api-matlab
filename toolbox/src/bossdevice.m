@@ -483,6 +483,13 @@ classdef bossdevice < handle
             bossapi.inst.createRecording(recordingDuration, obj.targetObject);
         end
 
+        function restoreInstrument(obj)
+            obj.removeAllInstruments;
+            hInst = slrealtime.Instrument(obj.firmwareFilepath);
+            hInst.addInstrumentedSignals;
+            obj.addInstrument(hInst);
+        end
+
 
         %% Target object wrappers
         function addInstrument(obj, inst)
