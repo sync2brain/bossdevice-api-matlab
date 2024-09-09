@@ -272,12 +272,12 @@ classdef bossdevice < handle
         end
 
         function set.spatial_filter_weights(obj, weights)
-            % check that the dimensions matches the number of channels
-            assert(size(weights, 1) == obj.num_eeg_channels,...
-                'Number of rows in weights vector (%i) must equal to number of EEG channels (%i).',size(weights, 1),obj.num_eeg_channels);
             num_rows = size(obj.spatial_filter_weights, 1);
             num_columns = size(obj.spatial_filter_weights, 2);
-            % check if the number of columns does not exceed the number of parallell signals
+            % check that the dimensions matches the number of channels
+            assert(size(weights, 1) <= num_rows,...
+                'Number of rows in weights vector (%i) cannot exceed number of maximum supported EEG channels (%i).',size(weights, 1),num_rows);
+            % check if the number of columns does not exceed the number of parallel signals
             assert(size(weights, 2) <= num_columns,...
                 'Number of columns in weights vector (%i) cannot exceed number of signal dimensions (%i).',size(weights, 2),num_columns);
             % add additional columns if necessary
