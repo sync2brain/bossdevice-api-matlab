@@ -12,8 +12,10 @@ The following products are required for some advanced functionality such as desi
 - [Signal Processing Toolbox&trade;](https://www.mathworks.com/products/signal.html)
 
 ## Enable bossdevice communication over Control PC
+This step is strictly required to enable communication between the Control PC and the bossdevice over a point-to-point Ethernet connection. If your bossdevice is on, you cannot establish a connection from MATLAB or you get an error message like `Error communicating with target '192.168.7.5': Unable to connect to target computer '192.168.7.5': No response from target computer after 10 pings.`, this step is probably not fully completed yet.
 1. Turn on the bossdevice and connect the `Control PC` Ethernet port on your bossdevice to an available Ethernet port on your computer.
-2. On your computer, follow [these steps](https://www.mathworks.com/help/slrealtime/gs/development-computer-communication-setup-windows.html) to configure the local Ethernet interface on your PC with the IP address `192.168.7.2`.
+2. On your computer, follow [these steps](https://www.mathworks.com/help/slrealtime/gs/development-computer-communication-setup-windows.html) to configure the local Ethernet interface on your PC with the IP address `192.168.7.2`. Please note you may use as well a different local IP address on your PC as long as it is different from the bossdevice's IP address and it is located in the same subnet. This enables eventual access over an internal network too.
+3. The first time you connect from within MATLAB to the bossdevice, you may see a user prompt from your firewall. Please accept or allow the connection between the Control PC and the bossdevice.
 ### Optional
 If you cannot connect to the bossdevice facing message errors like `Error: Cannot connect to target 'bossdevice': Cannot connect to target.` or experience frequent disconnection issues, please check out the following recommended steps.
 
