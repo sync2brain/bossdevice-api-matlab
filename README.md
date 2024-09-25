@@ -16,10 +16,12 @@ This step is strictly required to enable communication between the Control PC an
 1. Turn on the bossdevice and connect the `Control PC` Ethernet port on your bossdevice to an available Ethernet port on your computer.
 2. On your computer, follow [these steps](https://www.mathworks.com/help/slrealtime/gs/development-computer-communication-setup-windows.html) to configure the local Ethernet interface on your PC with the IP address `192.168.7.2`. Please note you may use as well a different local IP address on your PC as long as it is different from the bossdevice's IP address and it is located in the same subnet. This enables eventual access over an internal network too.
 3. The first time you connect from within MATLAB to the bossdevice, you may see a user prompt from your firewall. Please accept or allow the connection between the Control PC and the bossdevice.
+![image](https://github.com/user-attachments/assets/ee89285f-68e3-4102-a68b-03c2160c2b33)
+
 ### Optional
 If you cannot connect to the bossdevice facing message errors like `Error: Cannot connect to target 'bossdevice': Cannot connect to target.` or experience frequent disconnection issues, please check out the following recommended steps.
 
-3. If you are working on Windows, to ensure a stable and robust connection between the development PC and the bossdevice, please start PowerShell with administrator rights, and execute the command `New-NetFirewallRule -DisplayName "bossdevice" -Direction Inbound -RemotePort 5505-5507,5510-5512,5515-5517 -Protocol UDP -Action Allow -Profile Any -RemoteAddress 192.168.7.5`. See [reference](https://www.mathworks.com/matlabcentral/answers/2020516-how-can-i-establish-communication-with-a-speedgoat-target-computer-via-an-ethernet-interface-configu).
+4. If you are working on Windows, to ensure a stable and robust connection between the development PC and the bossdevice, please start PowerShell with administrator rights, and execute the command `New-NetFirewallRule -DisplayName "bossdevice" -Direction Inbound -RemotePort 5505-5507,5510-5512,5515-5517 -Protocol UDP -Action Allow -Profile Any -RemoteAddress 192.168.7.5`. See [reference](https://www.mathworks.com/matlabcentral/answers/2020516-how-can-i-establish-communication-with-a-speedgoat-target-computer-via-an-ethernet-interface-configu).
 
 ## Installation and initial toolbox configuration
 1. Download `bossdevice-api-installer.mltbx` from the latest [release](https://github.com/sync2brain/bossdevice-api-matlab/releases) available in the GitHub project.
