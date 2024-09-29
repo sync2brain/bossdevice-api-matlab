@@ -490,6 +490,10 @@ classdef bossdevice < handle
             obj.addInstrument(hInst);
         end
 
+        function exportRecording(obj)
+            bossapi.inst.exportLastRunToFile();
+        end
+
 
         %% Target object wrappers
         function addInstrument(obj, inst)
@@ -546,10 +550,23 @@ classdef bossdevice < handle
 
         function stopRecording(obj)
             obj.targetObject.stopRecording;
+            disp('Recording stopped.');
         end
 
         function startRecording(obj)
+            if ~obj.targetObject.isRunning
+                error('Target "%s" is not running yet. Start it before recording.',...
+                    obj.targetObject.TargetSettings.name);
+            end
+
+            try
+                obj.targetObject.stopRecording;
+            catch ME
+                disp(ME.message);
+            end
+
             obj.targetObject.startRecording;
+            disp('Recording started.');
         end
     end
 
