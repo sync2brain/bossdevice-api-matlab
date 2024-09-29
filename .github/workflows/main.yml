@@ -45,6 +45,7 @@ jobs:
           tasks: check
 
       - name: Upload SARIF file
+        if: success() || failure()
         uses: github/codeql-action/upload-sarif@v3
         with:
           # Path to SARIF file relative to the root of the repository
@@ -57,7 +58,7 @@ jobs:
     strategy:
       fail-fast: false # Run with every MATLAB version independently
       matrix:
-        matlabVer: [R2024a] # List of MATLAB releases to test
+        matlabVer: [R2024a, R2024b] # List of MATLAB releases to test
     runs-on: matlab
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -99,7 +100,7 @@ jobs:
           tasks: test
 
       - name: Upload Test Results
-        if: always()
+        if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
           name: Test Results (MATLAB ${{ matrix.matlabVer }})
@@ -120,7 +121,7 @@ jobs:
       checks: write
       # only needed unless run with comment_mode: off
       pull-requests: write
-    if: always()
+    if: success() || failure()
     steps:
       - name: Download Test Results
         uses: actions/download-artifact@v4
