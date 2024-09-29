@@ -56,6 +56,10 @@ classdef bossdevice < handle
         function doc()
             openBossdeviceDoc;
         end
+
+        function exportRecording()
+            bossapi.inst.exportLastRunToFile();
+        end
     end
 
     methods (Access=protected)
@@ -488,10 +492,6 @@ classdef bossdevice < handle
             hInst = slrealtime.Instrument(obj.firmwareFilepath);
             hInst.addInstrumentedSignals;
             obj.addInstrument(hInst);
-        end
-
-        function exportRecording(obj)
-            bossapi.inst.exportLastRunToFile();
         end
 
 
