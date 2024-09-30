@@ -79,7 +79,9 @@ classdef bossdevice < handle
             end
 
             % Verify if SLRT Target Support Package is installed
-            bossapi.tg.checkSLRTSupportPkg;
+            if ~batchStartupOptionUsed
+                bossapi.tg.checkSLRTSupportPkg;
+            end
             
             % Get bossdevice API toolbox path
             obj.toolboxPath = fileparts(fileparts(which(mfilename)));
