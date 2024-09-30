@@ -79,7 +79,7 @@ classdef bossdevice < handle
             end
 
             % Verify if SLRT Target Support Package is installed
-            if ~batchStartupOptionUsed
+            if ~batchStartupOptionUsed && isMATLABReleaseOlderThan('R2024b') % Should run always but using if due to two MATLAB bugs
                 bossapi.tg.checkSLRTSupportPkg;
             end
             
