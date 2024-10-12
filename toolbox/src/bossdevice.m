@@ -328,10 +328,6 @@ classdef bossdevice < handle
             sequence = getparam(obj, 'GEN', 'sequence_time_duration_port_marker');
         end
 
-        function set.generator_sequence(obj, sequence)
-            setparam(obj, 'GEN', 'sequence_time_duration_port_marker', sequence);
-        end
-
         function n = get.num_eeg_channels(obj)
             n = getparam(obj, 'UDP', 'num_eeg_channels');
         end
@@ -339,7 +335,6 @@ classdef bossdevice < handle
         function set.num_eeg_channels(obj, n)
             setparam(obj, 'UDP', 'num_eeg_channels', n);
         end
-
 
         function n = get.num_aux_channels(obj)
             n = getparam(obj, 'UDP', 'num_aux_channels');
@@ -362,12 +357,24 @@ classdef bossdevice < handle
                 obj bossdevice
                 sequence {mustBeNumeric}
             end
-            sizeRefSeq = size(obj.generator_sequence);
+            bossapi.boss.setGenSequenceOnTarget(obj.targetObject,sequence);
+        end
 
-            assert(size(sequence, 1) <= sizeRefSeq(1), 'Sequence exceeds maximum number of rows (%i).', sizeRefSeq(1));
-            assert(size(sequence, 2) == sizeRefSeq(2), 'Sequence must have %i columns.', sizeRefSeq(2));
+        function tiledObj = plot_generator_sequence(obj, sequence, figParent)
+            arguments
+                obj bossdevice
+                sequence {mustBeNumeric} = obj.generator_sequence
+                figParent = figure
+            end
 
-            obj.generator_sequence = [sequence; zeros(sizeRefSeq(1)-size(sequence,1), sizeRefSeq(2))];
+            % Convert generator sequence from array to table
+            sequence = array2table(sequence, 'VariableNames', {'Time [s]','Pulse Width [s]','Encoded Port','Marker'});
+
+            % Remove rows with all 0 values
+            sequence(all(sequence{:,:} == 0, 2),:) = [];
+
+            % Plot sequente in figParent
+            tiledObj = bossapi.app.plotProtocolSequence(sequence, obj.marker_pulse_width_sec, figParent);
         end
 
         function generator_running = get.isGeneratorRunning(obj)
