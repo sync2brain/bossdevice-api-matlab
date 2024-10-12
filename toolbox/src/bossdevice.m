@@ -392,19 +392,19 @@ classdef bossdevice < handle
         function set.isArmed(obj, isArmed)
             if isArmed
                 assert(~obj.isGeneratorRunning, 'Cannot arm target while generator is running.');
-                setparam(obj, 'GEN', 'enabled', 1);
+                setparam(obj, 'GEN', 'enabled', true);
                 setparam(obj, 'TRG', 'enabled', 1);
                 if ~obj.isRunning
                     disp('bossdevice is armed and ready to start.');
                 end
             else
-                setparam(obj, 'GEN', 'enabled', 0);
+                setparam(obj, 'GEN', 'enabled', false);
                 setparam(obj, 'TRG', 'enabled', 0);
             end
         end
 
         function isArmed = get.isArmed(obj)
-            if (getparam(obj, 'GEN', 'enabled') == 1 && getparam(obj, 'TRG', 'enabled') == 1)
+            if (getparam(obj, 'GEN', 'enabled') == true && getparam(obj, 'TRG', 'enabled') == 1)
                 isArmed = true;
             else
                 isArmed = false;
@@ -444,9 +444,9 @@ classdef bossdevice < handle
                     marker = port;
                 end
 
-                setparam(obj, 'GEN', 'enabled', 0);
+                setparam(obj, 'GEN', 'enabled', false);
                 setparam(obj, 'TRG', 'enabled', 0);
-                setparam(obj, 'GEN', 'manualtrigger', 0);
+                setparam(obj, 'GEN', 'manualtrigger', false);
 
                 obj.configure_generator_sequence([0 width port marker]); % 0 seconds after the trigger and during 0.001 seconds, trigger port 1 and send marker 1
 
@@ -457,11 +457,11 @@ classdef bossdevice < handle
         end
 
         function manualTrigger(obj)
-            setparam(obj, 'GEN', 'enabled', 1);
+            setparam(obj, 'GEN', 'enabled', true);
             setparam(obj, 'TRG', 'enabled', 0);
 
-            setparam(obj, 'GEN', 'manualtrigger', 1);
-            setparam(obj, 'GEN', 'manualtrigger', 0);
+            setparam(obj, 'GEN', 'manualtrigger', true);
+            setparam(obj, 'GEN', 'manualtrigger', false);
 
             disp('Triggering sequence...');
 
