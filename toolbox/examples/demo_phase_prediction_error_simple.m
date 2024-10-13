@@ -25,10 +25,16 @@ bd.alpha.offset_samples = 3; %this depends on the loop-delay
 
 
 %% Configuring an instrument buffer to acquire data
+spfBuf = bd.createAsyncBuffer('spf_sig',10);
+oscBuf = bd.createAsyncBuffer('osc',10,'SignalProps',{'BusElement','alpha.ip'});
+
 instObj = slrealtime.Instrument;
-instObj.addSignal('spf_sig');
-instObj.addSignal('osc','BusElement','alpha.ip');
-instObj.BufferData = true;
+
+spfBuf.addToInstrument(instObj);
+instObj.connectCallback(@spfBuf.write);
+
+oscBuf.addToInstrument(instObj);
+instObj.connectCallback(@oscBuf.write);
 
 bd.addInstrument(instObj);
 
@@ -36,16 +42,11 @@ bd.addInstrument(instObj);
 tWait = 10;
 fprintf('Waiting %is to accumulate data in buffer...\n',tWait);
 pause(tWait);
-mapData = instObj.getBufferedData;
+spf_sig = spfBuf.peek("extractAsTimetable",true);
+osc_alpha_ip = oscBuf.peek("extractAsTimetable",true);
 disp('Done.');
 
-sigData = mapData.values;
-
-% Extract data and downsample fast signal
-osc_alpha_ip = timetable(seconds(sigData{1}.time),sigData{1}.data(:,1));
-spf_sig = squeeze(sigData{2}.data)';
-spf_sig = timetable(seconds(sigData{2}.time),spf_sig(:,1));
-
+% Synchronized data in buffers
 syncedData = synchronize(osc_alpha_ip, spf_sig, 'first', 'nearest');
 
 % Compensante offset in instantaneous predicted phase
@@ -61,7 +62,7 @@ oscBPFcoeffs = bd.getparam('OSC/alpha', 'bpf_fir_coeffs');
 
 % Compute phase prediction error
 [phaseError, meanError, meanDev] = bossapi.boss.computePhasePredictionError(oscBPFcoeffs,...
-                        syncedData.Var1_spf_sig(1+numSamples:end), syncedData.Var1_osc_alpha_ip(1:end-numSamples));
+                        syncedData.spf_sig_idx1(1+numSamples:end), syncedData.osc_idx1(1:end-numSamples));
 
 disp('Done.');
 

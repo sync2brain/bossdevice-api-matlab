@@ -501,6 +501,20 @@ classdef bossdevice < handle
             obj.addInstrument(hInst);
         end
 
+        function [bufObj, instObj] = createAsyncBuffer(obj, signalName, bufferLen, options)
+            arguments
+                obj bossdevice
+                signalName {mustBeTextScalar}
+                bufferLen (1,1) {mustBePositive}
+                options.ArrayIndex {mustBeVector,mustBeInteger} = 1;
+                options.SignalProps {mustBeText} = {};
+            end
+
+            % Initializie streamingAsyncBuffer object
+            bufObj = bossapi.inst.streamingAsyncBuffer(signalName,'',bufferLen,...
+                'AppName',obj.appName,'ArrayIndex',options.ArrayIndex,'SignalProps',options.SignalProps);
+        end
+
 
         %% Target object wrappers
         function addInstrument(obj, inst)
