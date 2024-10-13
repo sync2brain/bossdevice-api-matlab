@@ -501,7 +501,7 @@ classdef bossdevice < handle
             obj.addInstrument(hInst);
         end
 
-        function [bufObj, instObj] = createAsyncBuffer(obj, signalName, bufferLen, options)
+        function bufObj = createAsyncBuffer(obj, signalName, bufferLen, options)
             arguments
                 obj bossdevice
                 signalName {mustBeTextScalar}
