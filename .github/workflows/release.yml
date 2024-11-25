@@ -25,7 +25,7 @@ jobs:
           
       # Download firmware mldatx file from bossdevice-firmware
       - name: Download firmware artifacts
-        uses: dawidd6/action-download-artifact@v3
+        uses: dawidd6/action-download-artifact@v6
         with:
           github_token: ${{ secrets.REPO_READ_TOKEN }}
           workflow: main.yml
@@ -38,7 +38,7 @@ jobs:
       
       # Download Speedgoat dependendencies
       - name: Download Speedgoat dependencies artifacts
-        uses: dawidd6/action-download-artifact@v3
+        uses: dawidd6/action-download-artifact@v6
         with:
           github_token: ${{ secrets.REPO_READ_TOKEN }}
           workflow: main.yml
