@@ -512,7 +512,7 @@ classdef bossdevice < handle
 
             % Initializie streamingAsyncBuffer object
             bufObj = bossapi.inst.streamingAsyncBuffer(signalName,'',bufferLen,...
-                'AppName',obj.appName,'ArrayIndex',options.ArrayIndex,'SignalProps',options.SignalProps);
+                'AppName',obj.firmwareFilepath,'ArrayIndex',options.ArrayIndex,'SignalProps',options.SignalProps);
         end
 
 
