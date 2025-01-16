@@ -62,7 +62,7 @@ oscBPFcoeffs = bd.getparam('OSC/alpha', 'bpf_fir_coeffs');
 
 % Compute phase prediction error
 [phaseError, meanError, meanDev] = bossapi.boss.computePhasePredictionError(oscBPFcoeffs,...
-                        syncedData.spf_sig_idx1(1+numSamples:end), syncedData.osc_idx1(1:end-numSamples));
+                        syncedData.spf_sig_idx1(1+numSamples:end-1), syncedData.osc_idx1(2:end-numSamples));
 
 disp('Done.');
 
