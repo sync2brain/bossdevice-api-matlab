@@ -57,11 +57,13 @@ assert(numSamples >= 1);
 %% Phase error using standard non-causal methods
 disp('Determining phase using standard non-causal methods...');
 
-% Obtain applied filter
-oscBPFcoeffs = bd.getparam('OSC/alpha', 'bpf_fir_coeffs');
+% Prepare IIR Butterworth filter
+peakFrequency = 10;
+oscBPFfilter = designfilt('bandpassiir','FilterOrder',12,'HalfPowerFrequency1',peakFrequency-2,...
+    'HalfPowerFrequency2',peakFrequency+2,'SampleRate',osc_alpha_ip.Properties.SampleRate,'DesignMethod','butter');
 
 % Compute phase prediction error
-[phaseError, meanError, meanDev] = bossapi.boss.computePhasePredictionError(oscBPFcoeffs,...
+[phaseError, meanError, meanDev] = bossapi.boss.computePhasePredictionError(oscBPFfilter,...
                         syncedData.spf_sig_idx1(1+numSamples:end-1), syncedData.osc_idx1(2:end-numSamples));
 
 disp('Done.');
