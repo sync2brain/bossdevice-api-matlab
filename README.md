@@ -6,7 +6,7 @@
 - [Simulink&reg; Real-Time&trade;](https://www.mathworks.com/products/simulink-real-time.html)
 - [Simulink&reg; Real-Time&trade; Target Support Package](https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package) (no additional license required, installable from within MATLAB when you have Simulink Real-Time installed)
 - [bossdevice&reg; real-time digital processor](https://sync2brain.com/boss-device-research)
-- [bossdevice&reg; firmware](https://sync2brain.com/downloads)
+- [bossdevice&reg; firmware](https://sync2brain.com/downloads-bossdevice-research)
 ### Optional
 The following products are required for some advanced functionality such as designing custom filters but are not strictly required for a standard operation or triggering of the bossdevice.
 - [Signal Processing Toolbox&trade;](https://www.mathworks.com/products/signal.html)
@@ -25,7 +25,7 @@ If you cannot connect to the bossdevice facing message errors like `Error: Canno
 
 ## Installation and initial toolbox configuration
 1. Download `bossdevice-api-installer.mltbx` from the latest [release](https://github.com/sync2brain/bossdevice-api-matlab/releases) available in the GitHub project.
-2. Download the bossdevice firmware binary file for your MATLAB Release from [our downloads portal](https://sync2brain.com/downloads).
+2. Download the bossdevice firmware binary file for your MATLAB Release from [our downloads portal](https://sync2brain.com/downloads-bossdevice-research).
 3. Start MATLAB and install the bossdevice API toolbox with double click on `bossdevice-api-installer.mltbx`.
 4. In the MATLAB Command Window, call `bd = bossdevice` to add the bossdevice with the default settings to the list of targets. If you want to change either the name of the bossdevice or its default IP address in your local MATLAB settings, call `bd = bossdevice('bossdevice','192.168.7.5')` replacing the function arguments with the name and IP address you want to set on the real-time device.
 5. When prompted, select the bossdevice firmware binary file with the mldatx extension you have downloaded above. Please note you may run `bd.installFirmwareOnToolbox` afterwards to copy the firmware file into your local toolbox folder, so that you can skip this step in later sessions.
