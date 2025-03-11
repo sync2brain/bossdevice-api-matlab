@@ -33,7 +33,7 @@ bd.num_eeg_channels=eeg_channels;
 %% Preparing a Plasticity Protocol Seqeuence for BOSS Device
 plasticity_protocol_sequence = zeros(no_of_pulses,4);
 for iPulse=1:no_of_pulses
-    plasticity_protocol_sequence(iPulse,:)=[0.01 0.001 1 iPulse]; % Configuring Trigger Sequence in [Time PulseWidth Port Marker] format
+    plasticity_protocol_sequence(iPulse,:)=[0.01 0.001 1 0 0 0 iPulse]; % Configuring Trigger Sequence in [Time PulseWidth Port#1 Port#2 Port#3 Port#4 Marker] format
 end
 
 
