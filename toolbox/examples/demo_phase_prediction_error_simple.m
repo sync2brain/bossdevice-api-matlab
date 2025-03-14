@@ -64,7 +64,7 @@ oscBPFfilter = designfilt('bandpassiir','FilterOrder',12,'HalfPowerFrequency1',p
 
 % Compute phase prediction error
 [phaseError, meanError, meanDev] = bossapi.boss.computePhasePredictionError(oscBPFfilter,...
-                        syncedData.spf_sig_idx1(1+numSamples:end-1), syncedData.osc_idx1(2:end-numSamples));
+                        syncedData.spf_sig(1+numSamples:end-1), syncedData.osc(2:end-numSamples));
 
 disp('Done.');
 
