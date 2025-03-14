@@ -99,7 +99,7 @@ while (condition_index <= no_of_trials)
         bd.triggers_remaining = 1;
         bd.alpha.phase_target(1) = phase(randi(1:numel(phase), 1));
         bd.alpha.phase_plusminus(1) = phase_tolerance;
-        bd.configure_generator_sequence([0 0.001 1 0 0 0 1]); % Configuring Trigger Sequence in [Time PulseWidth Port#1 Port#2 Port#3 Port#4 Marker] format
+        bd.configure_generator_sequence([0 0.001 1 1]); % Configuring Trigger Sequence in [Time PulseWidth Port Marker] format
         bd.min_inter_trig_interval = minimium_inter_trigger_interval;
         bd.arm;
     end
