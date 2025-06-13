@@ -21,12 +21,6 @@ classdef commonSetupTests < matlab.unittest.TestCase
             % Initialize bossdevice object
             testCase.bd = bossdevice;
 
-            [testCase.isSGinstalled, testCase.sgPath] = bossapi.sg.isSpeedgoatBlocksetInstalled;
-            if testCase.isSGinstalled
-                % If local installation of Speedgoat blockset is present, update toolbox dependencies and work with them
-                bossapi.sg.removeSpeedgoatBlocksetFromPath(testCase.bd.logObj, testCase.sgPath);
-            end
-
             % Update target and wait until it has rebooted
             testCase.bd.targetObject.update;
 
