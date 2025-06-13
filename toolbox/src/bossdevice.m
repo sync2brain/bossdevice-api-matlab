@@ -19,6 +19,10 @@ classdef bossdevice < handle
         firmwareDepsPath
     end
 
+    properties (SetAccess = immutable)
+        logObj bossapi.Logger = bossapi.Logger('bossdevice API')
+    end
+
     properties (SetAccess = protected)
         firmwareFilepath
     end
@@ -71,12 +75,19 @@ classdef bossdevice < handle
     end
 
     methods
-        function obj = bossdevice(targetName, ipAddress)
+        function obj = bossdevice(targetName, ipAddress, opts)
             %BOSSDEVICE Construct an instance of this class
             arguments
                 targetName {mustBeTextScalar} = '';
                 ipAddress {mustBeTextScalar} = '';
+                opts.VerboseLevel mlog.Level = mlog.Level.INFO;
             end
+
+            % Setup command window verbose level
+            if batchStartupOptionUsed
+                opts.VerboseLevel = mlog.Level.TRACE;
+            end
+            obj.logObj.CommandWindowThreshold = opts.VerboseLevel;
 
             % Verify if SLRT Target Support Package is installed
             if ~batchStartupOptionUsed && isMATLABReleaseOlderThan('R2024b') % Should run always but using if due to two MATLAB bugs
@@ -121,7 +132,7 @@ classdef bossdevice < handle
 
             if isSGinstalled
                 % Using own full installation of Speedgoat I/O Blockset (for development or debugging purposes)
-                fprintf('[Debug] Using own full installation of Speedgoat I/O Blockset v%s.\n',speedgoat.version);
+                obj.logObj.debug('Using own full installation of Speedgoat I/O Blockset v%s.',speedgoat.version');
 
             elseif isfolder(fullfile(obj.sgDepsPath,matlabRelease.Release))
                 % MATLAB Toolbox installer adds everything to the path. We must remove first everything and
@@ -132,7 +143,7 @@ classdef bossdevice < handle
                     sprintf('Speedgoat files not found in "%s". Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.',fullfile(obj.sgDepsPath,matlabRelease.Release)));
 
             else
-                error('Speedgoat dependencies not found. Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.');
+                obj.logObj.error('Speedgoat dependencies not found. Please reach out to <a href="matlab:open(''bossdevice_api_support.html'')">sync2brain technical support</a>.');
 
             end
 
@@ -149,7 +160,7 @@ classdef bossdevice < handle
             obj.targetObject = slrealtime(targetName);
             if isTargetNew || ~strcmp(obj.targetObject.TargetSettings.address,ipAddress)
                 obj.targetObject.TargetSettings.address = ipAddress;
-                fprintf('Added new target configuration for "%s" with IP address "%s".\n',targetName,ipAddress);
+                obj.logObj.info('Added new target configuration for "%s" with IP address "%s".',targetName,ipAddress);
             end
 
             % Search firmware binary and prompt user if not found in MATLAB path
@@ -162,9 +173,9 @@ classdef bossdevice < handle
                 obj.firmwareFilepath = which([obj.appName,'.mldatx']);
             elseif ~batchStartupOptionUsed
                obj.selectFirmware;
-               disp('Please run installFirmwareOnToolbox to permanently copy the firmware file into the toolbox and skip this step.');
+               obj.logObj.info('Please run installFirmwareOnToolbox to permanently copy the firmware file into the toolbox and skip this step.');
             else
-                error('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
+                obj.logObj.error('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
 
             % Initialize bossdevice if it is connected
@@ -172,7 +183,7 @@ classdef bossdevice < handle
                 obj.initialize;
             else
                 if ~batchStartupOptionUsed
-                    disp('Connect the bossdevice and initialize your bossdevice object to start. For example, if you are using "bd = bossdevice", run "bd.initialize".');
+                    obj.logObj.info('Connect the bossdevice and initialize your bossdevice object to start. For example, if you are using "bd = bossdevice", run "bd.initialize".');
                 end
             end
         end
@@ -181,7 +192,7 @@ classdef bossdevice < handle
             [filename, filepath] = uigetfile([obj.appName,'.mldatx'],...
                 'Select the firmware binary to load on the bossdevice');
             if isequal(filename,0)
-                error('User selected Cancel. Please download the latest firmware version from <a href="https://sync2brain.com/downloads-bossdevice-research">sync2brain downloads portal</a> and select the firmware mldatx file to complete bossdevice dependencies.');
+                obj.logObj.error('User selected Cancel. Please download the latest firmware version from <a href="https://sync2brain.com/downloads-bossdevice-research">sync2brain downloads portal</a> and select the firmware mldatx file to complete bossdevice dependencies.');
             else
                 obj.firmwareFilepath = fullfile(filepath,filename);
             end
@@ -195,7 +206,7 @@ classdef bossdevice < handle
                 copyfile(obj.firmwareFilepath,fileparts(obj.firmwareDepsPath),'f');
                 obj.firmwareFilepath = obj.firmwareDepsPath;
             else
-                error('Firmware file is not located. Run method selectFirmware first.');
+                obj.logObj.error('Firmware file is not located. Run method selectFirmware first.');
             end
         end
 
@@ -209,7 +220,7 @@ classdef bossdevice < handle
             % Change IP address on remote target
             res = bossapi.tg.changeRemoteTargetIP(obj.targetObject, targetIP, targetNetmask);
             if res.ExitCode~=0
-                error(res.ErrorOutput);
+                obj.logObj.error(res.obj.logObj.errorOutput);
             end
 
             % Reboot target to apply new settings
@@ -219,7 +230,7 @@ classdef bossdevice < handle
             obj = bossdevice(obj.targetObject.TargetSettings.name, targetIP);
 
             % Output message
-            fprintf('The IP address "%s" has been applied to the bossdevice "%s". The device is now rebooting, please wait 30 seconds before reinitializing.\n',...
+            obj.logObj.info('The IP address "%s" has been applied to the bossdevice "%s". The device is now rebooting, please wait 30 seconds before reinitializing.',...
                 targetIP,obj.targetObject.TargetSettings.name);
         end
 
@@ -232,9 +243,9 @@ classdef bossdevice < handle
                 % Set Ethernet IP in secondary interface
                 bossapi.tg.setEthernetInterface(obj.targetObject,'wm1','192.168.200.5/24');
 
-                fprintf('Loading application "%s" on "%s"...\n',obj.appName,obj.targetObject.TargetSettings.name);
+                obj.logObj.info('Loading application "%s" on "%s"...',obj.appName,obj.targetObject.TargetSettings.name);
                 obj.targetObject.load(obj.firmwareFilepath);
-                fprintf('Application loaded. Ready to start.\n');
+                obj.logObj.info('Application loaded. Ready to start.');
             end
 
             % Figure out some oscillation values
@@ -250,9 +261,9 @@ classdef bossdevice < handle
             % Start application on target if not running yet
             if ~obj.targetObject.isRunning
                 obj.targetObject.start("ReloadOnStop",true,"StopTime",Inf);
-                disp('Application started!');
+                obj.logObj.info('Application started!');
             else
-                disp('Application is already running.');
+                obj.logObj.info('Application is already running.');
             end
         end
 
@@ -320,7 +331,7 @@ classdef bossdevice < handle
                 obj.setparam('TRG', 'countdown_reset', 1);
                 obj.setparam('TRG', 'countdown_reset', 0);
             else
-                error('Remaining triggers cannot be set unless application is running. Start the bossdevice before calling this method.');
+                obj.logObj.error('Remaining triggers cannot be set unless application is running. Start the bossdevice before calling this method.');
             end
         end
 
@@ -395,7 +406,7 @@ classdef bossdevice < handle
                 setparam(obj, 'GEN', 'enabled', true);
                 setparam(obj, 'TRG', 'enabled', 1);
                 if ~obj.isRunning
-                    disp('bossdevice is armed and ready to start.');
+                    obj.logObj.info('bossdevice is armed and ready to start.');
                 end
             else
                 setparam(obj, 'GEN', 'enabled', false);
@@ -452,7 +463,7 @@ classdef bossdevice < handle
 
                 obj.manualTrigger;
             else
-                disp('No pulse sent because app is not running yet. Start app first.');
+                obj.logObj.info('No pulse sent because app is not running yet. Start app first.');
             end
         end
 
@@ -463,14 +474,14 @@ classdef bossdevice < handle
             setparam(obj, 'GEN', 'manualtrigger', true);
             setparam(obj, 'GEN', 'manualtrigger', false);
 
-            disp('Triggering sequence...');
+            obj.logObj.info('Triggering sequence...');
 
             % Block execution of manualTrigger while generator is running
             while obj.isGeneratorRunning
                 pause(0.1);
             end
 
-            disp('Sequence completed.');
+            obj.logObj.info('Sequence completed.');
         end
 
         function openDocumentation(obj)
@@ -571,23 +582,23 @@ classdef bossdevice < handle
 
         function stopRecording(obj)
             obj.targetObject.stopRecording;
-            disp('Recording stopped.');
+            obj.logObj.info('Recording stopped.');
         end
 
         function startRecording(obj)
             if ~obj.targetObject.isRunning
-                error('Target "%s" is not running yet. Start it before recording.',...
+                obj.logObj.error('Target "%s" is not running yet. Start it before recording.',...
                     obj.targetObject.TargetSettings.name);
             end
 
             try
                 obj.targetObject.stopRecording;
             catch ME
-                disp(ME.message);
+                obj.logObj.info(ME.message);
             end
 
             obj.targetObject.startRecording;
-            disp('Recording started.');
+            obj.logObj.info('Recording started.');
         end
     end
 

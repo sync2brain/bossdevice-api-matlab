@@ -26,7 +26,7 @@ toolboxOptions.ToolboxImageFile = fullfile(projObj.RootFolder,"images/bossdevice
 % toolboxOptions.ToolboxGettingStartedGuide = fullfile(projObj.RootFolder,"toolbox/gettingStarted.mlx");
 
 if ~exist(fullfile(projObj.RootFolder,"releases"), 'dir')
-   mkdir(fullfile(projObj.RootFolder,"releases"))
+    mkdir(fullfile(projObj.RootFolder,"releases"))
 end
 toolboxOptions.OutputFile = fullfile(projObj.RootFolder,"releases/bossdevice-api-installer.mltbx");
 
@@ -45,6 +45,13 @@ toolboxContent = regexprep(toolboxContent, '\<today\>', char(datetime('now', 'Fo
 fid = fopen(contentsFilepath, 'w');
 fwrite(fid, toolboxContent);
 fclose(fid);
+
+% Required MATLAB Add-Ons
+toolboxOptions.RequiredAddons = ...
+    struct("Name","Advanced Logger for MATLAB", ...
+    "Identifier","fd9733c5-082a-4325-a5e5-e7490cdb8fb1", ...
+    "EarliestVersion","2.0", ...
+    "DownloadURL","https://www.mathworks.com/matlabcentral/fileexchange/87322-advanced-logger-for-matlab");
 
 % Required Additional Software
 % TODO: Automate download and installation of bossdevice firmware. DownloadURL must point to a ZIP file (MLDATX firmware fiel) in the downloads section of sync2brain
