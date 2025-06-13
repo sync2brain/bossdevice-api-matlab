@@ -368,7 +368,7 @@ classdef bossdevice < handle
                 obj bossdevice
                 sequence {mustBeNumeric}
             end
-            bossapi.boss.setGenSequenceOnTarget(obj.targetObject,sequence);
+            bossapi.boss.setGenSequenceOnTarget(obj.targetObject, sequence, obj.logObj);
         end
 
         function tiledObj = plot_generator_sequence(obj, sequence, figParent)
