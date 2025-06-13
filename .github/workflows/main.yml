@@ -58,7 +58,7 @@ jobs:
     strategy:
       fail-fast: false # Run with every MATLAB version independently
       matrix:
-        matlabVer: [R2024a, R2024b] # List of MATLAB releases to test
+        matlabVer: [R2024a, R2024b, R2025a] # List of MATLAB releases to test
     runs-on: matlab
 
     # Steps represent a sequence of tasks that will be executed as part of the job
