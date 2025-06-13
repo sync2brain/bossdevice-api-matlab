@@ -3,8 +3,12 @@ classdef bossdevice_oscillation
     %   Detailed explanation goes here
 
     properties (Access = protected)
-        targetObj
+        targetObj slrealtime.Target
         name
+    end
+
+    properties (SetAccess = immutable)
+        logObj bossapi.Logger
     end
 
     properties (Dependent)
@@ -18,15 +22,17 @@ classdef bossdevice_oscillation
     end
 
     methods
-        function obj = bossdevice_oscillation(targetObj, name)
+        function obj = bossdevice_oscillation(targetObj, name, logObj)
             %UNTITLED Construct an instance of this class
             arguments
                 targetObj slrealtime.Target
                 name {mustBeMember(name,{'alpha','beta','theta'})}
+                logObj bossapi.Logger
             end
 
             obj.targetObj = targetObj;
             obj.name = name;
+            obj.logObj = logObj;
 
             if obj.targetObj.isConnected && obj.targetObj.isLoaded
                 obj.phase_target = getparam(obj.targetObj, ['mainmodel/bosslogic/EVD/' obj.name], 'phase_target');
@@ -34,7 +40,7 @@ classdef bossdevice_oscillation
                 obj.amplitude_min = getparam(obj.targetObj, ['mainmodel/bosslogic/EVD/' obj.name], 'amplitude_min');
                 obj.amplitude_max = getparam(obj.targetObj, ['mainmodel/bosslogic/EVD/' obj.name], 'amplitude_max');
             else
-                error('bossdevice is not ready. Initialize your bossdevice object before further processing. For example, if you are using "bd = bossdevice", run "bd.initialize".');
+                obj.logObj.obj.logObj.error('bossdevice is not ready. Initialize your bossdevice object before further processing. For example, if you are using "bd = bossdevice", run "bd.initialize".');
             end
         end
 
@@ -53,7 +59,7 @@ classdef bossdevice_oscillation
             else
                 newValue = phi;
                 if ~all(size(previousValue) == size(newValue))
-                    warning('unable to set phase target, dimension mismatch')
+                    obj.logObj.warning('Wnable to set phase target, dimension mismatch');
                     return
                 end
             end
@@ -139,7 +145,7 @@ classdef bossdevice_oscillation
                     obj.amplitude_max = 1e6 * ones(size(obj.amplitude_max));
                 end
             else
-                error('bossdevice is not ready. Initialize your bossdevice object before further processing. For example, if you are using "bd = bossdevice", run "bd.initialize".');
+                obj.logObj.obj.logObj.error('bossdevice is not ready. Initialize your bossdevice object before further processing. For example, if you are using "bd = bossdevice", run "bd.initialize".');
             end
         end
 

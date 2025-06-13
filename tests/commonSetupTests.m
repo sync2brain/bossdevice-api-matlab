@@ -18,14 +18,10 @@ classdef commonSetupTests < matlab.unittest.TestCase
             
             testCase.applyFixture(SuppressedWarningsFixture("MATLAB:pfileOlderThanMfile"));
 
-            [testCase.isSGinstalled, testCase.sgPath] = bossapi.sg.isSpeedgoatBlocksetInstalled;
-            if testCase.isSGinstalled
-                % If local installation of Speedgoat blockset is present, update toolbox dependencies and work with them
-                bossapi.sg.removeSpeedgoatBlocksetFromPath(testCase.sgPath);
-            end
+            % Initialize bossdevice object
+            testCase.bd = bossdevice;
 
             % Update target and wait until it has rebooted
-            testCase.bd = bossdevice;
             testCase.bd.targetObject.update;
 
             testCase.assertThat(@() bossapi.tg.pingTarget(testCase.bd.targetObject),...
@@ -46,7 +42,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
         function resetSgPath(testCase)
             if testCase.isSGinstalled
                 % If local installation of Speedgoat blockset is present, restore default paths
-                bossapi.sg.addSpeedgoatBlocksetToPath(testCase.sgPath);
+                bossapi.sg.addSpeedgoatBlocksetToPath(testCase.bd.logObj, testCase.sgPath);
             end
         end
 
