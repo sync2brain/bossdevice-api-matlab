@@ -68,9 +68,9 @@ classdef bossdevice < handle
 
     methods (Access=protected)
         function initOscillationProps(obj)
-            obj.theta = bossdevice_oscillation(obj.targetObject, 'theta');
-            obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha');
-            obj.beta = bossdevice_oscillation(obj.targetObject, 'beta');
+            obj.theta = bossdevice_oscillation(obj.targetObject, 'theta', obj.logObj);
+            obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha', obj.logObj);
+            obj.beta = bossdevice_oscillation(obj.targetObject, 'beta', obj.logObj);
         end
     end
 
