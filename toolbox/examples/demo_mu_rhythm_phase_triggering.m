@@ -6,11 +6,6 @@
 %              4) The stimulator is Switched On, External Trigger mode is turned on and the Stimulator is Enabled
 % Press Ctrl+C on MATLAB command line to stop the script anytime
 
-%% Help functions for automated testing
-% Skip this script if running in the CI pipeline
-if batchStartupOptionUsed
-    return;
-end
 
 %% Initializing Demo Script Variables;
 no_of_trials=10;

@@ -16,6 +16,7 @@ projObj = currentProject;
 % Get list of example scripts in path
 exName = {dir(fullfile(projObj.RootFolder,'toolbox/examples','**/*.m')).name}';
 exName = exName(isFileOnPath(exName));
+exName = filterOutTests(exName);
 exParam = Parameter.fromData('exName',exName);
 
 suite = TestSuite.fromProject(projObj,'ExternalParameters',exParam);
@@ -42,4 +43,16 @@ onPath = boolean(zeros(1,length(filename)));
 for ii = 1:length(filename)
     onPath(ii) = exist(filename{ii},"file")>0;
 end
+end
+
+function testcases = filterOutTests(testcases)
+
+% Example doesn't work without real EEG data
+testcases(ismember(testcases,{'demo_mu_rhythm_phase_triggering.m'})) = [];
+
+if ~isMATLABReleaseOlderThan("R2025a")
+    % Issue when reading sample rate from osc_alpha_ip. Diff is not constant
+    testcases(ismember(testcases,{'demo_phase_prediction_error_simple.m'})) = [];
+end
+
 end
