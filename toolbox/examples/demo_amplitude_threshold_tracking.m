@@ -50,8 +50,10 @@ hAmplitudeDistributionAxes = subplot(2,1,2);
 
 %% Controlling BOSS Device for mu Alpha Phase Locked Triggering
 condition_index=1;
+lastsize = 0;
 while (condition_index <= no_of_trials)
-    fprintf('Running trial %i out of %i...\n',condition_index,no_of_trials);
+    fprintf(repmat('\b', 1, lastsize));
+    lastsize = fprintf('Running trial %i out of %i...\n',condition_index,no_of_trials);
     pause(0.1);
 
     mapData = inst.getBufferedData;
@@ -59,7 +61,6 @@ while (condition_index <= no_of_trials)
 
     % Skip iteration if buffer is empty
     if isempty(sigData) || numel(sigData) < 2
-        disp('Buffer empty in this iteration.');
         continue;
     end
 
@@ -108,7 +109,8 @@ while (condition_index <= no_of_trials)
     if(bd.triggers_remaining == 0)
         condition_index = condition_index + 1;
         bd.disarm;
-        disp Triggered!
+        fprintf('Triggered!\n\n');
+        lastsize = 0;
     end
 end
 disp('Experiment finished');

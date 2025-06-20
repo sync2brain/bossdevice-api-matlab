@@ -55,9 +55,10 @@ bd.configure_generator_sequence(plasticity_protocol_sequence);
 bd.min_inter_trig_interval = minimium_inter_trigger_interval;
 bd.arm;
 
-fprintf('System running, pulses remaining: %i', bd.triggers_remaining);
+lastsize = 0;
 while (bd.triggers_remaining > 0)
-    fprintf('\b\b\b%03i', bd.triggers_remaining);
+    fprintf(repmat('\b', 1, lastsize));
+    lastsize = fprintf('System running, pulses remaining: %i', bd.triggers_remaining);
     pause(0.1);
 end
 fprintf('\nDone\n');
@@ -66,8 +67,10 @@ fprintf('\nDone\n');
 %% Controlling BOSS Device for mu Alpha Phase Locked Triggering
 % this could be for excitability, where we have interleaved different conditions
 condition_index=0;
+lastsize = 0;
 while (condition_index <= no_of_trials)
-    fprintf('Running trial %i out of %i...\n',condition_index,no_of_trials);
+    fprintf(repmat('\b', 1, lastsize));
+    lastsize = fprintf('Running trial %i out of %i...',condition_index,no_of_trials);
     if ~bd.isArmed
         bd.triggers_remaining = 1;
         bd.arm;
@@ -76,7 +79,8 @@ while (condition_index <= no_of_trials)
     if(bd.triggers_remaining == 0)
         condition_index = condition_index + 1;
         bd.disarm;
-        disp('Triggered!');
+        fprintf('\nTriggered!\n');
+        lastsize = 0;
     end
     pause(0.01);
 end
