@@ -471,6 +471,9 @@ classdef bossdevice < handle
 
         function manualTrigger(obj)
             if obj.isRunning
+                % Automatically disable GEN at end of sequence or if user aborts
+                cleanupObj = onCleanup(@() cleanupManualTrigger(obj));
+
                 setparam(obj, 'GEN', 'enabled', true);
                 setparam(obj, 'TRG', 'enabled', 0);
 
@@ -484,11 +487,18 @@ classdef bossdevice < handle
                     pause(0.1);
                 end
 
-                obj.logObj.info('Sequence completed.');
-
             else
                 obj.logObj.error('Target "%s" is not running yet. Start it before sending a trigger.',...
                     obj.targetObject.TargetSettings.name);
+            end
+
+            function cleanupManualTrigger(obj)
+                if ~obj.isGeneratorRunning
+                    obj.logObj.info('Sequence completed.');
+                else
+                    obj.logObj.info('Sequence aborted by the user.');
+                end
+                setparam(obj, 'GEN', 'enabled', false);
             end
         end
 
