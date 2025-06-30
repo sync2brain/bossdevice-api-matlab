@@ -402,11 +402,13 @@ classdef bossdevice < handle
 
         function set.isArmed(obj, isArmed)
             if isArmed
-                assert(~obj.isGeneratorRunning, 'Cannot arm target while generator is running.');
+                if obj.isGeneratorRunning
+                    obj.logObj.error('Cannot arm target while generator is running.');
+                end
                 setparam(obj, 'GEN', 'enabled', true);
                 setparam(obj, 'TRG', 'enabled', 1);
                 if ~obj.isRunning
-                    obj.logObj.info('bossdevice is armed and ready to start.');
+                    obj.logObj.info('bossdevice is armed and ready to trigger. Call start to begin the sequence.');
                 end
             else
                 setparam(obj, 'GEN', 'enabled', false);
@@ -468,20 +470,26 @@ classdef bossdevice < handle
         end
 
         function manualTrigger(obj)
-            setparam(obj, 'GEN', 'enabled', true);
-            setparam(obj, 'TRG', 'enabled', 0);
+            if obj.isRunning
+                setparam(obj, 'GEN', 'enabled', true);
+                setparam(obj, 'TRG', 'enabled', 0);
 
-            setparam(obj, 'GEN', 'manualtrigger', true);
-            setparam(obj, 'GEN', 'manualtrigger', false);
+                setparam(obj, 'GEN', 'manualtrigger', true);
+                setparam(obj, 'GEN', 'manualtrigger', false);
 
-            obj.logObj.info('Triggering sequence...');
+                obj.logObj.info('Triggering sequence (press Ctrl-C to abort)...');
 
-            % Block execution of manualTrigger while generator is running
-            while obj.isGeneratorRunning
-                pause(0.1);
+                % Block execution of manualTrigger while generator is running
+                while obj.isGeneratorRunning
+                    pause(0.1);
+                end
+
+                obj.logObj.info('Sequence completed.');
+
+            else
+                obj.logObj.error('Target "%s" is not running yet. Start it before sending a trigger.',...
+                    obj.targetObject.TargetSettings.name);
             end
-
-            obj.logObj.info('Sequence completed.');
         end
 
         function openDocumentation(obj)
