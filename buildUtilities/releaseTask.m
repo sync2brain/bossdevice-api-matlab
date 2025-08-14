@@ -30,7 +30,7 @@ if ~exist(fullfile(projObj.RootFolder,"releases"), 'dir')
 end
 toolboxOptions.OutputFile = fullfile(projObj.RootFolder,"releases/bossdevice-api-installer.mltbx");
 
-toolboxOptions.MinimumMatlabRelease = "R2023b";
+toolboxOptions.MinimumMatlabRelease = "R2024b";
 % toolboxOptions.MaximumMatlabRelease = "R2023a"; % Won't limit maximum MATLAB release
 toolboxOptions.SupportedPlatforms.Glnxa64 = true;
 toolboxOptions.SupportedPlatforms.Maci64 = false;

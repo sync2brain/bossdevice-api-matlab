@@ -2,7 +2,7 @@
 [![CI](https://github.com/sync2brain/bossdevice-api-matlab/actions/workflows/main.yml/badge.svg)](https://github.com/sync2brain/bossdevice-api-matlab/actions/workflows/main.yml) [![GitHub issues by-label](https://img.shields.io/github/issues-raw/sync2brain/bossdevice-api-matlab/bug)](https://github.com/sync2brain/bossdevice-api-matlab/issues?q=is%3Aissue+is%3Aopen+label%3Abug) ![GitHub](https://img.shields.io/github/license/sync2brain/bossdevice-api-matlab) [![View bossdevice-api-matlab on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/133972-bossdevice-api-matlab) [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=sync2brain/bossdevice-api-matlab&project=Bossdeviceapimatlab.prj)
 
 ## Requirements
-- MATLAB&reg; R2024a or newer.
+- MATLAB&reg; R2024b or newer.
 - [Simulink&reg; Real-Time&trade;](https://www.mathworks.com/products/simulink-real-time.html)
 - [Simulink&reg; Real-Time&trade; Target Support Package](https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package) (no additional license required, installable from within MATLAB when you have Simulink Real-Time installed)
 - [bossdevice&reg; real-time digital processor](https://sync2brain.com/boss-device-research)
