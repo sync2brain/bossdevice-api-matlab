@@ -10,4 +10,10 @@ classdef exampleTests < commonSetupTests
             run(exName);
         end
     end
+
+    methods (TestMethodTeardown)
+        function closeFigures(~)
+            close all;
+        end
+    end
 end
