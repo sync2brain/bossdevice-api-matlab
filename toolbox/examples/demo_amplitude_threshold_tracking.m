@@ -39,7 +39,7 @@ bd.alpha.bpf_fir_coeffs = bpf_fir_coeffs;
 
 % Prepare instrument object with signals to stream
 inst = slrealtime.Instrument;
-inst.addSignal('osc','BusElement','alpha.ia','Decimation',5); % OSC signals run x5 faster than QLY
+inst.addSignal('instAmplitude','BusElement','alpha','Decimation',5);
 inst.addSignal('sig_clean');
 inst.BufferData = true;
 bd.addInstrument(inst);

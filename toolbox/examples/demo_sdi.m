@@ -23,9 +23,9 @@ Simulink.sdi.setSubPlotLayout(2,1);
 runObj = Simulink.sdi.Run.getLatest;
 
 % Get signal objects and expand to convert multidimensional signals to scalar channels
-eegSig = runObj.getSignalsByName("biosignal.eeg");
+eegSig = runObj.getSignalsByName("biosignal.EEG");
 eegSig.expand;
-spfSig = runObj.getSignalsByName("spf");
+spfSig = runObj.getSignalsByName("spf_eeg");
 spfSig.expand;
 
 % Plot signals in subplots

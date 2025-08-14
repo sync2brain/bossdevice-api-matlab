@@ -23,31 +23,25 @@ bd.alpha.offset_samples = 3; %this depends on the loop-delay
 % bd.alpha.bpf_fir_coeffs = firls(70, [0 6 9 13 16 (500/2)]/(500/2), [0 0 1 1 0 0], [1 1 1]);
 %fvtool(bd.alpha.bpf_fir_coeffs, 'Fs', 500) % visualize filter
 
-
-%% Configuring an instrument buffer to acquire data
-spfBuf = bd.createAsyncBuffer('spf_sig',10);
-oscBuf = bd.createAsyncBuffer('osc',10,'SignalProps',{'BusElement','alpha.ip'});
-
-instObj = slrealtime.Instrument;
-
-spfBuf.addToInstrument(instObj);
-instObj.connectCallback(@spfBuf.write);
-
-oscBuf.addToInstrument(instObj);
-instObj.connectCallback(@oscBuf.write);
-
-bd.addInstrument(instObj);
+% Prepare instrument object with signals to stream
+inst = slrealtime.Instrument;
+inst.addSignal('instPhase','BusElement','alpha');
+inst.addSignal('spf_eeg');
+inst.BufferData = true;
+bd.addInstrument(inst);
 
 %% Retrieve signal data from bossdevice
 tWait = 10;
 fprintf('Waiting %is to accumulate data in buffer...\n',tWait);
 pause(tWait);
-spf_sig = spfBuf.peek("extractAsTimetable",true);
-osc_alpha_ip = oscBuf.peek("extractAsTimetable",true);
-disp('Done.');
 
-% Synchronized data in buffers
-syncedData = synchronize(osc_alpha_ip, spf_sig, 'first', 'nearest');
+% Read data from buffer
+mapData = inst.getBufferedData;
+sigData = mapData.values;
+
+spf_eeg = squeeze(sigData{2}.data)';
+alpha_ip = sigData{1}.data;
+disp('Done.');
 
 % Compensante offset in instantaneous predicted phase
 numSamples = bd.alpha.offset_samples;
@@ -60,11 +54,11 @@ disp('Determining phase using standard non-causal methods...');
 % Prepare IIR Butterworth filter
 peakFrequency = 10;
 oscBPFfilter = designfilt('bandpassiir','FilterOrder',12,'HalfPowerFrequency1',peakFrequency-2,...
-    'HalfPowerFrequency2',peakFrequency+2,'SampleRate',osc_alpha_ip.Properties.SampleRate,'DesignMethod','butter');
+    'HalfPowerFrequency2',peakFrequency+2,'SampleRate',1/mode(diff(sigData{1}.time)),'DesignMethod','butter');
 
 % Compute phase prediction error
 [phaseError, meanError, meanDev] = bossapi.boss.computePhasePredictionError(oscBPFfilter,...
-                        syncedData.spf_sig(1+numSamples:end-1), syncedData.osc(2:end-numSamples));
+                        spf_eeg(1+numSamples:end-1), alpha_ip(2:end-numSamples));
 
 disp('Done.');
 

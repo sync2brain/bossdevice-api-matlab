@@ -47,7 +47,7 @@ classdef bossdevice < handle
     end
 
     properties (Constant, Hidden)
-        appName = 'mainmodel';
+        appName = 'bossdevice_main';
     end
 
     methods (Static)
@@ -274,16 +274,16 @@ classdef bossdevice < handle
 
         % getters and setters for dependent properties
         function duration = get.sample_and_hold_seconds(obj)
-            duration = obj.getparam('UDP', 'sample_and_hold_seconds');
+            duration = obj.getparam('biosignal Sample and Hold', 'sample_and_hold_seconds');
         end
 
         function set.sample_and_hold_seconds(obj, duration)
-            obj.setparam('UDP', 'sample_and_hold_seconds', duration);
+            obj.setparam('biosignal Sample and Hold', 'sample_and_hold_seconds', duration);
         end
 
 
         function spatial_filter_weights = get.spatial_filter_weights(obj)
-            spatial_filter_weights = getparam(obj, 'OSC', 'weights');
+            spatial_filter_weights = getparam(obj, '', 'spfWeights');
         end
 
         function set.spatial_filter_weights(obj, weights)
@@ -303,7 +303,7 @@ classdef bossdevice < handle
             if size(weights, 1) < num_rows
                 weights(num_rows, 1) = 0; % fill with zeros
             end
-            setparam(obj, 'OSC', 'weights', single(weights));
+            setparam(obj, '', 'spfWeights', single(weights));
         end
 
 
@@ -340,19 +340,27 @@ classdef bossdevice < handle
         end
 
         function n = get.num_eeg_channels(obj)
-            n = getparam(obj, 'UDP', 'num_eeg_channels');
+            n = getparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numEEGch');
         end
 
         function set.num_eeg_channels(obj, n)
-            setparam(obj, 'UDP', 'num_eeg_channels', n);
+            arguments
+                obj 
+                n uint8 {mustBeInteger,mustBeNonnegative}
+            end
+            setparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numEEGch', n);
         end
 
         function n = get.num_aux_channels(obj)
-            n = getparam(obj, 'UDP', 'num_aux_channels');
+            n = getparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numAUXch');
         end
 
         function set.num_aux_channels(obj, n)
-            setparam(obj, 'UDP', 'num_aux_channels', n);
+            arguments
+                obj 
+                n uint8 {mustBeInteger,mustBeNonnegative}
+            end
+            setparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numAUXch', n);
         end
 
         function val = get.marker_pulse_width_sec(obj)
@@ -389,7 +397,7 @@ classdef bossdevice < handle
         end
 
         function generator_running = get.isGeneratorRunning(obj)
-            generator_running = obj.getsignal('GEN',5);
+            generator_running = obj.getsignal('GEN',3);
         end
 
         function obj = arm(obj)
@@ -571,12 +579,24 @@ classdef bossdevice < handle
         end
 
         function setparam(obj, path, varargin)
-            setparam(obj.targetObject, [obj.appName,'/bosslogic/', path], varargin{:});
+            if isempty(path)
+                setparam(obj.targetObject, '', varargin{:});
+            elseif ~iscell(path)
+                setparam(obj.targetObject, [obj.appName,'/', char(path)], varargin{:});
+            else
+                setparam(obj.targetObject, [{[obj.appName,'/', path{1}]},path(2:end)],  varargin{:});
+            end
         end
 
         function val = getparam(obj, path, varargin)
             if obj.isInitialized
-                val = getparam(obj.targetObject, [obj.appName,'/bosslogic/', path], varargin{:});
+                if isempty(path)
+                    val = getparam(obj.targetObject, '', varargin{:});
+                elseif ~iscell(path)
+                    val = getparam(obj.targetObject, [obj.appName,'/', char(path)], varargin{:});
+                else
+                    val = getparam(obj.targetObject, [{[obj.appName,'/', path{1}]},path(2:end)],  varargin{:});
+                end
             else
                 val = [];
             end
@@ -591,9 +611,9 @@ classdef bossdevice < handle
 
             if obj.isInitialized
                 if ~iscell(path)
-                    val = getsignal(obj.targetObject, [obj.appName,'/bosslogic/', path], portIndex);
+                    val = getsignal(obj.targetObject, [obj.appName,'/', path], portIndex);
                 else
-                    val = getsignal(obj.targetObject, [{[obj.appName,'/bosslogic/', path{1}]},path(2:end)], portIndex);
+                    val = getsignal(obj.targetObject, [{[obj.appName,'/', path{1}]},path(2:end)], portIndex);
                 end
             end
         end

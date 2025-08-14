@@ -20,7 +20,7 @@ Simulink.sdi.setSubPlotLayout(1,1);
 runObj = Simulink.sdi.Run.getLatest;
 
 % Get signal objects and add to subplot
-mrkSig = runObj.getSignalsByName('biosignal.mrk');
+mrkSig = runObj.getSignalsByName('biosignal.MRK');
 mrkSig.plotOnSubPlot(1,1,true);
 
 genRunSig = runObj.getSignalsByName('gen_running');
