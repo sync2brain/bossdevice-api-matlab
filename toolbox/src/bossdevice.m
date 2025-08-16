@@ -235,6 +235,9 @@ classdef bossdevice < handle
         end
 
         function initialize(obj)
+            % Use SFTP always avoiding potential issues with active UDP traffic on secondary Ethernet port (QNX issue)
+            obj.targetObject.UseSFTP = 1;
+
             % Connect to bosdevice
             obj.targetObject.connect;
 
