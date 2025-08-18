@@ -36,6 +36,8 @@ classdef bossdevice < handle
         num_eeg_channels
         num_aux_channels
         marker_pulse_width_sec
+        protocol_type
+        connection_status
     end
 
     properties (SetAccess = private, Dependent)
@@ -343,7 +345,12 @@ classdef bossdevice < handle
         end
 
         function n = get.num_eeg_channels(obj)
-            n = getparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numEEGch');
+            if obj.protocol_type == 2 % actiCHamp
+                n = obj.getsignal({'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/TurboLink Decode',...
+                    'TurboLink_UDP_Decode/MATLAB Function'},1) * 32;
+            else
+                n = getparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numEEGch');
+            end
         end
 
         function set.num_eeg_channels(obj, n)
@@ -351,11 +358,20 @@ classdef bossdevice < handle
                 obj 
                 n uint8 {mustBeInteger,mustBeNonnegative}
             end
-            setparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numEEGch', n);
+
+            if obj.protocol_type == 2 % actiCHamp
+                warning('Number of EEG channels is determined automically for actiCHamp. This input will be ignored.');
+            else
+                setparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numEEGch', n);
+            end
         end
 
         function n = get.num_aux_channels(obj)
-            n = getparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numAUXch');
+            if obj.protocol_type == 2 % actiCHamp
+                n = 8;
+            else
+                n = getparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numAUXch');
+            end
         end
 
         function set.num_aux_channels(obj, n)
@@ -363,7 +379,12 @@ classdef bossdevice < handle
                 obj 
                 n uint8 {mustBeInteger,mustBeNonnegative}
             end
-            setparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numAUXch', n);
+
+            if obj.protocol_type == 2 % actiCHamp
+                warning('Number of AUX channels is determined automically for actiCHamp. This input will be ignored.');
+            else
+                setparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numAUXch', n);
+            end            
         end
 
         function val = get.marker_pulse_width_sec(obj)
@@ -372,6 +393,14 @@ classdef bossdevice < handle
 
         function set.marker_pulse_width_sec(obj, val)
             setparam(obj, 'GEN', 'marker_pulse_width_sec', val);
+        end
+
+        function val = get.protocol_type(obj)
+            val = obj.getsignal({'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/Protocol Selector'},1);
+        end
+
+        function val = get.connection_status(obj)
+            val = obj.getsignal({'UDP Receive','UDP_Receive_Queue/UDP Connection Status'},1);
         end
 
         function obj = configure_generator_sequence(obj, sequence)
