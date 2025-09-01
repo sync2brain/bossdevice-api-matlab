@@ -78,7 +78,7 @@ classdef bossdevice_oscillation
         function obj = set.phase_plusminus(obj, phase_plusminus)
             %set.phase_plusminus Set phase tolerance
             %   A tolerance of pi ignores the phase in generation of events
-            setparam(obj.targetObj, [obj.appName,'/EVD/' obj.name], 'phase_plusminus', phase_plusminus);
+            setparam(obj.targetObj, [obj.appName,'/EVD/' obj.name], 'phase_plusminus', single(phase_plusminus));
         end
 
 
@@ -89,7 +89,7 @@ classdef bossdevice_oscillation
         function obj = set.amplitude_min(obj, amplitude_min)
             %METHOD1 Summary of this method goes here
             %   Detailed explanation goes here
-            setparam(obj.targetObj, [obj.appName,'/EVD/' obj.name], 'amplitude_min', amplitude_min);
+            setparam(obj.targetObj, [obj.appName,'/EVD/' obj.name], 'amplitude_min', single(amplitude_min));
         end
 
 
@@ -98,7 +98,7 @@ classdef bossdevice_oscillation
         end
 
         function obj = set.amplitude_max(obj, amplitude_max)
-            setparam(obj.targetObj, [obj.appName,'/EVD/' obj.name], 'amplitude_max', amplitude_max);
+            setparam(obj.targetObj, [obj.appName,'/EVD/' obj.name], 'amplitude_max', single(amplitude_max));
         end
 
 
