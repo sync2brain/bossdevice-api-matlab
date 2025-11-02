@@ -308,7 +308,7 @@ classdef bossdevice < handle
             if size(weights, 1) < num_rows
                 weights(num_rows, 1) = 0; % fill with zeros
             end
-            setparam(obj, '', 'spfWeights', single(weights));
+            setparam(obj, '', 'spfWeights', weights);
         end
 
 

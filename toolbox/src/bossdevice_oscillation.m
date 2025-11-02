@@ -120,7 +120,7 @@ classdef bossdevice_oscillation
             if numel(coeffs) < numel(obj.bpf_fir_coeffs)
                 coeffs(numel(obj.bpf_fir_coeffs)) = 0; % fill with zeros
             end
-            setparam(obj.targetObj, [obj.appName,'/OSC/' obj.name], 'bpf_fir_coeffs', single(coeffs));
+            setparam(obj.targetObj, [obj.appName,'/OSC/' obj.name], 'bpf_fir_coeffs', coeffs);
         end
 
         function offset_samples = get.offset_samples(obj)
