@@ -194,7 +194,7 @@ classdef bossdevice < handle
             [filename, filepath] = uigetfile([obj.appName,'.mldatx'],...
                 'Select the firmware binary to load on the bossdevice');
             if isequal(filename,0)
-                obj.logObj.error('User selected Cancel. Please download the latest firmware version from <a href="https://sync2brain.com/downloads-bossdevice-research">sync2brain downloads portal</a> and select the firmware mldatx file to complete bossdevice dependencies.');
+                obj.logObj.error('User selected Cancel. Please download the latest firmware version from <a href="https://sync2brain.com/bossdevice-research-downloads">sync2brain downloads portal</a> and select the firmware mldatx file to complete bossdevice dependencies.');
             else
                 obj.firmwareFilepath = fullfile(filepath,filename);
             end
