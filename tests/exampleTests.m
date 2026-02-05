@@ -6,7 +6,7 @@ classdef exampleTests < commonSetupTests
     end
 
     methods (Test, TestTags = {'bdConnected'})
-        function runExampleScript(testCase, exName)
+        function runExampleScript(~, exName)
             run(exName);
         end
     end
