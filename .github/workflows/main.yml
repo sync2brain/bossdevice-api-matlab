@@ -35,7 +35,7 @@ jobs:
     steps:  
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: 'recursive'
           token: ${{ secrets.REPO_READ_TOKEN }}
@@ -50,7 +50,7 @@ jobs:
 
       - name: Upload SARIF file
         if: success() || failure()
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           # Path to SARIF file relative to the root of the repository
           sarif_file: results.sarif
@@ -69,13 +69,13 @@ jobs:
     steps:  
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: 'recursive'
           token: ${{ secrets.REPO_READ_TOKEN }}
 
       - name: Cache MATLAB build files
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           key: matlab-buildtool
           path: |
