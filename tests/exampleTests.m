@@ -6,8 +6,8 @@ classdef exampleTests < commonSetupTests
     end
 
     methods (Test, TestTags = {'bdConnected'})
-        function runExampleScript(~, exName)
-            run(exName);
+        function runExampleScript(testCase, exName)
+            testCase.verifyWarningFree(@() run(exName));
         end
     end
 
