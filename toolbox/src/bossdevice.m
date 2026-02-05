@@ -205,7 +205,7 @@ classdef bossdevice < handle
                 if ~isfolder(fileparts(obj.firmwareDepsPath))
                     mkdir(fileparts(obj.firmwareDepsPath));
                 end
-                copyfile(obj.firmwareFilepath,fileparts(obj.firmwareDepsPath),'f');
+                copyfile(obj.firmwareFilepath,fullfile(fileparts(obj.firmwareDepsPath),[obj.appName,'.mldatx']),'f');
                 obj.firmwareFilepath = obj.firmwareDepsPath;
             else
                 obj.logObj.error('Firmware file is not located. Run method selectFirmware first.');
