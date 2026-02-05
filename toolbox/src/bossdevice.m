@@ -573,10 +573,10 @@ classdef bossdevice < handle
         function bufObj = createAsyncBuffer(obj, signalName, bufferLen, options)
             arguments
                 obj bossdevice
-                signalName {mustBeTextScalar}
-                bufferLen (1,1) {mustBePositive}
-                options.ArrayIndex {mustBeVector,mustBeInteger} = 1;
-                options.SignalProps {mustBeText} = {};
+                signalName {mustBeTextScalar} % Signal to log in buffer
+                bufferLen (1,1) {mustBePositive} % Buffer length in seconds
+                options.ArrayIndex {mustBeVector,mustBeInteger} = 1; % If signal is multidimensional only buffers the indicated element(s)
+                options.SignalProps {mustBeText} = {}; % Additional signal properties like bus element name or decimation
             end
 
             % Initializie streamingAsyncBuffer object

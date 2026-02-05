@@ -18,7 +18,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: 'recursive'
           token: ${{ secrets.REPO_READ_TOKEN }}
@@ -53,7 +53,7 @@ jobs:
           Get-ChildItem '.' -Filter speedgoat-deps-*.zip | Expand-Archive -DestinationPath 'toolbox\dependencies\sg' -Force
           
       - name: Cache MATLAB build files
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           key: matlab-buildtool
           path: |
@@ -71,7 +71,7 @@ jobs:
       
       # Create new release
       - name: Create a new release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: releases/bossdevice-api-installer.mltbx
           fail_on_unmatched_files: true
