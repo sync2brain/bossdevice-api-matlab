@@ -177,7 +177,7 @@ classdef bossdevice < handle
                 obj.selectFirmware;
                 obj.logObj.info('Please run installFirmwareOnToolbox to permanently copy the firmware file into the toolbox and skip this step.');
             else
-                obj.logObj.error('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
+                obj.logObj.error([obj.appName,'.mldatx could not be found in the MATLAB path.'],'bossdeviceapi:noMLDATX');
             end
 
             % Initialize bossdevice if it is connected
@@ -251,7 +251,7 @@ classdef bossdevice < handle
             % Use SFTP always avoiding potential issues with active UDP traffic on secondary Ethernet port (QNX issue)
             obj.targetObject.UseSFTP = 1;
 
-            % Connect to bosdevice
+            % Connect to bossdevice
             obj.targetObject.connect;
 
             % Load firmware on the bossdevice if not loaded yet
@@ -540,7 +540,7 @@ classdef bossdevice < handle
 
             else
                 obj.logObj.error({'Target "%s" is not running yet. Start it before sending a trigger.',...
-                    obj.targetObject.TargetSettings.name});
+                    obj.targetObject.TargetSettings.name},'bossdeviceapi:appNotRunning');
             end
 
             function cleanupManualTrigger(obj)
