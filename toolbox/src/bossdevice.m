@@ -95,7 +95,7 @@ classdef bossdevice < handle
             if ~batchStartupOptionUsed && isMATLABReleaseOlderThan('R2024b') % Should run always but using if due to two MATLAB bugs
                 bossapi.tg.checkSLRTSupportPkg;
             end
-            
+
             % Get bossdevice API toolbox path
             obj.toolboxPath = fileparts(fileparts(which(mfilename)));
 
@@ -174,8 +174,8 @@ classdef bossdevice < handle
             elseif exist([obj.appName,'.mldatx'],"file")
                 obj.firmwareFilepath = which([obj.appName,'.mldatx']);
             elseif ~batchStartupOptionUsed
-               obj.selectFirmware;
-               obj.logObj.info('Please run installFirmwareOnToolbox to permanently copy the firmware file into the toolbox and skip this step.');
+                obj.selectFirmware;
+                obj.logObj.info('Please run installFirmwareOnToolbox to permanently copy the firmware file into the toolbox and skip this step.');
             else
                 obj.logObj.error('bossapi:noMLDATX',[obj.appName,'.mldatx could not be found in the MATLAB path.']);
             end
@@ -195,8 +195,19 @@ classdef bossdevice < handle
                 'Select the firmware binary to load on the bossdevice');
             if isequal(filename,0)
                 obj.logObj.error('User selected Cancel. Please download the latest firmware version from <a href="https://sync2brain.com/bossdevice-research-downloads">sync2brain downloads portal</a> and select the firmware mldatx file to complete bossdevice dependencies.');
+                return;
             else
                 obj.firmwareFilepath = fullfile(filepath,filename);
+            end
+
+            fig = uifigure;
+            sel = uiconfirm(fig,"Do you also want to copy the firmware file to the toolbox folder? This will save you from selecting the firmware file the next time.",...
+                "Copy firmware file to toolbox folder","CloseFcn",@(~,~) close(fig));
+            switch sel
+                case 'OK'
+                    obj.installFirmwareOnToolbox
+                case 'Cancel'
+                    return;
             end
         end
 
@@ -355,7 +366,7 @@ classdef bossdevice < handle
 
         function set.num_eeg_channels(obj, n)
             arguments
-                obj 
+                obj
                 n uint8 {mustBeInteger,mustBeNonnegative}
             end
 
@@ -376,7 +387,7 @@ classdef bossdevice < handle
 
         function set.num_aux_channels(obj, n)
             arguments
-                obj 
+                obj
                 n uint8 {mustBeInteger,mustBeNonnegative}
             end
 
@@ -384,7 +395,7 @@ classdef bossdevice < handle
                 warning('Number of AUX channels is determined automically for actiCHamp. This input will be ignored.');
             else
                 setparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numAUXch', n);
-            end            
+            end
         end
 
         function val = get.marker_pulse_width_sec(obj)
@@ -636,7 +647,7 @@ classdef bossdevice < handle
 
         function val = getsignal(obj, path, portIndex)
             arguments
-                obj 
+                obj
                 path {mustBeText}
                 portIndex {mustBeScalarOrEmpty}
             end
