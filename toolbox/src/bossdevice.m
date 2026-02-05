@@ -539,8 +539,8 @@ classdef bossdevice < handle
                 end
 
             else
-                obj.logObj.error('Target "%s" is not running yet. Start it before sending a trigger.',...
-                    obj.targetObject.TargetSettings.name);
+                obj.logObj.error({'Target "%s" is not running yet. Start it before sending a trigger.',...
+                    obj.targetObject.TargetSettings.name});
             end
 
             function cleanupManualTrigger(obj)
@@ -668,8 +668,8 @@ classdef bossdevice < handle
 
         function startRecording(obj)
             if ~obj.targetObject.isRunning
-                obj.logObj.error('Target "%s" is not running yet. Start it before recording.',...
-                    obj.targetObject.TargetSettings.name);
+                obj.logObj.error({'Target "%s" is not running yet. Start it before recording.',...
+                    obj.targetObject.TargetSettings.name});
             end
 
             try
