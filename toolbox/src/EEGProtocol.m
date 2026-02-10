@@ -4,6 +4,7 @@ classdef EEGProtocol < Simulink.IntEnumType
         Unknown(0)
         NeurOne(1)
         actiCHamp(2)
+        gtec(3)
     end
 
 end
