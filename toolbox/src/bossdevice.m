@@ -360,7 +360,7 @@ classdef bossdevice < handle
                 n = obj.getsignal({'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/TurboLink Decode',...
                     'TurboLink_UDP_Decode/MATLAB Function'},1) * 32;
             else
-                n = getparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numEEGch');
+                n = getparam(obj, '', 'numEEGch');
             end
         end
 
@@ -373,7 +373,7 @@ classdef bossdevice < handle
             if obj.protocol_type == 2 % actiCHamp
                 warning('Number of EEG channels is determined automically for actiCHamp. This input will be ignored.');
             else
-                setparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numEEGch', n);
+                setparam(obj, '', 'numEEGch', n);
             end
         end
 
@@ -381,7 +381,7 @@ classdef bossdevice < handle
             if obj.protocol_type == 2 % actiCHamp
                 n = 8;
             else
-                n = getparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numAUXch');
+                n = getparam(obj, '', 'numAUXch');
             end
         end
 
@@ -394,7 +394,7 @@ classdef bossdevice < handle
             if obj.protocol_type == 2 % actiCHamp
                 warning('Number of AUX channels is determined automically for actiCHamp. This input will be ignored.');
             else
-                setparam(obj, {'UDP Decode','UDP_Decode_Biosignal/Decode UDP Messages/NeurOne Decode'},'numAUXch', n);
+                setparam(obj, '', 'numAUXch', n);
             end
         end
 
