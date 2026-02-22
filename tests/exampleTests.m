@@ -15,5 +15,11 @@ classdef exampleTests < commonSetupTests
         function closeFigures(~)
             close all;
         end
+
+        function clearBossdeviceObj(testCase)
+            if ~isempty(testCase.bd) && testCase.bd.isConnected
+                testCase.bd.stop;
+            end
+        end
     end
 end
