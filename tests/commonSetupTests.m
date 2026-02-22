@@ -57,12 +57,4 @@ classdef commonSetupTests < matlab.unittest.TestCase
         end
     end
 
-    methods (TestMethodTeardown)
-        function clearBossdeviceObj(testCase)
-            if ~isempty(testCase.bd) && testCase.bd.isConnected
-                testCase.bd.stop;
-            end
-        end
-    end
-
 end

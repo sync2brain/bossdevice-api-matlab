@@ -52,6 +52,10 @@ classdef bossdevice < handle
         appName = 'bossdevice_main';
     end
 
+    events
+        MarkerReceived
+    end
+
     methods (Static)
         function clearPersonalSettings()
             s = settings;
@@ -73,6 +77,17 @@ classdef bossdevice < handle
             obj.theta = bossdevice_oscillation(obj.targetObject, 'theta', obj.logObj);
             obj.alpha = bossdevice_oscillation(obj.targetObject, 'alpha', obj.logObj);
             obj.beta = bossdevice_oscillation(obj.targetObject, 'beta', obj.logObj);
+        end
+
+        function addCustomInst(obj)
+            % Initialize instrument object
+            instObj = slrealtime.Instrument(obj.firmwareFilepath);
+
+            % Remote marker
+            instObj.connectCallback(@(src, event) bossapi.inst.notifyMarkerReceived(obj,src,event,{'biosignal','BusElement','MRK'}));
+
+            % Add instrument objects to target
+            obj.targetObject.addInstrument(instObj);
         end
     end
 
@@ -266,6 +281,9 @@ classdef bossdevice < handle
 
             % Figure out some oscillation values
             initOscillationProps(obj);
+
+            % Add custom instrumentation
+            obj.addCustomInst;
         end
 
         function start(obj)
@@ -579,6 +597,7 @@ classdef bossdevice < handle
             hInst = slrealtime.Instrument(obj.firmwareFilepath);
             hInst.addInstrumentedSignals;
             obj.addInstrument(hInst);
+            obj.addCustomInst;
         end
 
         function bufObj = createAsyncBuffer(obj, signalName, bufferLen, options)
