@@ -84,9 +84,7 @@ classdef bossdevice < handle
             instObj = slrealtime.Instrument(obj.firmwareFilepath);
 
             % Remote marker
-            mrkSignal = {'biosignal','BusElement','MRK'};
-            instObj.addSignal(mrkSignal{:});
-            instObj.connectCallback(@(src, event) bossapi.inst.notifyMarkerReceived(obj,src,event,mrkSignal));
+            instObj.connectCallback(@(src, event) bossapi.inst.notifyMarkerReceived(obj,src,event,{'biosignal','BusElement','MRK'}));
 
             % Add instrument objects to target
             obj.targetObject.addInstrument(instObj);
