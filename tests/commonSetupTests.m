@@ -20,7 +20,10 @@ classdef commonSetupTests < matlab.unittest.TestCase
 
             % Initialize bossdevice object
             testCase.bd = bossdevice;
-
+            
+            testCase.assertThat(@() bossapi.tg.pingTarget(testCase.bd.targetObject),...
+                Eventually(IsTrue,"WithTimeoutOf",60),'Should wait until bossdevice has rebooted.');
+                
             % Update target and wait until it has rebooted
             testCase.bd.targetObject.update;
 
