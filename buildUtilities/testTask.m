@@ -48,7 +48,9 @@ end
 function testcases = filterOutTests(testcases)
 
 % Example doesn't work without real EEG data
-testcases(ismember(testcases,{'demo_mu_rhythm_phase_triggering.m'})) = [];
+testcases(ismember(testcases,{...
+    'demo_mu_rhythm_phase_triggering.m',...
+    'demo_triggered_buffer.m'})) = [];
 
 if ~isMATLABReleaseOlderThan("R2025a")
     % Issue when reading sample rate from osc_alpha_ip. Diff is not constant
