@@ -62,7 +62,7 @@ jobs:
     strategy:
       fail-fast: false # Run with every MATLAB version independently
       matrix:
-        matlabVer: [R2024b, R2025b] # List of MATLAB releases to test
+        matlabVer: [R2025b] # List of MATLAB releases to test # R2024b momentarily disabled due to a bug introduced in R2024bU8
     runs-on: matlab
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -82,7 +82,7 @@ jobs:
             .buildtool
 
       - name: Download firmware artifact
-        uses: dawidd6/action-download-artifact@v6
+        uses: dawidd6/action-download-artifact@v19
         with:
           github_token: ${{ secrets.REPO_READ_TOKEN }}
           workflow: main.yml
@@ -105,14 +105,14 @@ jobs:
 
       - name: Upload Test Results
         if: success() || failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Test Results (MATLAB ${{ matrix.matlabVer }})
           path: results.xml
 
       - name: Upload Speedgoat dependencies as artifacts
         if: ${{ github.ref == 'refs/heads/master' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: speedgoat-deps-${{ matrix.matlabVer }}
           path: toolbox\dependencies\sg
@@ -128,7 +128,7 @@ jobs:
     if: success() || failure()
     steps:
       - name: Download Test Results
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: Test Results*
           path: artifacts
