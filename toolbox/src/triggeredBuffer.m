@@ -115,8 +115,14 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
         function out = read(obj)
             if obj.isComplete
                 out = read@bossapi.inst.streamingAsyncBuffer(obj,'extractAsTimetable',true);
+            elseif obj.isArmed
+                if obj.isTriggered
+                    error('Buffer is not complete yet. Please wait and try again.');
+                else
+                    error('Buffer is empty, because the trigger condition has not been detected yet.');
+                end
             else
-                error('Buffer is not complete yet. Please wait.');
+                error('Buffer is not armed. Please call its arm method first.');
             end
         end
 
