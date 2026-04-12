@@ -14,8 +14,8 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
     end
 
     properties (SetAccess = private)
-        isTriggered logical
-        isArmed logical
+        isTriggered logical = false
+        isArmed logical = false
 
         TriggerTime {mustBePositive} % Time of occurrence of trigger event
     end
@@ -53,7 +53,7 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
 
             obj.preTrigger_ms = preTrigger_ms;
             obj.postTrigger_ms = postTrigger_ms;
-            obj.RemainingPostTriggerSamplesInitial = 1+round(postTrigger_ms/obj.getSamplePeriod(options.AppName));
+            obj.RemainingPostTriggerSamplesInitial = 1+round(postTrigger_ms/1000 /obj.getSamplePeriod(options.AppName));
             % Check if trigger signal exists by calling its info. Errors out if signal is not found
             bossapi.inst.getInfoSignalFromMldatx(options.AppName,triggerSignal);
             obj.TriggerSignal = triggerSignal;
@@ -106,7 +106,6 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
         end
 
         function reset(obj)
-            obj.isArmed = false;
             obj.isTriggered = false;
             obj.RemainingPostTriggerSamplesCurrent = obj.RemainingPostTriggerSamplesInitial;
             reset@bossapi.inst.streamingAsyncBuffer(obj);
@@ -118,7 +117,7 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
 
         function out = read(obj)
             if obj.isFull
-                out = read@bossapi.inst.streamingAsyncBuffer(obj,'extractAsTimetable',true);
+                out = obj.peek('extractAsTimetable',true);
             elseif obj.isArmed
                 if obj.isTriggered
                     error('triggeredBuffer:notFull','Buffer is not full yet. Please wait and try again.');
@@ -140,6 +139,7 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
             if obj.Enable && ~obj.isFull
                 % Get data for trigger signal
                 [triggerTime,triggerData] = getCallbackDataForSignal(instObj, event, obj.TriggerSignal);
+                
                 % Get data for buffer signal
                 [signalTime,signalData] = obj.getCallbackDataForSignal(instObj, event);
                 if ~ismatrix(signalData)
@@ -156,11 +156,13 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
                     obj.isTriggered = true;
 
                     % Add all buffers pretrigger to buffer
-                    write@bossapi.inst.streamingAsyncBuffer(obj, signalTime(1:triggerIdx-1), signalData(1:triggerIdx-1,:));
+                    if ~isempty(signalData)
+                        write@bossapi.inst.streamingAsyncBuffer(obj, signalTime(1:triggerIdx-1), signalData(1:triggerIdx-1,:));
 
-                    % Remove rows already added to buffer
-                    signalTime(1:triggerIdx-1) = [];
-                    signalData(1:triggerIdx-1,:) = [];
+                        % Remove rows already added to buffer
+                        signalTime(1:triggerIdx-1) = [];
+                        signalData(1:triggerIdx-1,:) = [];
+                    end
                 end
 
                 % Fill buffer with new samples depending on trigger
@@ -183,15 +185,20 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
             end
         end
 
-        function p = plot(obj, parentFig)
+        function parentAxes = plot(obj, parentAxes)
             arguments
                 obj
-                parentFig = uifigure
+                parentAxes matlab.graphics.axis.Axes = axes
             end
 
-            % WIP
             data = obj.read;
-            p = plot(parentFig, data.Time, data.Variables);
+            plot(parentAxes, data.Time, data.Variables, 'DisplayName', obj.SignalName);
+
+            xline(parentAxes, obj.TriggerTime, '--r','Trigger','DisplayName','Trigger');
+
+            title(parentAxes, obj.SignalName,'Interpreter','none');
+            % legend('show','Interpreter','none');
+            grid(parentAxes,"on");
         end
     end
 
