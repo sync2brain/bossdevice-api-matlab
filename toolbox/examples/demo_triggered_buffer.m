@@ -6,7 +6,11 @@ bd.start;
 bufObj = triggeredBuffer(bd,'spf_eeg','gen_running', @(x) x>0, 100, 1000);
 bufObj.arm;
 
-%% When buffer is complete (check isComplete or listen to BufferComplete)
+%% Send manual trigger and capture buffer data
+bd.manualTrigger;
+pause(5); % Pause must be longer than post trigger buffer length
+
+%% When buffer is complete (check isFull or listen to BufferFull)
 data = bufObj.read;
 triggerTime = bufObj.TriggerTime;
 
