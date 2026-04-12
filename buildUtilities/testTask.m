@@ -51,9 +51,4 @@ function testcases = filterOutTests(testcases)
 testcases(ismember(testcases,{...
     'demo_mu_rhythm_phase_triggering.m'})) = [];
 
-if ~isMATLABReleaseOlderThan("R2025a")
-    % Issue when reading sample rate from osc_alpha_ip. Diff is not constant
-    testcases(ismember(testcases,{'demo_phase_prediction_error_simple.m'})) = [];
-end
-
 end
