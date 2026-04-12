@@ -90,7 +90,7 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
             obj.Inst = slrealtime.Instrument;
             obj.Inst.addSignal(obj.TriggerSignal);
             obj.addToInstrument(obj.Inst);
-            obj.Inst.connectCallback(@obj.push);
+            obj.Inst.connectCallback(@obj.write);
 
             obj.Target.addInstrument(obj.Inst);
             obj.isArmed = true;
@@ -130,7 +130,7 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
             end
         end
 
-        function push(obj, instObj, event)
+        function write(obj, instObj, event)
             arguments
                 obj
                 instObj slrealtime.Instrument
@@ -156,7 +156,7 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
                     obj.isTriggered = true;
 
                     % Add all buffers pretrigger to buffer
-                    obj.write(signalTime(1:triggerIdx-1), signalData(1:triggerIdx-1,:));
+                    write@bossapi.inst.streamingAsyncBuffer(obj, signalTime(1:triggerIdx-1), signalData(1:triggerIdx-1,:));
 
                     % Remove rows already added to buffer
                     signalTime(1:triggerIdx-1) = [];
@@ -167,13 +167,13 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
                 numRows = numel(signalTime);
                 if obj.isTriggered
                     rowsToAdd = min(obj.RemainingPostTriggerSamplesCurrent, numRows);
-                    obj.write(signalTime(1:rowsToAdd), signalData(1:rowsToAdd,:));
+                    write@bossapi.inst.streamingAsyncBuffer(obj, signalTime(1:rowsToAdd), signalData(1:rowsToAdd,:));
 
                     % Update remaining post trigger samples
                     obj.RemainingPostTriggerSamplesCurrent = obj.RemainingPostTriggerSamplesCurrent - rowsToAdd;
                 else
                     % Fill buffer with all new samples
-                    obj.write(signalTime, signalData);
+                    write@bossapi.inst.streamingAsyncBuffer(obj, signalTime, signalData);
                 end
 
                 % Check if buffer is complete in this call
@@ -196,18 +196,8 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
     end
 
     methods (Hidden)
-        function write(obj, time, data)
-            if ~isempty(data)
-                if ~isempty(obj.ArrayIndex)
-                    write@dsp.AsyncBuffer(obj, [time, data(:, obj.ArrayIndex)]);
-                else
-                    write@dsp.AsyncBuffer(obj, [time, data]);
-                end
-            end
-        end
-
-        function [out,nUnderrun] = peek(obj)
-            [out,nUnderrun] = peek@bossapi.inst.streamingAsyncBuffer(obj);
+        function [out,nUnderrun] = peek(obj, varargin)
+            [out,nUnderrun] = peek@bossapi.inst.streamingAsyncBuffer(obj, varargin{:});
         end
     end
 
