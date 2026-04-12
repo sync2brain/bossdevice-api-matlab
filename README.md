@@ -8,8 +8,9 @@
 - [bossdevice&reg; real-time digital processor](https://sync2brain.com/boss-device-research)
 - [bossdevice&reg; firmware](https://sync2brain.com/bossdevice-research-downloads)
 ### Optional
-The following products are required for some advanced functionality such as designing custom filters but are not strictly required for a standard operation or triggering of the bossdevice.
+The following products are required for some advanced functionality such as designing custom filters or using asynchronous data buffers but are not strictly required for a standard operation or triggering of the bossdevice.
 - [Signal Processing Toolbox&trade;](https://www.mathworks.com/products/signal.html)
+- [DSP System Toolbox&trade;](https://www.mathworks.com/products/dsp-system.html)
 
 ## Enable bossdevice communication over Control PC
 This step is strictly required to enable communication between the Control PC and the bossdevice over a point-to-point Ethernet connection. If your bossdevice is on, you cannot establish a connection from MATLAB or you get an error message like `Error communicating with target '192.168.7.5': Unable to connect to target computer '192.168.7.5': No response from target computer after 10 pings.`, this step is probably not fully completed yet.
