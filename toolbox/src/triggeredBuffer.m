@@ -37,7 +37,7 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
     methods
         function obj = triggeredBuffer(bossObj, signalName, triggerSignal, triggerCondition, preTrigger_ms, postTrigger_ms, options)
             arguments
-                bossObj {mustBeA(bossObj,"bossdevice")}
+                bossObj bossdevice
                 signalName {mustBeTextScalar}
                 triggerSignal {mustBeTextScalar}
                 triggerCondition function_handle
@@ -47,13 +47,13 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
                 options.SignalProps {mustBeText} = {};
             end
 
-            options.AppName = bossObj.appName;
+            options.AppName = bossObj.firmwareFilepath;
             bufOptions = struct2pairs(options);
             obj@bossapi.inst.streamingAsyncBuffer(signalName, '', (preTrigger_ms+postTrigger_ms)/1000, true, bufOptions{:});
 
             obj.preTrigger_ms = preTrigger_ms;
             obj.postTrigger_ms = postTrigger_ms;
-            obj.RemainingPostTriggerSamplesInitial = 1+round(postTrigger_ms/obj.getSamplePeriod(bossObj.appName));
+            obj.RemainingPostTriggerSamplesInitial = 1+round(postTrigger_ms/obj.getSamplePeriod(options.AppName));
             % Check if trigger signal exists by calling its info. Errors out if signal is not found
             bossapi.inst.getInfoSignalFromMldatx(options.AppName,triggerSignal);
             obj.TriggerSignal = triggerSignal;
@@ -97,7 +97,9 @@ classdef triggeredBuffer < bossapi.inst.streamingAsyncBuffer
         end
 
         function disarm(obj)
-            obj.Target.removeInstrument(obj.Inst);
+            if ~isempty(obj.Inst)
+                obj.Target.removeInstrument(obj.Inst);
+            end
             obj.isArmed = false;
         end
 
