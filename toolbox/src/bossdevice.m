@@ -614,6 +614,22 @@ classdef bossdevice < handle
                 'AppName',obj.firmwareFilepath,'ArrayIndex',options.ArrayIndex,'SignalProps',options.SignalProps);
         end
 
+        function obj = triggeredBuffer(bossObj, signalName, triggerSignal, triggerCondition, preTrigger_ms, postTrigger_ms, options)
+            arguments
+                bossObj bossdevice
+                signalName {mustBeTextScalar}
+                triggerSignal {mustBeTextScalar}
+                triggerCondition function_handle
+                preTrigger_ms {mustBeNonnegative}
+                postTrigger_ms {mustBeNonnegative}
+                options.ArrayIndex {mustBeVector(options.ArrayIndex,"allow-all-empties"),mustBeInteger} = [];
+                options.SignalProps {mustBeText} = {};
+            end
+
+            obj = slrtCustomInst.triggeredBuffer(bossObj.targetObject, bossObj.firmwareFilepath,...
+                signalName, triggerSignal, triggerCondition, preTrigger_ms, postTrigger_ms, options);
+        end
+
 
         %% Target object wrappers
         function addInstrument(obj, inst)
