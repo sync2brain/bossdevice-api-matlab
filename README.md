@@ -7,6 +7,9 @@
 - [Simulink&reg; Real-Time&trade; Target Support Package](https://www.mathworks.com/matlabcentral/fileexchange/76387-simulink-real-time-target-support-package) (no additional license required, installable from within MATLAB when you have Simulink Real-Time installed)
 - [bossdevice&reg; real-time digital processor](https://sync2brain.com/boss-device-research)
 - [bossdevice&reg; firmware](https://sync2brain.com/bossdevice-research-downloads)
+### MATLAB Add-Ons
+Add-ons are automatically downloaded and installed if you don't have them already available, when you install this API toolbox for the first time. Therefore, you don't have to download and install them manually or in advance.
+- [Advanced Logger for MATLAB](https://www.mathworks.com/matlabcentral/fileexchange/87322-advanced-logger-for-matlab)
 ### Optional
 The following products are required for some advanced functionality such as designing custom filters or using asynchronous data buffers but are not strictly required for a standard operation or triggering of the bossdevice.
 - [Signal Processing Toolbox&trade;](https://www.mathworks.com/products/signal.html)
