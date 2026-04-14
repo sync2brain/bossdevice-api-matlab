@@ -610,7 +610,7 @@ classdef bossdevice < handle
             end
 
             % Initializie streamingAsyncBuffer object
-            bufObj = bossapi.inst.streamingAsyncBuffer(signalName,'',bufferLen,...
+            bufObj = slrtCustomInst.streamingAsyncBuffer(signalName,'',bufferLen,...
                 'AppName',obj.firmwareFilepath,'ArrayIndex',options.ArrayIndex,'SignalProps',options.SignalProps);
         end
 
