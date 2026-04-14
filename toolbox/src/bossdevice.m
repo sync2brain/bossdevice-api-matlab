@@ -614,9 +614,9 @@ classdef bossdevice < handle
                 'AppName',obj.firmwareFilepath,'ArrayIndex',options.ArrayIndex,'SignalProps',options.SignalProps);
         end
 
-        function obj = triggeredBuffer(bossObj, signalName, triggerSignal, triggerCondition, preTrigger_ms, postTrigger_ms, options)
+        function bufObj = triggeredBuffer(obj, signalName, triggerSignal, triggerCondition, preTrigger_ms, postTrigger_ms, options)
             arguments
-                bossObj bossdevice
+                obj bossdevice
                 signalName {mustBeTextScalar}
                 triggerSignal {mustBeTextScalar}
                 triggerCondition function_handle
@@ -626,15 +626,16 @@ classdef bossdevice < handle
                 options.SignalProps {mustBeText} = {};
             end
 
-            obj = slrtCustomInst.triggeredBuffer(bossObj.targetObject, bossObj.firmwareFilepath,...
-                signalName, triggerSignal, triggerCondition, preTrigger_ms, postTrigger_ms, options);
+            bufObj = slrtCustomInst.triggeredBuffer(obj.targetObject, obj.firmwareFilepath,...
+                signalName, triggerSignal, triggerCondition, preTrigger_ms, postTrigger_ms,...
+                'ArrayIndex',options.ArrayIndex,'SignalProps',options.SignalProps);
         end
 
 
         %% Target object wrappers
         function addInstrument(obj, inst)
             arguments
-                obj
+                obj bossdevice
                 inst slrealtime.Instrument
             end
             obj.targetObject.addInstrument(inst);
@@ -642,7 +643,7 @@ classdef bossdevice < handle
 
         function removeInstrument(obj, inst)
             arguments
-                obj
+                obj bossdevice
                 inst slrealtime.Instrument
             end
             obj.targetObject.removeInstrument(inst);
