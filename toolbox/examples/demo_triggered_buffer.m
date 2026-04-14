@@ -6,6 +6,8 @@ bd.start;
 bufObj = triggeredBuffer(bd,'spf_eeg','gen_running', @(x) x>0, 100, 1000);
 bufObj.arm;
 
+pause(5); % Pause to let the buffer pretrigger fill with some data
+
 %% Send manual trigger and capture buffer data
 bd.manualTrigger;
 pause(5); % Pause must be longer than post trigger buffer length
