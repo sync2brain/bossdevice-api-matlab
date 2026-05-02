@@ -22,16 +22,19 @@ classdef commonSetupTests < matlab.unittest.TestCase
             testCase.bd = bossdevice;
             
             testCase.assertThat(@() bossapi.tg.pingTarget(testCase.bd.targetObject),...
-                Eventually(IsTrue,"WithTimeoutOf",60),'Should wait until bossdevice has rebooted.');
+                Eventually(IsTrue,"WithTimeoutOf",60),'Target is not reachable at test class setup.');
 
-            % Wait additional seconds since the target may respond ping but not be ready yet
-            pause(testCase.waitTimeReboot);
+            % Boot on QNX or Linux based on current release
+            bossapi.tg.setBootForCurrentRelease("TargetObject",testCase.bd.targetObject,"AutoReboot",true);
+            pause(10); % Must wait a bit because reboot command is not immediate
+            testCase.assertThat(@() bossapi.tg.pingTarget(testCase.bd.targetObject),...
+                Eventually(IsTrue,"WithTimeoutOf",60),'Target is not available after setting boot OS.');
                 
             % Update target and wait until it has rebooted
             testCase.bd.targetObject.update;
 
-            testCase.assertThat(@() bossapi.tg.pingTarget(testCase.bd.targetObject),...
-                Eventually(IsTrue,"WithTimeoutOf",60),'Should wait until bossdevice has rebooted.');
+            testCase.assertThat(@() bossapi.tg.pingTarget(testCase.tg),...
+                Eventually(IsTrue,"WithTimeoutOf",60),'Target is not available after updating.');
 
             % Wait additional seconds since the target may respond ping but not be ready yet
             pause(testCase.waitTimeReboot);
@@ -56,7 +59,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
             import matlab.unittest.constraints.Eventually
             import matlab.unittest.constraints.IsTrue
             
-            if ~isempty(testCase.bd) && testCase.bd.isConnected
+            if ~isempty(testCase.bd) && testCase.bd.isInitialized
                 disp('Rebooting bossdevice to teardown test class.');
                 testCase.bd.reboot;
             end
