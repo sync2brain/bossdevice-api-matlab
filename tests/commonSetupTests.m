@@ -33,7 +33,7 @@ classdef commonSetupTests < matlab.unittest.TestCase
             % Update target and wait until it has rebooted
             testCase.bd.targetObject.update;
 
-            testCase.assertThat(@() bossapi.tg.pingTarget(testCase.tg),...
+            testCase.assertThat(@() bossapi.tg.pingTarget(testCase.bd.targetObject),...
                 Eventually(IsTrue,"WithTimeoutOf",60),'Target is not available after updating.');
 
             % Wait additional seconds since the target may respond ping but not be ready yet
