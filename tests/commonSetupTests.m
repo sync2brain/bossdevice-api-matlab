@@ -62,6 +62,10 @@ classdef commonSetupTests < matlab.unittest.TestCase
             if ~isempty(testCase.bd) && testCase.bd.isInitialized
                 disp('Rebooting bossdevice to teardown test class.');
                 testCase.bd.reboot;
+
+                if ~isMATLABReleaseOlderThan("R2026a")
+                    pause(testCase.waitTimeReboot);
+                end
             end
         end
     end
