@@ -272,7 +272,11 @@ classdef bossdevice < handle
             % Load firmware on the bossdevice if not loaded yet
             if ~obj.targetObject.isLoaded
                 % Set Ethernet IP in secondary interface
-                bossapi.tg.setEthernetInterface(obj.targetObject,'wm1','192.168.200.5/24');
+                if isMATLABReleaseOlderThan("R2026a")
+                    bossapi.tg.setEthernetInterface(obj.targetObject,'wm1','192.168.200.5/24');
+                else
+                    bossapi.tg.setEthernetInterface(obj.targetObject,'enp4s0','192.168.200.5/24');
+                end
 
                 obj.logObj.info('Loading application "%s" on "%s"...',obj.appName,obj.targetObject.TargetSettings.name);
                 obj.targetObject.load(obj.firmwareFilepath);
