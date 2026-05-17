@@ -609,11 +609,11 @@ classdef bossdevice < handle
                 obj bossdevice
                 signalName {mustBeTextScalar} % Signal to log in buffer
                 bufferLen (1,1) {mustBePositive} % Buffer length in seconds
-                options.ArrayIndex {mustBeVector,mustBeInteger} = 1; % If signal is multidimensional only buffers the indicated element(s)
+                options.ArrayIndex {mustBeVector(options.ArrayIndex,"allow-all-empties"),mustBeInteger} = [];
                 options.SignalProps {mustBeText} = {}; % Additional signal properties like bus element name or decimation
             end
 
-            % Initializie streamingAsyncBuffer object
+            % Initialize streamingAsyncBuffer object
             bufObj = slrtCustomInst.streamingAsyncBuffer(signalName,'',bufferLen,...
                 'AppName',obj.firmwareFilepath,'ArrayIndex',options.ArrayIndex,'SignalProps',options.SignalProps);
         end
