@@ -3,7 +3,11 @@ bd = bossdevice;
 bd.start;
 
 %% Create and arm triggered buffer object
-bufObj = triggeredBuffer(bd,'spf_eeg','gen_running', @(x) x>0, 100, 1000);
+bufObj = triggeredBuffer(bd,'spf_eeg','gen_running', @(x) x>0, 100, 1000, 'ArrayIndex', 1);
+% Other examples of configuration below
+% bufObj = triggeredBuffer(bd,'biosignal','gen_running', @(x) x>0, 100, 1000, 'ArrayIndex', 1, 'SignalProps', {'BusElement','AUX'});
+
+% Arm buffer object to fill with data when triggering event occurs
 bufObj.arm;
 
 pause(5); % Pause to let the buffer pretrigger fill with some data
