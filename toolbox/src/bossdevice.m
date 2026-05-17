@@ -626,9 +626,10 @@ classdef bossdevice < handle
                 options.SignalProps {mustBeText} = {};
             end
 
+            bufOptions = struct2pairs(options);
+
             bufObj = slrtCustomInst.triggeredBuffer(obj.targetObject, obj.firmwareFilepath,...
-                signalName, triggerSignal, triggerCondition, preTrigger_ms, postTrigger_ms,...
-                'ArrayIndex',options.ArrayIndex,'SignalProps',options.SignalProps);
+                signalName, triggerSignal, triggerCondition, preTrigger_ms, postTrigger_ms, bufOptions{:});
         end
 
 
