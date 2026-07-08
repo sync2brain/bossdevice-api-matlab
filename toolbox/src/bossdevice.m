@@ -610,7 +610,7 @@ classdef bossdevice < handle
             end
 
             % Initializie streamingAsyncBuffer object
-            bufObj = slrtCustomInst.streamingAsyncBuffer(signalName,'',bufferLen,...
+            bufObj = slrtStreamingUtils.streamingAsyncBuffer(signalName,'',bufferLen,...
                 'AppName',obj.firmwareFilepath,'ArrayIndex',options.ArrayIndex,'SignalProps',options.SignalProps);
         end
 
@@ -628,7 +628,7 @@ classdef bossdevice < handle
 
             bufOptions = struct2pairs(options);
 
-            bufObj = slrtCustomInst.triggeredBuffer(obj.targetObject, obj.firmwareFilepath,...
+            bufObj = slrtStreamingUtils.triggeredBuffer(obj.targetObject, obj.firmwareFilepath,...
                 signalName, triggerSignal, triggerCondition, preTrigger_ms, postTrigger_ms, bufOptions{:});
         end
 
