@@ -51,4 +51,10 @@ function testcases = filterOutTests(testcases)
 testcases(ismember(testcases,{...
     'demo_mu_rhythm_phase_triggering.m'})) = [];
 
+if ~isMATLABReleaseOlderThan('R2026a')
+    % Example fails due to getBufferedData. To be replaced by new asyncBuffer object
+    testcases(ismember(testcases,{...
+        'demo_phase_prediction_error_simple.m'})) = [];
+end
+
 end

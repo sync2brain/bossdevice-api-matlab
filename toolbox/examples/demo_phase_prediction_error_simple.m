@@ -43,7 +43,7 @@ spf_eeg = squeeze(sigData{2}.data)';
 alpha_ip = sigData{1}.data;
 disp('Done.');
 
-% Compensante offset in instantaneous predicted phase
+% Compensate offset in instantaneous predicted phase
 numSamples = bd.alpha.offset_samples;
 assert(numSamples >= 1);
 

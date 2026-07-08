@@ -10,7 +10,11 @@ fprintf('Updating Speedgoat dependencies in local project from %s...\n',sgDefaul
 
 % Figure out list of Speedgoat tools to copy
 sgTools = dir(fullfile(sgDefaultPath,'sg_resources'));
-sgTools = sgTools(~[sgTools.isdir]);
+if isMATLABReleaseOlderThan('R2026a')
+    sgTools = sgTools(~[sgTools.isdir]);
+else
+    sgTools = sgTools(ismember({sgTools.name},{'antelope_rtos'}));
+end
 
 % Create dependencies folder in local toolbox
 destFolder = fullfile(projObj.RootFolder,'toolbox/dependencies/sg');

@@ -272,7 +272,11 @@ classdef bossdevice < handle
             % Load firmware on the bossdevice if not loaded yet
             if ~obj.targetObject.isLoaded
                 % Set Ethernet IP in secondary interface
-                bossapi.tg.setEthernetInterface(obj.targetObject,'wm1','192.168.200.5/24');
+                if isMATLABReleaseOlderThan("R2026a")
+                    bossapi.tg.setEthernetInterface(obj.targetObject,'wm1','192.168.200.5/24');
+                else
+                    bossapi.tg.setEthernetInterface(obj.targetObject,'enp4s0','192.168.200.5/24');
+                end
 
                 obj.logObj.info('Loading application "%s" on "%s"...',obj.appName,obj.targetObject.TargetSettings.name);
                 obj.targetObject.load(obj.firmwareFilepath);
@@ -605,11 +609,11 @@ classdef bossdevice < handle
                 obj bossdevice
                 signalName {mustBeTextScalar} % Signal to log in buffer
                 bufferLen (1,1) {mustBePositive} % Buffer length in seconds
-                options.ArrayIndex {mustBeVector,mustBeInteger} = 1; % If signal is multidimensional only buffers the indicated element(s)
+                options.ArrayIndex {mustBeVector(options.ArrayIndex,"allow-all-empties"),mustBeInteger} = [];
                 options.SignalProps {mustBeText} = {}; % Additional signal properties like bus element name or decimation
             end
 
-            % Initializie streamingAsyncBuffer object
+            % Initialize streamingAsyncBuffer object
             bufObj = slrtStreamingUtils.streamingAsyncBuffer(signalName,'',bufferLen,...
                 'AppName',obj.firmwareFilepath,'ArrayIndex',options.ArrayIndex,'SignalProps',options.SignalProps);
         end
